@@ -372,6 +372,8 @@ screen), kept by the `display.status` / `display.lease` events of its
 `profile_key`, an older lease epoch ignored, read again on each reconnect.
 
 The Screen page (`/screen/:profile`) is always dark, as a picture viewer.
+Opening it takes the focus off the composer, so closing it does not raise
+the keyboard again. Each profile has its own desktop and lease.
 `ScreenSession` drives `ScreenStage`, a web view (`webview_flutter`) with
 `assets/bot_screen/screen.html` loaded under the gateway's origin (so the
 stream's socket carries the gateway's own Origin). The page dials the

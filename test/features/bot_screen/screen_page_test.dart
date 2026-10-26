@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hermes/app/routes.dart';
 import 'package:hermes/core/config/app_config.dart';
+import 'package:hermes/core/theme/app_theme.dart';
 import 'package:hermes/features/bot_screen/domain/remote_input.dart';
 import 'package:hermes/features/bot_screen/presentation/bot_screen_page.dart';
 import 'package:hermes/features/bot_screen/presentation/widgets/screen_action.dart';
+import 'package:hermes/l10n/generated/app_localizations.dart';
 import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
 
 import '../../support/app_host.dart';
@@ -77,6 +82,56 @@ void main() {
 
     await header(FakeScreenApi()..takenElsewhere());
     expect(find.byTooltip('Screen: a person has control'), findsOneWidget);
+  });
+
+  testWidgets('closing the screen does not raise the keyboard again', (
+    tester,
+  ) async {
+    final composer = FocusNode();
+    addTearDown(composer.dispose);
+    final router = GoRouter(
+      routes: [
+        GoRoute(
+          path: Routes.home,
+          builder: (_, _) => Scaffold(
+            body: Column(
+              children: [
+                TextField(focusNode: composer),
+                const ScreenAction(profile: screenBot),
+              ],
+            ),
+          ),
+        ),
+        GoRoute(
+          path: Routes.screen,
+          builder: (_, _) => const Scaffold(body: Text('screen')),
+        ),
+      ],
+    );
+    addTearDown(router.dispose);
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: screenOverrides(FakeScreenApi(), ScreenClient()),
+        child: MaterialApp.router(
+          theme: AppTheme.light(),
+          routerConfig: router,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(TextField));
+    await tester.pump();
+    expect(composer.hasFocus, isTrue);
+
+    await tester.tap(find.byTooltip('Screen'));
+    await tester.pumpAndSettle();
+    expect(find.text('screen'), findsOneWidget);
+    router.pop();
+    await tester.pumpAndSettle();
+
+    expect(composer.hasFocus, isFalse);
   });
 
   testWidgets('a screen that is off offers Start, then comes up watching', (
