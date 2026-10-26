@@ -182,9 +182,6 @@ Bug reports and pull requests are welcome. Read
 [CONTRIBUTING.md](CONTRIBUTING.md) first; new features start as an issue.
 Security problems: [SECURITY.md](SECURITY.md).
 
-If Pomelu is useful to you, give the repo a ⭐: it helps other Hermes Agent
-users find it.
-
 ## License
 
 The code is licensed under the [Apache License 2.0](LICENSE). The name
@@ -194,3 +191,16 @@ covered: see [TRADEMARKS.md](TRADEMARKS.md) and [NOTICE](NOTICE).
 Made by [Royan AB](https://royan.se) in Sweden ·
 [royan.se/pomelu](https://royan.se/pomelu/). "Hermes Agent" and
 "Nous Research" belong to Nous Research.
+
+---
+
+<div align="center">
+
+### ⭐ Like Pomelu? Give it a star
+
+If Pomelu is helpful to you, please [star this repo](https://github.com/ateymoori/pomelu/stargazers).
+It is free and it helps other Hermes Agent users find the app.
+
+[![Star Pomelu on GitHub](https://img.shields.io/github/stars/ateymoori/pomelu?style=social)](https://github.com/ateymoori/pomelu/stargazers)
+
+</div>
