@@ -27,7 +27,7 @@ android/app/release/
 google-services.json
 
 # fastlane (App Review details stay local)
-ios/fastlane/metadata/review_information/
+ios/fastlane/metadata/review_information
 ios/fastlane/report.xml
 ios/fastlane/README.md
 
