@@ -1,0 +1,1 @@
+Vereist je eigen Hermes Agent. Chat met de bots: live antwoorden, toolactiviteit, goedkeuringen, spraak en bestanden, in één chat per bot.

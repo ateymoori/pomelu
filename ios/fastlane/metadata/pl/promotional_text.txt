@@ -1,0 +1,1 @@
+Wymaga własnego Hermes Agent. Rozmawiaj z jego botami: odpowiedzi na żywo, aktywność narzędzi, zatwierdzenia, głos i pliki, jeden czat na bota.

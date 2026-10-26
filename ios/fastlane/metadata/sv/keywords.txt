@@ -1,0 +1,1 @@
+chatbot,chattbot,språkmodell,llm,självhostad,botar,automatisering,lokal,server,homelab,mcp

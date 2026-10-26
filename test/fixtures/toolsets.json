@@ -1,0 +1,7 @@
+[
+  {"name": "web", "label": "Web Search & Scraping", "description": "web_search, web_extract", "platform": "cli", "platform_label": "CLI", "enabled": true, "available": true, "configured": true, "tools": ["web_extract", "web_search"]},
+  {"name": "terminal", "label": "Terminal & Processes", "description": "terminal, process", "platform": "cli", "platform_label": "CLI", "enabled": true, "available": true, "configured": true, "tools": ["process", "terminal"]},
+  {"name": "file", "label": "File Operations", "description": "read, write, patch, search", "platform": "cli", "platform_label": "CLI", "enabled": true, "available": true, "configured": true, "tools": ["patch", "read_file", "search_files", "terminal", "write_file"]},
+  {"name": "image_gen", "label": "Image Generation", "description": "image_generate", "platform": "cli", "platform_label": "CLI", "enabled": false, "available": false, "configured": false, "tools": ["image_generate"]},
+  {"name": "browser", "label": "", "description": "", "platform": "cli", "platform_label": "CLI", "enabled": false, "available": false, "configured": false}
+]

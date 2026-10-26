@@ -1,0 +1,1 @@
+chatbot,llm,self-hosted,bots,gateway,automation,local,server,homelab,agentic,model,mcp,tools,skills

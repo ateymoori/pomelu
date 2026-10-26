@@ -1,0 +1,41 @@
+# A cold start finds the gateway again by itself and reaches "Connected".
+# Airplane mode is not toggled (the emulator's network is the host's), so the
+# app is stopped and started instead. Cutting the link under a running app is
+# a by-hand step: see "Definition of done" in docs/TESTING.md.
+# Expects a configured app (run smoke.yaml first).
+appId: se.royan.pomelu
+---
+- launchApp
+- extendedWaitUntil:
+    visible: "Attach"
+    timeout: 30000
+# Let a cold start settle: taps during first-load work can be lost.
+- waitForAnimationToEnd:
+    timeout: 15000
+- stopApp
+- launchApp
+- extendedWaitUntil:
+    visible: "Attach"
+    timeout: 30000
+# Under 640 dp the status lives in the drawer: open it.
+- runFlow:
+    when:
+      visible: "Open menu"
+    commands:
+      - tapOn: "Open menu"
+- extendedWaitUntil:
+    visible: "Connected"
+    timeout: 30000
+- assertNotVisible: "Sign in required"
+- assertNotVisible: "Offline"
+- takeScreenshot: reconnect-connected
+# Leave the chat as it was: close a drawer with a tap on the scrim beside it.
+- runFlow:
+    when:
+      notVisible: "Attach"
+    commands:
+      - tapOn:
+          point: "95%,50%"
+- extendedWaitUntil:
+    visible: "Attach"
+    timeout: 10000

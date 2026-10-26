@@ -1,0 +1,31 @@
+# A shared picture opens the target picker; picking a bot attaches it to the
+# composer; sending it must not fail.
+# Trigger the share first (see "Send an image" in maestro/README.md): the
+# system photo picker is not scripted, a share intent is the way in. The bot is
+# chosen by its display name, as in share_text.yaml (`-e BOT="<name>"`).
+appId: se.royan.pomelu
+---
+- extendedWaitUntil:
+    visible: "(?s)Send to.*"
+    timeout: 20000
+- tapOn:
+    text: "(?s)${BOT || 'default'}.*"
+# The picture is in the composer, with its remove mark.
+- extendedWaitUntil:
+    visible: "Remove"
+    timeout: 15000
+- takeScreenshot: share-image-composer
+# The composer grew with the picture: let it settle before the tap.
+- waitForAnimationToEnd
+- tapOn: "Send"
+# The turn runs (Stop shows) and ends; a failed upload would say so.
+- extendedWaitUntil:
+    visible: "Stop"
+    timeout: 30000
+    optional: true
+- extendedWaitUntil:
+    notVisible: "Stop"
+    timeout: 120000
+- assertNotVisible: "Not sent · tap to retry"
+- assertNotVisible: "Image unavailable"
+- takeScreenshot: share-image-sent

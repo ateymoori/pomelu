@@ -1,0 +1,1 @@
+Needs your own Hermes Agent. Chat with its bots: live answers, tool activity, approvals, voice and files, in one chat per bot.

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Also `appName` in lib/l10n/app_en.arb. -->
+    <string name="app_name">Pomelu</string>
+
+    <!-- Fallbacks: Dart passes its own words to the service. -->
+    <string name="connection_channel_name">Gateway connection</string>
+    <string name="connection_channel_description">Keeps the connection to your gateway open while the app is in the background.</string>
+    <string name="connection_default_title">Stay connected</string>
+    <string name="connection_default_body">Connected to your gateway</string>
+</resources>

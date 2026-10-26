@@ -1,0 +1,68 @@
+# Pomelu App Store lanes; run from ios/ (`cd ios && fastlane <lane>`).
+# Auth: an App Store Connect API key; ASC_KEY_ID and ASC_ISSUER_ID come from
+# the environment or ios/fastlane/.env, the .p8 from ~/.appstoreconnect/private_keys
+# (none of them in git).
+default_platform(:ios)
+
+ROOT = File.expand_path('../..')
+KEY_ID = ENV.fetch('ASC_KEY_ID')
+# The build number is the part after `+` in pubspec.yaml.
+BUILD = File.read("#{ROOT}/pubspec.yaml")[/^version: .+\+(\d+)$/, 1]
+
+platform :ios do
+  before_all do
+    app_store_connect_api_key(
+      key_id: KEY_ID,
+      issuer_id: ENV.fetch('ASC_ISSUER_ID'),
+      key_filepath: ENV.fetch(
+        'ASC_KEY_PATH',
+        File.expand_path("~/.appstoreconnect/private_keys/AuthKey_#{KEY_ID}.p8"),
+      ),
+    )
+  end
+
+  desc 'Release IPA; keep build/symbols-ios for crash stacks'
+  lane :build do
+    Dir.chdir(ROOT) do
+      sh('flutter', 'build', 'ipa', '--release', '--obfuscate',
+         '--split-debug-info=build/symbols-ios')
+    end
+  end
+
+  desc 'Build and upload to TestFlight (bump the build number in pubspec first)'
+  lane :beta do
+    build
+    upload_to_testflight(
+      ipa: Dir["#{ROOT}/build/ios/ipa/*.ipa"].first,
+      skip_waiting_for_build_processing: true,
+    )
+  end
+
+  desc 'Push store text, screenshots and review details'
+  lane :metadata do
+    deliver(
+      skip_binary_upload: true,
+      overwrite_screenshots: true,
+      force: true,
+      run_precheck_before_submit: false,
+    )
+  end
+
+  # A pending submission is cancelled first; the cancel takes a few seconds,
+  # so then the lane fails once and the second run submits.
+  desc 'Submit the pubspec build for App Review, replacing a pending one (manual release)'
+  lane :release do
+    deliver(
+      build_number: BUILD,
+      skip_binary_upload: true,
+      skip_metadata: true,
+      skip_screenshots: true,
+      submit_for_review: true,
+      reject_if_possible: true,
+      automatic_release: false,
+      force: true,
+      run_precheck_before_submit: false,
+      submission_information: { add_id_info_uses_idfa: false },
+    )
+  end
+end

@@ -1,0 +1,50 @@
+# The bot's name in the chat header opens the bot details sheet; its four
+# tabs open.
+# Read only: nothing is edited, run, paused or deleted. Expects a configured
+# app (run smoke.yaml first).
+appId: se.royan.pomelu
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible: "Attach"
+    timeout: 30000
+# Let a cold start settle: taps during first-load work can be lost.
+- waitForAnimationToEnd:
+    timeout: 15000
+# The title capsule's node is the name, the model and the hint "Bot details";
+# a tab's also says "Tab 1 of 4", hence the .* in the matchers.
+- tapOn: "(?s).*Bot details.*"
+- extendedWaitUntil:
+    visible:
+      text: "(?s)Skills.*"
+      selected: true
+    timeout: 15000
+- assertVisible: "(?s)Tools.*"
+- assertVisible: "(?s)Instructions.*"
+- assertVisible: "(?s)Cron.*"
+- tapOn: "(?s)Tools.*"
+- assertVisible:
+    text: "(?s)Tools.*"
+    selected: true
+- tapOn: "(?s)Instructions.*"
+- assertVisible:
+    text: "(?s)Instructions.*"
+    selected: true
+# The file's text with Edit, or the empty state, or the failure with Retry.
+- extendedWaitUntil:
+    visible: "Edit|Write instructions|Could not load"
+    timeout: 20000
+- tapOn: "(?s)Cron.*"
+- assertVisible:
+    text: "(?s)Cron.*"
+    selected: true
+- takeScreenshot: bot-details-cron
+# Swipe the sheet down to close it (iOS has no back key); the chat is
+# still there.
+- swipe:
+    start: "50%,20%"
+    end: "50%,95%"
+- extendedWaitUntil:
+    visible: "Attach"
+    timeout: 10000

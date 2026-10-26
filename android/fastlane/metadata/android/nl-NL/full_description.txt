@@ -1,0 +1,33 @@
+BELANGRIJK: Pomelu heeft Hermes Agent nodig en werkt niet op zichzelf. Installeer en start eerst Hermes Agent (van Nous Research) op je eigen computer of server en verbind Pomelu daarna ermee. Installatiegids: https://hermes-agent.nousresearch.com
+
+Pomelu is de mobiele app voor Hermes Agent: een onofficiële Android-client voor de opensource AI-agent van Nous Research. Chat waar je ook bent met de AI-bots van je eigen, zelfgehoste Hermes Agent-gateway. Je persoonlijke AI-assistent, je eigen modellen, je eigen server.
+
+Elke bot (Hermes-profiel) heeft één chat, net als een contact in een berichtenapp. Antwoorden verschijnen live en je ziet wat de AI-agent doet terwijl hij werkt: toolaanroepen, vragen en afgeronde taken.
+
+LIVE AI-CHAT
+Antwoorden verschijnen terwijl de agent ze schrijft, met Markdown, tabellen en codeblokken die je met één tik kopieert. Terwijl de agent werkt, zie je welke tools hij gebruikt.
+
+VRAGEN EN GOEDKEURINGEN
+Stelt de agent je een vraag of heeft hij je goedkeuring nodig voor een opdracht, dan antwoord je direct in de chat, vanaf je telefoon.
+
+AFBEELDINGEN, VIDEO, SPRAAK EN BESTANDEN
+Verstuur en ontvang afbeeldingen, video's, spraakberichten en bestanden. Deel een locatie vanaf een kaart, of deel foto's, links en documenten vanuit andere apps direct met een bot.
+
+ÉÉN CHAT PER BOT
+Maak een bot aan en geef hem een naam en een afbeelding: een van 32 personages of je eigen foto. Begin op elk moment een nieuw gesprek met /new; eerdere gesprekken blijven erboven staan.
+
+BOTDETAILS, VAARDIGHEDEN EN GEPLANDE TAKEN
+Bekijk de vaardigheden en tools van een bot, lees en bewerk zijn SOUL.md, en pauzeer, hervat, start of verwijder zijn geplande taken (cron).
+
+GEMAAKT VOOR TELEFOONS, VOUWBARE TOESTELLEN EN TABLETS
+Een zijpaneel op vouwbare toestellen en tablets, ondersteuning voor toetsenbord en muis, bedieningselementen in Liquid Glass en een licht en een donker thema.
+
+BOTSCHERM, VOORLEZEN EN MELDINGEN
+Kijk hoe een bot op zijn eigen bureaublad werkt en neem het over met aanraking en toetsenbord. Laat een antwoord voorlezen met de eigen stem van de bot. Antwoorden en vragen komen binnen als meldingen, ook met het scherm uit, en je bots staan in het deelmenu en in het menu van het app-icoon.
+
+ZELFGEHOST: JOUW SERVER, JOUW DATA
+Pomelu communiceert alleen met de Hermes Agent-gateway die je zelf draait: op je Mac, pc, thuisserver of VPS, in je thuisnetwerk, via een VPN of via internet. Gebruik elk LLM (taalmodel) dat je Hermes Agent ondersteunt. Royan AB verzamelt geen gegevens: geen account, geen analytics, geen advertenties en geen tracking. Je wachtwoord wordt versleuteld opgeslagen met Android Keystore.
+
+De app is in het Engels.
+
+Niet gelieerd aan of goedgekeurd door Nous Research.

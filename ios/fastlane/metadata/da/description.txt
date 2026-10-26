@@ -1,0 +1,30 @@
+VIGTIGT: Pomelu kræver Hermes Agent og virker ikke alene. Installér og kør først Hermes Agent (fra Nous Research) på din egen computer eller server, og forbind derefter Pomelu til den. Installationsvejledning: https://hermes-agent.nousresearch.com
+
+Pomelu er mobilappen til Hermes Agent: en uofficiel iPhone-klient til AI-agenten med åben kildekode fra Nous Research. Chat med AI-bots på din egen selvhostede Hermes Agent-gateway, uanset hvor du er. Din personlige AI-assistent, dine modeller, din server.
+
+Hver bot (Hermes-profil) har én chat, ligesom en kontakt i en beskedapp. Svarene streames live, og du kan se, hvad AI-agenten laver, mens den arbejder: værktøjskald, spørgsmål og fuldførte opgaver.
+
+LIVE AI-CHAT
+Svarene kommer frem, mens agenten skriver dem, med Markdown, tabeller og kodeblokke, som du kopierer med ét tryk. Du kan følge værktøjsaktiviteten, mens agenten arbejder.
+
+SPØRGSMÅL OG GODKENDELSER
+Når agenten stiller dig et spørgsmål eller skal have din godkendelse til en kommando, svarer du direkte i chatten, fra din telefon.
+
+BILLEDER, VIDEO, STEMME OG FILER
+Send og modtag billeder, video, talebeskeder og filer. Del et sted fra et kort, eller del fotos, links og dokumenter fra andre apps direkte til en bot.
+
+ÉN CHAT PER BOT
+Opret en bot, og giv den et navn og et billede: en af 32 figurer eller dit eget foto. Start en ny samtale når som helst med /new; de tidligere bliver stående ovenover.
+
+BOTDETALJER, FÆRDIGHEDER OG PLANLAGTE JOB
+Se en bots færdigheder og værktøjer, læs og redigér dens SOUL.md, og sæt dens planlagte job (cron) på pause, genoptag, kør eller slet dem.
+
+LAVET TIL ALLE IPHONES
+Layout med to ruder på iPhone Duo, Liquid Glass-knapper og både et lyst og et mørkt tema.
+
+SELVHOSTET: DIN SERVER, DINE DATA
+Pomelu taler kun med den Hermes Agent-gateway, du selv kører: på din Mac, pc, hjemmeserver eller VPS, på dit hjemmenetværk, via VPN eller over internettet. Brug en hvilken som helst LLM (sprogmodel), som din Hermes Agent understøtter. Royan AB indsamler ingen data: ingen konto, ingen analyse, ingen reklamer og ingen sporing. Din adgangskode bliver i nøgleringen i iOS.
+
+Appen er på engelsk.
+
+Ikke tilknyttet eller godkendt af Nous Research.

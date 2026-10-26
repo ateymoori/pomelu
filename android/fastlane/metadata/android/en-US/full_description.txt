@@ -1,0 +1,31 @@
+IMPORTANT: Pomelu needs Hermes Agent and does not work on its own. First install and run Hermes Agent (by Nous Research) on your own computer or server, then connect Pomelu to it. Install guide: https://hermes-agent.nousresearch.com
+
+Pomelu is the mobile app for Hermes Agent: an unofficial Android client for the open-source AI agent by Nous Research. Chat with the AI bots of your own self-hosted Hermes Agent gateway, wherever you are. Your personal AI assistant, your models, your server.
+
+Each bot (Hermes profile) has one chat, like a contact in a messenger. Answers stream in live, and you see what the AI agent does while it works: tool calls, questions and finished tasks.
+
+LIVE AI CHAT
+Answers stream in as the agent writes them, with Markdown, tables and code blocks you can copy in one tap. Tool activity shows while the agent works.
+
+QUESTIONS AND APPROVALS
+When the agent asks you a question or needs your approval for a command, you answer it right in the chat, from your phone.
+
+IMAGES, VIDEO, VOICE AND FILES
+Send and receive images, video, voice messages and files. Share a place from a map, or share photos, links and documents from other apps straight into a bot.
+
+ONE CHAT PER BOT
+Create a bot, and give it a name and a picture: one of 32 characters, or your own photo. Start a new conversation at any time with /new; earlier ones stay above it.
+
+BOT DETAILS, SKILLS AND SCHEDULED JOBS
+See a bot's skills and tools, read and edit its SOUL.md, and pause, resume, run or delete its scheduled (cron) jobs.
+
+MADE FOR PHONES, FOLDABLES AND TABLETS
+A side pane on foldables and tablets, keyboard and mouse support, Liquid Glass controls, and a light and a dark theme.
+
+BOT SCREEN, READ ALOUD AND NOTIFICATIONS
+Watch a bot work on its own desktop, and take over with touch and keyboard. Have a reply read aloud in the bot's own voice. Replies and questions arrive as notifications, even with the screen off, and your bots sit in the share menu and the app icon's menu.
+
+SELF-HOSTED: YOUR SERVER, YOUR DATA
+Pomelu talks only to the Hermes Agent gateway that you run: on your Mac, PC, home server or VPS, on your home network, over a VPN or on the internet. Use any LLM that your Hermes Agent supports. Royan AB collects no data: no account, no analytics, no ads and no tracking. Your password is stored encrypted with the Android Keystore.
+
+Not affiliated with or endorsed by Nous Research.

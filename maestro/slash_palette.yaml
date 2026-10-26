@@ -1,0 +1,42 @@
+# Typing "/" docks the slash palette with exactly four commands, and a prefix
+# filters it. Nothing is run: never tap /restart or /update here, they restart
+# or update the real gateway. Expects a configured app (run smoke.yaml first).
+appId: se.royan.pomelu
+---
+- launchApp
+- extendedWaitUntil:
+    visible: "Attach"
+    timeout: 30000
+# Let a cold start settle: taps during first-load work can be lost.
+- waitForAnimationToEnd:
+    timeout: 15000
+# The composer field by its test id (its hint is gone under a draft).
+- tapOn:
+    id: "composer"
+# Start from an empty composer: drafts survive restarts.
+- repeat:
+    times: 40
+    commands:
+      - pressKey: Backspace
+- inputText: "/"
+# Each row is one node: the command over its description.
+- assertVisible: "(?s)/new.*"
+- assertVisible: "(?s)/restart.*"
+- assertVisible: "(?s)/update.*"
+- assertVisible: "(?s)/compact.*"
+- assertNotVisible: "No matching command"
+- takeScreenshot: slash-palette
+# A prefix keeps the commands that start with it.
+- inputText: "c"
+- assertVisible: "(?s)/compact.*"
+- assertNotVisible: "(?s)/new.*"
+- assertNotVisible: "(?s)/restart.*"
+- assertNotVisible: "(?s)/update.*"
+# A word that is no command says so.
+- inputText: "x"
+- assertVisible: "No matching command"
+# Leave the composer empty.
+- repeat:
+    times: 40
+    commands:
+      - pressKey: Backspace

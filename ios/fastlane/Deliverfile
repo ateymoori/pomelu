@@ -1,0 +1,7 @@
+# App Store text, screenshots and review details: `fastlane metadata`.
+app_version('1.0.0')
+platform('ios')
+app_review_information(
+  demo_user: ENV.fetch('POMELU_REVIEW_USER', ''),
+  demo_password: ENV.fetch('POMELU_REVIEW_PASSWORD', ''),
+)

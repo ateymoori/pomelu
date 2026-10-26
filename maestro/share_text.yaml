@@ -1,0 +1,18 @@
+# A plain-text share opens the target picker; picking a bot seeds the composer.
+# Trigger the share first (see maestro/README.md).
+#
+# The picker rows have no stable id (the app sets none), so the bot is chosen
+# by its display name. BOT defaults to "default", the gateway's default profile
+# as a gateway with no bot titles shows it; pass the display name of a bot of
+# yours with `-e BOT="<name>"`.
+appId: se.royan.pomelu
+---
+- extendedWaitUntil:
+    visible: "(?s)Send to.*"
+    timeout: 20000
+- tapOn:
+    text: "(?s)${BOT || 'default'}.*"
+# The composer may hold an earlier draft: the shared words are added to it.
+- extendedWaitUntil:
+    visible: "(?s).*hello_share.*"
+    timeout: 15000

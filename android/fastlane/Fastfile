@@ -1,0 +1,41 @@
+# Pomelu Google Play lanes; run from android/ (`cd android && fastlane <lane>`).
+# Auth: the service account key in Appfile. Signing: android/key.properties.
+default_platform(:android)
+
+ROOT = File.expand_path('../..')
+AAB = "#{ROOT}/build/app/outputs/bundle/release/app-release.aab"
+
+platform :android do
+  desc 'Release AAB; keep build/symbols for crash stacks'
+  lane :build do
+    Dir.chdir(ROOT) do
+      sh('flutter', 'build', 'appbundle', '--release', '--obfuscate',
+         '--split-debug-info=build/symbols')
+    end
+  end
+
+  # A draft until the app's first review passes: Play refuses any other
+  # release status for an app that was never published.
+  desc 'Build and upload to the closed test (bump the build number in pubspec first)'
+  lane :beta do
+    build
+    upload_to_play_store(
+      track: 'alpha',
+      aab: AAB,
+      release_status: 'draft',
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+    )
+  end
+
+  desc 'Push store text, icon, feature graphic and screenshots'
+  lane :metadata do
+    upload_to_play_store(
+      skip_upload_apk: true,
+      skip_upload_aab: true,
+      skip_upload_changelogs: true,
+    )
+  end
+end

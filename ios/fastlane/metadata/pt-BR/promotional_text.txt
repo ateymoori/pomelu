@@ -1,0 +1,1 @@
+Requer seu próprio Hermes Agent. Converse com os bots dele: respostas ao vivo, atividade de ferramentas, aprovações, voz e arquivos, em um chat por bot.

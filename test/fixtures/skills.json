@@ -1,0 +1,10 @@
+[
+  {"name": "plan", "description": "Plan mode: inspect context, write a plan, do not execute.", "category": "", "enabled": true, "usage": 12, "provenance": "bundled"},
+  {"name": "github-pr-workflow", "description": "Full pull-request lifecycle: branch, commit, open, review, merge.", "category": "github", "enabled": true, "usage": 3, "provenance": "bundled"},
+  {"name": "github-issues", "description": "Create, triage and close GitHub issues.", "category": "github", "enabled": false, "usage": 0, "provenance": "bundled"},
+  {"name": "apple-notes", "description": "Manage Apple Notes via memo CLI: create, search, edit.", "category": "apple", "enabled": false, "usage": 0, "provenance": "bundled"},
+  {"name": "Systematic-Debugging", "description": "Four-phase root cause debugging.", "category": "software-development", "enabled": true, "usage": 7, "provenance": "hub"},
+  {"name": "daily-report", "description": null, "category": "software-development", "enabled": true, "usage": 40, "provenance": "agent"},
+  {"name": "shared-notes", "description": "From an external skills directory.", "category": "productivity", "enabled": true, "usage": 1, "provenance": "external"},
+  {"name": "mystery", "description": "A source this app does not know.", "category": "productivity", "enabled": 1, "usage": "2", "provenance": "teleported"}
+]

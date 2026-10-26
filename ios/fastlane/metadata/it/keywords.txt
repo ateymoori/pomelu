@@ -1,0 +1,1 @@
+IA,chatbot,llm,self-hosted,bot,automazione,locale,server,homelab,mcp,strumenti,modello,intelligenza

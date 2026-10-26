@@ -1,0 +1,30 @@
+VIKTIGT: Pomelu kräver Hermes Agent och fungerar inte på egen hand. Installera och kör först Hermes Agent (från Nous Research) på din egen dator eller server, och anslut sedan Pomelu till den. Installationsguide: https://hermes-agent.nousresearch.com
+
+Pomelu är mobilappen för Hermes Agent: en inofficiell iPhone-klient för AI-agenten med öppen källkod från Nous Research. Chatta med AI-botarna i din egen självhostade Hermes Agent-gateway, var du än är. Din personliga AI-assistent, dina modeller, din server.
+
+Varje bot (Hermes-profil) har en egen chatt, precis som en kontakt i en meddelandeapp. Svaren strömmas in live och du ser vad AI-agenten gör medan den arbetar: verktygsanrop, frågor och slutförda uppgifter.
+
+AI-CHATT I REALTID
+Svaren dyker upp medan agenten skriver dem, med Markdown, tabeller och kodblock som du kopierar med ett tryck. Du ser verktygsaktiviteten medan agenten arbetar.
+
+FRÅGOR OCH GODKÄNNANDEN
+När agenten ställer en fråga eller behöver ditt godkännande för ett kommando svarar du direkt i chatten, från telefonen.
+
+BILDER, VIDEO, RÖST OCH FILER
+Skicka och ta emot bilder, video, röstmeddelanden och filer. Dela en plats från en karta, eller dela foton, länkar och dokument från andra appar direkt till en bot.
+
+EN CHATT PER BOT
+Skapa en bot och ge den ett namn och en bild: en av 32 figurer eller ett eget foto. Starta en ny konversation när du vill med /new; tidigare konversationer finns kvar ovanför.
+
+BOTINFORMATION, FÄRDIGHETER OCH SCHEMALAGDA JOBB
+Se en bots färdigheter och verktyg, läs och redigera dess SOUL.md, och pausa, återuppta, kör eller radera dess schemalagda jobb (cron).
+
+GJORD FÖR VARJE IPHONE
+Tvåpanelslayout på iPhone Duo, Liquid Glass-kontroller samt ett ljust och ett mörkt tema.
+
+SJÄLVHOSTAT: DIN SERVER, DINA DATA
+Pomelu kommunicerar bara med den Hermes Agent-gateway som du själv kör: på din Mac, pc, hemserver eller VPS, i ditt hemnätverk, via VPN eller över internet. Använd vilken LLM (språkmodell) som helst som din Hermes Agent stöder. Royan AB samlar inte in några data: inget konto, ingen analys, inga annonser och ingen spårning. Ditt lösenord stannar i nyckelringen i iOS.
+
+Appen är på engelska.
+
+Inte ansluten till eller godkänd av Nous Research.

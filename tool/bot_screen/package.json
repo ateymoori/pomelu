@@ -1,0 +1,13 @@
+{
+  "name": "pomelu-bot-screen",
+  "private": true,
+  "description": "Builds assets/bot_screen/screen.html (noVNC in Pomelu's web view).",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "devDependencies": {
+    "@novnc/novnc": "1.7.0",
+    "esbuild": "0.25.12"
+  }
+}

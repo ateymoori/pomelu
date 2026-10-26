@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Direct Share: each bot's shortcut (`BotShortcuts.kt`, this category)
+     shows in the share sheet's top row. The types are those of
+     MainActivity's ACTION_SEND filter; the share then names its bot in
+     EXTRA_SHORTCUT_ID. -->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <share-target android:targetClass="se.royan.pomelu.MainActivity">
+        <data android:mimeType="text/*" />
+        <data android:mimeType="image/*" />
+        <data android:mimeType="video/*" />
+        <data android:mimeType="audio/*" />
+        <data android:mimeType="application/*" />
+        <category android:name="se.royan.pomelu.category.BOT_SHARE" />
+    </share-target>
+</shortcuts>

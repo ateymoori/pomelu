@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The gateway is the user's own server: a LAN, Tailscale or tunnel host,
+     often over plain http:// and sometimes with a certificate from the
+     user's own CA. So:
+     - cleartext is allowed for every host; the app warns in Settings when
+       the gateway URL is http://;
+     - certificates are checked against the system CAs and the CAs the user
+       installed on the phone (Settings > Security > Encryption &
+       credentials).
+     The trust anchors apply where the platform TLS stack is used. Dart's
+     own sockets (dio, the WebSocket) do not read this file. -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

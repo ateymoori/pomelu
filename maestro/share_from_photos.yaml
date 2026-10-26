@@ -1,0 +1,25 @@
+# iOS: shares the first picture in Photos to this app through the share
+# extension: the trigger for share_image.yaml on the simulator. The extension
+# copies the picture into the App Group inbox and wakes the app.
+appId: com.apple.mobileslideshow
+---
+- launchApp
+- tapOn:
+    text: "Continue"
+    optional: true
+- tapOn:
+    text: "Not Now"
+    optional: true
+# The first tile of the library grid.
+- tapOn:
+    point: "16%,22%"
+# A tap in the photo view can hide its bars: bring them back.
+- runFlow:
+    when:
+      notVisible: "Share"
+    commands:
+      - tapOn:
+          point: "50%,50%"
+- tapOn: "Share"
+- waitForAnimationToEnd
+- tapOn: "Pomelu"

@@ -1,0 +1,261 @@
+{
+ "jsonrpc": "2.0",
+ "id": 1,
+ "result": {
+  "profiles": [
+   {
+    "name": "default",
+    "path": "/home/user/.hermes",
+    "is_default": true,
+    "model": "claude-fable-5-1",
+    "provider": "anthropic",
+    "description": "General assistant with the full toolset",
+    "display_name": "",
+    "skill_count": 94,
+    "last_session": {
+     "id": "20260902_110752_5e49d213",
+     "title": "Say hello",
+     "preview": "Hello! How can I help today?",
+     "started_at": 1788340072.321952,
+     "last_active": 1788340237.042965,
+     "message_count": 9
+    },
+    "worker_session": null,
+    "canonical_session": {
+     "id": "20260901_130132_f4e356",
+     "resolved_id": "20260901_130132_f4e356",
+     "root_title": "Bot Chat",
+     "title": "Bot Chat",
+     "preview": "Hi, I am Default. What do you want to do?",
+     "started_at": 1788260492.349907,
+     "last_active": 1788276247.608326,
+     "message_count": 83
+    },
+    "ui_meta_revisions": {
+     "hermes-bots": 1
+    },
+    "ui_meta": {
+     "hermes-bots": {
+      "shape": "blob",
+      "color": "hsl(150 68% 58%)",
+      "imageKind": "shape",
+      "title": "General",
+      "custom": true
+     }
+    },
+    "has_avatar": true
+   },
+   {
+    "name": "atlas",
+    "path": "/home/user/.hermes/profiles/atlas",
+    "is_default": false,
+    "model": "claude-opus-5",
+    "provider": "anthropic",
+    "description": "Research agent: web research and long reports",
+    "display_name": "",
+    "skill_count": 18,
+    "last_session": {
+     "id": "20260902_113205_0a4055fb",
+     "title": "Name and OK reply",
+     "preview": "Atlas OK",
+     "started_at": 1788341525.5737212,
+     "last_active": 1788341682.042384,
+     "message_count": 24
+    },
+    "worker_session": null,
+    "canonical_session": {
+     "id": "20260901_130128_f3c41d",
+     "resolved_id": "20260901_130128_f3c41d",
+     "root_title": "Bot Chat",
+     "title": "Bot Chat",
+     "preview": "",
+     "started_at": 1788260488.259718,
+     "last_active": 1788260488.259718,
+     "message_count": 0
+    },
+    "ui_meta_revisions": {
+     "hermes-bots": 1
+    },
+    "ui_meta": {
+     "hermes-bots": {
+      "shape": "blobatar",
+      "color": "hsl(84 68% 58%)",
+      "imageKind": "shape",
+      "title": "",
+      "custom": true
+     }
+    },
+    "has_avatar": true
+   },
+   {
+    "name": "nova",
+    "path": "/home/user/.hermes/profiles/nova",
+    "is_default": false,
+    "model": "claude-opus-5",
+    "provider": "anthropic",
+    "description": "Notes agent: short answers and reminders",
+    "display_name": "",
+    "skill_count": 5,
+    "last_session": {
+     "id": "20260901_214133_b63848",
+     "title": "Name and OK reply",
+     "preview": "Nova OK",
+     "started_at": 1788291695.143441,
+     "last_active": 1788291698.434437,
+     "message_count": 2
+    },
+    "worker_session": null,
+    "canonical_session": {
+     "id": "20260901_131113_0b03de",
+     "resolved_id": "20260901_131113_0b03de",
+     "root_title": "Bot Chat",
+     "title": "Bot Chat",
+     "preview": "Hi, I am Nova. What do you want to do?",
+     "started_at": 1788261073.525839,
+     "last_active": 1788262714.687131,
+     "message_count": 8
+    },
+    "ui_meta_revisions": {
+     "hermes-bots": 1
+    },
+    "ui_meta": {
+     "hermes-bots": {
+      "shape": "squircle",
+      "color": "hsl(150 68% 58%)",
+      "imageKind": "shape",
+      "title": "",
+      "custom": true
+     }
+    },
+    "has_avatar": true
+   },
+   {
+    "name": "scout",
+    "path": "/home/user/.hermes/profiles/scout",
+    "is_default": false,
+    "model": "claude-opus-5",
+    "provider": "anthropic",
+    "description": "Media agent: films, music and downloads",
+    "display_name": "",
+    "skill_count": 2,
+    "last_session": {
+     "id": "20260901_214211_dead06",
+     "title": "Name and OK reply",
+     "preview": "Scout OK",
+     "started_at": 1788291732.844202,
+     "last_active": 1788291736.335432,
+     "message_count": 2
+    },
+    "worker_session": null,
+    "canonical_session": {
+     "id": "20260901_160213_e71e9f",
+     "resolved_id": "20260901_160213_e71e9f",
+     "root_title": "Bot Chat",
+     "title": "Bot Chat",
+     "preview": "",
+     "started_at": 1788271333.631758,
+     "last_active": 1788271333.631758,
+     "message_count": 0
+    },
+    "ui_meta_revisions": {
+     "hermes-bots": 1
+    },
+    "ui_meta": {
+     "hermes-bots": {
+      "shape": "drop",
+      "color": "hsl(0 68% 58%)",
+      "imageKind": "shape",
+      "title": "",
+      "custom": true
+     }
+    },
+    "has_avatar": true
+   },
+   {
+    "name": "echo",
+    "path": "/home/user/.hermes/profiles/echo",
+    "is_default": false,
+    "model": "mistral-medium-2604",
+    "provider": "mistral",
+    "description": "Writing agent: stories and drafts, no tools",
+    "display_name": "",
+    "skill_count": 1,
+    "last_session": {
+     "id": "20260901_214217_ab0583",
+     "title": "Name and OK reply",
+     "preview": "Echo OK",
+     "started_at": 1788291738.152218,
+     "last_active": 1788291740.2096782,
+     "message_count": 2
+    },
+    "worker_session": null,
+    "canonical_session": {
+     "id": "20260901_135119_6944bd",
+     "resolved_id": "20260901_135119_6944bd",
+     "root_title": "Bot Chat",
+     "title": "Bot Chat",
+     "preview": "Hi, I am Echo. What do you want to do?",
+     "started_at": 1788263479.92066,
+     "last_active": 1788269983.8802931,
+     "message_count": 5
+    },
+    "ui_meta_revisions": {
+     "hermes-bots": 1
+    },
+    "ui_meta": {
+     "hermes-bots": {
+      "shape": "hexagon",
+      "color": "hsl(0 68% 58%)",
+      "imageKind": "shape",
+      "title": "",
+      "custom": true
+     }
+    },
+    "has_avatar": true
+   },
+   {
+    "name": "iris",
+    "path": "/home/user/.hermes/profiles/iris",
+    "is_default": false,
+    "model": "claude-opus-5",
+    "provider": "anthropic",
+    "description": "Social agent: posts, replies and playlists",
+    "display_name": "",
+    "skill_count": 7,
+    "last_session": {
+     "id": "20260901_214221_175e7b",
+     "title": "Name and OK reply",
+     "preview": "Iris OK",
+     "started_at": 1788291742.004967,
+     "last_active": 1788291748.769591,
+     "message_count": 2
+    },
+    "worker_session": null,
+    "canonical_session": {
+     "id": "20260901_183823_441615",
+     "resolved_id": "20260901_183823_441615",
+     "root_title": "Bot Chat",
+     "title": "Bot Chat",
+     "preview": "",
+     "started_at": 1788280703.820749,
+     "last_active": 1788280703.820749,
+     "message_count": 0
+    },
+    "ui_meta_revisions": {
+     "hermes-bots": 1
+    },
+    "ui_meta": {
+     "hermes-bots": {
+      "shape": "triangle",
+      "color": "hsl(270 68% 58%)",
+      "imageKind": "shape",
+      "title": "",
+      "custom": true
+     }
+    },
+    "has_avatar": true
+   }
+  ],
+  "bot_mode_protocol": true
+ }
+}

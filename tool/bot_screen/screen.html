@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<style>
+  html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: transparent;
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #stage, #poster {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+  #stage {
+    transform-origin: 0 0;
+    will-change: transform;
+  }
+  #poster {
+    object-fit: contain;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--motion, 0ms) ease-out;
+  }
+  #poster.shown {
+    opacity: 1;
+  }
+  #stage.control canvas {
+    box-shadow: 0 0 0 var(--ring) var(--accent);
+  }
+</style>
+</head>
+<body>
+<img id="poster" alt="">
+<div id="stage"></div>
+<script type="module">/*SCREEN_JS*/</script>
+</body>
+</html>

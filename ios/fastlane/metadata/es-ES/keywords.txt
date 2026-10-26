@@ -1,0 +1,1 @@
+agente,IA,chatbot,llm,autoalojado,bots,servidor,local,automatización,modelo,mcp,homelab

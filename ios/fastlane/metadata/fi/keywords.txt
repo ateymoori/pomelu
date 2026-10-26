@@ -1,0 +1,1 @@
+tekoäly,chatbot,keskustelubotti,kielimalli,llm,botti,automaatio,paikallinen,palvelin,homelab,mcp

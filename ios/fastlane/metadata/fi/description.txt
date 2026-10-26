@@ -1,0 +1,30 @@
+TÄRKEÄÄ: Pomelu vaatii Hermes Agentin eikä toimi yksinään. Asenna ja käynnistä ensin Nous Researchin Hermes Agent omalle tietokoneellesi tai palvelimellesi ja yhdistä sitten Pomelu siihen. Asennusohje: https://hermes-agent.nousresearch.com
+
+Pomelu on Hermes Agentin mobiilisovellus: epävirallinen iPhone-sovellus Nous Researchin avoimen lähdekoodin tekoälyagentille. Keskustele oman, itse ylläpitämäsi Hermes Agent -yhdyskäytävän tekoälybottien kanssa missä tahansa. Oma henkilökohtainen tekoälyavustajasi, omat mallisi, oma palvelimesi.
+
+Jokaisella botilla (Hermes-profiililla) on yksi keskustelu, kuin yhteystiedolla viestisovelluksessa. Vastaukset virtaavat näytölle reaaliajassa, ja näet, mitä tekoälyagentti tekee työskennellessään: työkalukutsut, kysymykset ja valmiit tehtävät.
+
+TEKOÄLYCHAT REAALIAJASSA
+Vastaukset ilmestyvät sitä mukaa kuin agentti kirjoittaa niitä, ja niissä on Markdown-muotoilua, taulukoita ja koodilohkoja, jotka kopioit yhdellä napautuksella. Työkalujen käyttö näkyy, kun agentti työskentelee.
+
+KYSYMYKSET JA HYVÄKSYNNÄT
+Kun agentti kysyy sinulta jotain tai tarvitsee hyväksyntäsi komennolle, vastaat suoraan keskustelussa puhelimellasi.
+
+KUVAT, VIDEO, ÄÄNI JA TIEDOSTOT
+Lähetä ja vastaanota kuvia, videoita, ääniviestejä ja tiedostoja. Jaa sijainti kartalta tai jaa kuvia, linkkejä ja dokumentteja muista sovelluksista suoraan botille.
+
+YKSI KESKUSTELU BOTTIA KOHDEN
+Luo botti ja anna sille nimi ja kuva: yksi 32 hahmosta tai oma valokuvasi. Aloita uusi keskustelu milloin tahansa komennolla /new; aiemmat jäävät sen yläpuolelle.
+
+BOTIN TIEDOT, TAIDOT JA AJASTETUT TEHTÄVÄT
+Näe botin taidot ja työkalut, lue ja muokkaa sen SOUL.md-tiedostoa sekä keskeytä, jatka, suorita tai poista sen ajastettuja tehtäviä (cron).
+
+TEHTY JOKAISELLE IPHONELLE
+Kaksipaneelinen asettelu iPhone Duossa, Liquid Glass -säätimet sekä vaalea ja tumma teema.
+
+ITSE YLLÄPIDETTY: OMA PALVELIN, OMAT TIEDOT
+Pomelu on yhteydessä vain itse ylläpitämääsi Hermes Agent -yhdyskäytävään: Macillasi, PC:lläsi, kotipalvelimellasi tai VPS:lläsi, kotiverkossa, VPN:n kautta tai internetin yli. Käytä mitä tahansa kielimallia (LLM), jota Hermes Agent tukee. Royan AB ei kerää mitään tietoja: ei tiliä, ei analytiikkaa, ei mainoksia eikä seurantaa. Salasanasi pysyy iOS:n avainnipussa.
+
+Sovellus on englanninkielinen.
+
+Ei Nous Researchin hyväksymä eikä siihen sidoksissa.

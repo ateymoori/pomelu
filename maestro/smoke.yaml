@@ -1,0 +1,40 @@
+# Connect, open the default bot (or BOT), send a prompt, wait for the streamed
+# reply.
+appId: se.royan.pomelu
+env:
+  URL: ${URL}
+---
+- runFlow: connect.yaml
+- extendedWaitUntil:
+    visible:
+      text: "Attach"
+    timeout: 30000
+# Optional BOT: send to that bot instead of the one that opens (a bot whose
+# chat another gateway process holds cannot take a turn here).
+- runFlow:
+    when:
+      true: ${BOT != undefined && BOT != ''}
+    commands:
+      - runFlow:
+          when:
+            visible: "Open menu"
+          commands:
+            - tapOn: "Open menu"
+      - tapOn: "(?s)${BOT}.*"
+      - extendedWaitUntil:
+          visible: "Attach"
+          timeout: 30000
+# The composer field by its test id (its hint is gone under a draft).
+- tapOn:
+    id: "composer"
+- waitForAnimationToEnd
+- inputText: "Reply with only the word PONG."
+- waitForAnimationToEnd
+- tapOn: "Send"
+# A node that starts with "PONG": the reply (iOS adds its clock to the node),
+# not the prompt, which only contains the word.
+- extendedWaitUntil:
+    visible:
+      text: "(?s)PONG.*"
+    timeout: 90000
+- takeScreenshot: smoke-reply

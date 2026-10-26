@@ -1,0 +1,27 @@
+{
+ "jsonrpc": "2.0",
+ "id": 6,
+ "result": {
+  "session_id": "5691ff8d",
+  "resumed": "20260901_214133_b63848",
+  "message_count": 2,
+  "messages": [],
+  "hydrating": true,
+  "info": {
+   "cwd": "/home/user/.hermes",
+   "branch": "",
+   "project": null,
+   "model": "claude-opus-5",
+   "tools": {},
+   "skills": {},
+   "lazy": true,
+   "desktop_contract": 6,
+   "profile_name": "nova"
+  },
+  "inflight": null,
+  "running": false,
+  "session_key": "20260901_214133_b63848",
+  "started_at": 1788353580.462558,
+  "status": "resuming"
+ }
+}

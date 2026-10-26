@@ -1,0 +1,21 @@
+{
+ "jsonrpc": "2.0",
+ "id": 7,
+ "result": {
+  "count": 2,
+  "messages": [
+   {
+    "role": "user",
+    "text": "Reply in one line: your agent name, then the word OK.",
+    "timestamp": 1788291694.594215,
+    "row_id": 65
+   },
+   {
+    "role": "assistant",
+    "text": "Nova \u2014 OK",
+    "timestamp": 1788291698.434437,
+    "row_id": 66
+   }
+  ]
+ }
+}

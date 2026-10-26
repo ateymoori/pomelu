@@ -1,0 +1,1 @@
+chatbot,czatbot,SI,llm,self-hosted,boty,automatyzacja,lokalny,serwer,homelab,mcp,narzędzia,model

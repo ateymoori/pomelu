@@ -1,0 +1,30 @@
+WICHTIG: Pomelu benötigt Hermes Agent und funktioniert nicht eigenständig. Installiere und starte zuerst Hermes Agent (von Nous Research) auf deinem eigenen Computer oder Server und verbinde Pomelu dann damit. Installationsanleitung: https://hermes-agent.nousresearch.com
+
+Pomelu ist die mobile App für Hermes Agent: ein inoffizieller iPhone-Client für den Open-Source-KI-Agenten von Nous Research. Chatte mit den KI-Bots auf deinem eigenen, selbst gehosteten Gateway von Hermes Agent, wo immer du bist. Dein persönlicher KI-Assistent, deine Modelle, dein Server.
+
+Jeder Bot (ein Hermes-Profil) hat genau einen Chat, wie ein Kontakt in einem Messenger. Antworten erscheinen live, und du siehst, was der KI-Agent gerade tut: Tool-Aufrufe, Rückfragen und erledigte Aufgaben.
+
+LIVE-KI-CHAT
+Antworten erscheinen, während der Agent sie schreibt, mit Markdown, Tabellen und Codeblöcken, die du mit einem Tippen kopierst. Während der Agent arbeitet, siehst du seine Tool-Aktivität.
+
+FRAGEN UND FREIGABEN
+Wenn der Agent dir eine Frage stellt oder deine Freigabe für einen Befehl braucht, antwortest du direkt im Chat, vom Handy aus.
+
+BILDER, VIDEO, SPRACHE UND DATEIEN
+Sende und empfange Bilder, Videos, Sprachnachrichten und Dateien. Teile einen Ort von einer Karte oder teile Fotos, Links und Dokumente aus anderen Apps direkt mit einem Bot.
+
+EIN CHAT PRO BOT
+Erstelle einen Bot und gib ihm einen Namen und ein Bild: eine von 32 Figuren oder dein eigenes Foto. Starte jederzeit mit /new eine neue Unterhaltung; frühere bleiben darüber erhalten.
+
+BOT-DETAILS, SKILLS UND GEPLANTE JOBS
+Sieh dir die Skills und Tools eines Bots an und lies und bearbeite seine SOUL.md. Seine geplanten Jobs (Cron) kannst du pausieren, fortsetzen, sofort ausführen oder löschen.
+
+FÜR JEDES IPHONE GEMACHT
+Zweispaltiges Layout auf dem iPhone Duo, Bedienelemente in Liquid Glass sowie ein helles und ein dunkles Design.
+
+SELBST GEHOSTET: DEIN SERVER, DEINE DATEN
+Pomelu kommuniziert nur mit dem Gateway von Hermes Agent, das du selbst betreibst – auf deinem Mac, PC, Heimserver oder VPS, im Heimnetz, über ein VPN oder im Internet. Nutze jedes LLM (Sprachmodell), das dein Hermes Agent unterstützt. Royan AB erhebt keine Daten: kein Konto, keine Analyse, keine Werbung und kein Tracking. Dein Passwort bleibt im iOS-Schlüsselbund.
+
+Die App ist auf Englisch.
+
+Weder mit Nous Research verbunden noch von Nous Research unterstützt.

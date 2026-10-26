@@ -1,0 +1,45 @@
+name: Bug report
+description: Something in Pomelu does not work as it should.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what you saw.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps
+      placeholder: |
+        1. Open the chat of a bot
+        2. Send a photo
+        3. …
+    validations:
+      required: true
+  - type: input
+    id: app
+    attributes:
+      label: Pomelu version
+      description: Settings → About.
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Device and OS
+      placeholder: Galaxy Z Fold6, Android 16 / iPhone 17, iOS 27.1
+    validations:
+      required: true
+  - type: input
+    id: gateway
+    attributes:
+      label: Hermes Agent version
+      description: "`hermes --version`"
+  - type: textarea
+    id: extra
+    attributes:
+      label: Screenshots or logs
+      description: Remove passwords, tokens and private chat text first.

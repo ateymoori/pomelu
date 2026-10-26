@@ -1,0 +1,4 @@
+package_name('se.royan.pomelu')
+# The Play API service account key (Play Console → Users and permissions);
+# path in PLAY_JSON_KEY (environment or android/fastlane/.env); never in git.
+json_key_file(ENV.fetch('PLAY_JSON_KEY'))

@@ -1,0 +1,19 @@
+# Shares picture.png from the system Files app to this app: the trigger for
+# share_image.yaml. A share from adb (`am start ... --grant-read-uri-permission`)
+# no longer works: the shell cannot grant a media or document URI on Android 17.
+# Put the picture in Pictures and open that folder first (maestro/README.md).
+appId: com.google.android.documentsui
+---
+- longPressOn: "picture.png"
+- tapOn:
+    id: ".*action_menu_share"
+    optional: true
+- runFlow:
+    when:
+      notVisible: "Pomelu"
+    commands:
+      - tapOn: "Share"
+- extendedWaitUntil:
+    visible: "Pomelu"
+    timeout: 10000
+- tapOn: "Pomelu"

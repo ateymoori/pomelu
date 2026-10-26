@@ -1,0 +1,30 @@
+VIKTIG: Pomelu krever Hermes Agent og fungerer ikke alene. Installer og kjør først Hermes Agent (fra Nous Research) på din egen datamaskin eller server, og koble deretter Pomelu til den. Installasjonsveiledning: https://hermes-agent.nousresearch.com
+
+Pomelu er mobilappen for Hermes Agent: en uoffisiell iPhone-klient for KI-agenten med åpen kildekode fra Nous Research. Chat med KI-botene på din egen selvhostede Hermes Agent-gateway, uansett hvor du er. Din personlige KI-assistent, dine modeller, din server.
+
+Hver bot (Hermes-profil) har én chat, akkurat som en kontakt i en meldingsapp. Svarene strømmes inn direkte, og du ser hva KI-agenten gjør mens den jobber: verktøykall, spørsmål og fullførte oppgaver.
+
+KI-CHAT I SANNTID
+Svarene kommer inn mens agenten skriver dem, med Markdown, tabeller og kodeblokker du kopierer med ett trykk. Du ser verktøyaktiviteten mens agenten jobber.
+
+SPØRSMÅL OG GODKJENNINGER
+Når agenten stiller deg et spørsmål eller trenger godkjenning for en kommando, svarer du rett i chatten, fra telefonen.
+
+BILDER, VIDEO, TALE OG FILER
+Send og motta bilder, video, talemeldinger og filer. Del et sted fra et kart, eller del bilder, lenker og dokumenter fra andre apper rett til en bot.
+
+ÉN CHAT PER BOT
+Opprett en bot, og gi den et navn og et bilde: en av 32 figurer eller ditt eget foto. Start en ny samtale når du vil med /new; de tidligere blir liggende over den.
+
+BOTDETALJER, FERDIGHETER OG PLANLAGTE JOBBER
+Se ferdighetene og verktøyene til en bot, les og rediger SOUL.md-filen dens, og sett de planlagte jobbene (cron) på pause, gjenoppta, kjør eller slett dem.
+
+LAGET FOR ALLE IPHONE-MODELLER
+Oppsett med to paneler på iPhone Duo, Liquid Glass-kontroller og både lyst og mørkt tema.
+
+SELVHOSTET: DIN SERVER, DINE DATA
+Pomelu snakker bare med Hermes Agent-gatewayen du selv kjører: på din Mac, PC, hjemmeserver eller VPS, på hjemmenettverket, via VPN eller over internett. Bruk hvilken som helst LLM (språkmodell) som Hermes Agent støtter. Royan AB samler ikke inn data: ingen konto, ingen analyse, ingen reklame og ingen sporing. Passordet ditt blir værende i nøkkelringen i iOS.
+
+Appen er på engelsk.
+
+Ikke tilknyttet eller godkjent av Nous Research.

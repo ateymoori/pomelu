@@ -1,0 +1,48 @@
+# The attach sheet offers Location; the map page opens and closes without
+# sharing anything. Expects a configured app (run smoke.yaml first). The
+# location permission is granted up front so no system dialog gets in the way.
+appId: se.royan.pomelu
+---
+# Maestro names the grant per platform: iOS rejects `allow`.
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - launchApp:
+          permissions:
+            location: inuse
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - launchApp:
+          permissions:
+            location: allow
+- extendedWaitUntil:
+    visible: "Attach"
+    timeout: 30000
+# Let a cold start settle: taps during first-load work can be lost.
+- waitForAnimationToEnd:
+    timeout: 15000
+- tapOn: "Attach"
+- extendedWaitUntil:
+    visible: "Location"
+    timeout: 15000
+- tapOn: "Location"
+# Google's "Location Accuracy" prompt may cover the map on emulators.
+- runFlow:
+    when:
+      visible: "No thanks"
+    commands:
+      - tapOn: "No thanks"
+- extendedWaitUntil:
+    visible: "(?s)Share location.*"
+    timeout: 15000
+- assertVisible: "My location"
+- assertVisible: "Share"
+- takeScreenshot: location-map
+- tapOn: "Close"
+- extendedWaitUntil:
+    visible: "Attach"
+    timeout: 10000
+- assertNotVisible: "(?s)Share location.*"

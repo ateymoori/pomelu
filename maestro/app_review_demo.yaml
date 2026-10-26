@@ -1,0 +1,129 @@
+# The App Review demo video: setup, the bot list, a streamed reply, the
+# reply menu with Report, the bot details tabs. Sends one real turn: use a
+# demo gateway with its own HERMES_HOME. Run `-e URL=... -e BOT=<name>`
+# after a clear start (see docs/TESTING.md → "App Review video").
+# A long pull-down menu can hide Report below its fold: swipe it up.
+# A wait for "PAUSE_NEVER" (never on screen) holds a view for the viewer.
+appId: se.royan.pomelu
+env:
+  URL: ${URL}
+  BOT: ${BOT}
+---
+- launchApp
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible: "PAUSE_NEVER"
+    timeout: 2000
+    optional: true
+- tapOn: "Open settings"
+- waitForAnimationToEnd
+- tapOn: "(?s)Gateway URL.*"
+- inputText: ${URL}
+- extendedWaitUntil:
+    visible: "This gateway does not require sign-in"
+    timeout: 15000
+- hideKeyboard
+- tapOn: "Test connection"
+- extendedWaitUntil:
+    visible:
+      text: "Reachable.*"
+    timeout: 25000
+- extendedWaitUntil:
+    visible: "PAUSE_NEVER"
+    timeout: 2000
+    optional: true
+- scrollUntilVisible:
+    element: "Dark"
+    direction: DOWN
+- tapOn: "Dark"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible: "PAUSE_NEVER"
+    timeout: 1000
+    optional: true
+- scrollUntilVisible:
+    element: "Save and connect"
+    direction: UP
+- tapOn: "Save and connect"
+- extendedWaitUntil:
+    visible: "Attach"
+    timeout: 30000
+- tapOn: "Open menu"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible: "PAUSE_NEVER"
+    timeout: 2500
+    optional: true
+- tapOn: "(?s)${BOT}.*"
+- extendedWaitUntil:
+    visible: "Attach"
+    timeout: 30000
+- waitForAnimationToEnd
+- tapOn:
+    id: "composer"
+- inputText: "Give me 4 short tips to fall asleep faster tonight. End on a line with only the word Done"
+- waitForAnimationToEnd
+- tapOn: "Send"
+- waitForAnimationToEnd
+- tapOn:
+    text: "Send"
+    optional: true
+- extendedWaitUntil:
+    visible: "(?s)(?!Give me 4).*\\nDone.*"
+    timeout: 150000
+- waitForAnimationToEnd
+- hideKeyboard
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible: "PAUSE_NEVER"
+    timeout: 3000
+    optional: true
+- longPressOn:
+    point: "50%,72%"
+- waitForAnimationToEnd
+- tapOn:
+    text: "More actions"
+    index: 1
+- waitForAnimationToEnd
+- runFlow:
+    when:
+      notVisible: "(?s)Report.*"
+    commands:
+      - swipe:
+          start: "30%,30%"
+          end: "30%,12%"
+      - waitForAnimationToEnd
+- tapOn: "(?s)Report.*"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible: "PAUSE_NEVER"
+    timeout: 2500
+    optional: true
+- tapOn:
+    point: "50%,8%"
+- waitForAnimationToEnd
+- tapOn: "(?s).*Bot details.*"
+- extendedWaitUntil:
+    visible:
+      text: "(?s)Skills.*"
+      selected: true
+    timeout: 15000
+- waitForAnimationToEnd
+- tapOn: "(?s)Tools.*"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible: "PAUSE_NEVER"
+    timeout: 2000
+    optional: true
+- tapOn: "(?s)Instructions.*"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible: "PAUSE_NEVER"
+    timeout: 2000
+    optional: true
+- tapOn: "(?s)Cron.*"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible: "PAUSE_NEVER"
+    timeout: 2000
+    optional: true

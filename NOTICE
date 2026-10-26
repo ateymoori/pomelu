@@ -1,0 +1,22 @@
+Pomelu
+Copyright 2026 Royan AB
+
+This product is licensed under the Apache License, Version 2.0 (LICENSE).
+The Pomelu name, logo, mascot, bot characters and store art are not covered
+by that license: see TRADEMARKS.md.
+
+Pomelu is an unofficial client for Hermes Agent by Nous Research. It is not
+affiliated with or endorsed by Nous Research.
+
+This product includes third-party software:
+
+- gpt_markdown (BSD 3-Clause), a modified copy in third_party/gpt_markdown;
+  license in third_party/gpt_markdown/LICENSE.
+- noVNC 1.7.0 (Mozilla Public License 2.0, https://github.com/novnc/noVNC)
+  and pako (MIT), bundled unmodified in assets/bot_screen/screen.html;
+  licenses in assets/bot_screen/. Build: tool/bot_screen.
+- Inter and JetBrains Mono fonts (SIL Open Font License 1.1); licenses in
+  assets/fonts/.
+
+Dart and Flutter packages keep their own licenses (pubspec.lock); the app
+shows all of them under Settings → About → Open-source licenses.

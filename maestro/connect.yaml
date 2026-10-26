@@ -1,0 +1,51 @@
+# Configure the gateway and connect. Env: URL, e.g. http://127.0.0.1:$PORT
+# (the loopback hermes serve port, bridged with `adb reverse tcp:$PORT tcp:$PORT`;
+# see maestro/README.md for how to find it).
+appId: se.royan.pomelu
+env:
+  URL: ${URL}
+---
+- launchApp:
+    clearState: true
+- tapOn: "Open settings"
+- assertVisible: "Settings"
+# A fresh install has no gateway URL, only a hint: the field reads as
+# "Gateway URL\n<hint>", so a multi-line regex finds and focuses it.
+- tapOn: "(?s)Gateway URL.*"
+- inputText: ${URL}
+- extendedWaitUntil:
+    visible: "This gateway does not require sign-in"
+    timeout: 15000
+- tapOn: "Test connection"
+- extendedWaitUntil:
+    visible:
+      text: "Reachable.*"
+    timeout: 25000
+- tapOn: "Save and connect"
+# The chat is back before the layout is judged.
+- extendedWaitUntil:
+    visible: "Attach"
+    timeout: 30000
+- waitForAnimationToEnd
+# On a wide screen the status is in the side pane; on a phone in the drawer:
+# open it, check, close it with a tap on the scrim beside it.
+- runFlow:
+    when:
+      notVisible: "Open menu"
+    commands:
+      - extendedWaitUntil:
+          visible: "Connected"
+          timeout: 25000
+- runFlow:
+    when:
+      visible: "Open menu"
+    commands:
+      - tapOn: "Open menu"
+      - extendedWaitUntil:
+          visible: "Connected"
+          timeout: 25000
+      - tapOn:
+          point: "95%,50%"
+- extendedWaitUntil:
+    visible: "Attach"
+    timeout: 25000

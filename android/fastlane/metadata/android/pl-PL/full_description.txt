@@ -1,0 +1,33 @@
+WAŻNE: Pomelu wymaga Hermes Agent i nie działa samodzielnie. Najpierw zainstaluj i uruchom Hermes Agent (od Nous Research) na własnym komputerze lub serwerze, a następnie połącz z nim Pomelu. Instrukcja instalacji: https://hermes-agent.nousresearch.com
+
+Pomelu to aplikacja mobilna dla Hermes Agent: nieoficjalny klient na Androida dla open source'owego agenta AI od Nous Research. Rozmawiaj z botami AI z własnej, samodzielnie hostowanej (self-hosted) bramki Hermes Agent, gdziekolwiek jesteś. Twój osobisty asystent AI, Twoje modele, Twój serwer.
+
+Każdy bot (profil Hermes) ma jeden czat, jak kontakt w komunikatorze. Odpowiedzi pojawiają się na żywo, a Ty widzisz, co agent AI robi podczas pracy: wywołania narzędzi, pytania i ukończone zadania.
+
+CZAT AI NA ŻYWO
+Odpowiedzi pojawiają się na bieżąco, gdy agent je pisze, z Markdownem, tabelami i blokami kodu, które skopiujesz jednym dotknięciem. Podczas pracy agenta widać, jakich narzędzi używa.
+
+PYTANIA I ZATWIERDZENIA
+Gdy agent zada Ci pytanie lub potrzebuje Twojej zgody na polecenie, odpowiadasz bezpośrednio w czacie, z telefonu.
+
+ZDJĘCIA, WIDEO, GŁOS I PLIKI
+Wysyłaj i odbieraj zdjęcia, wideo, wiadomości głosowe i pliki. Udostępnij miejsce z mapy albo przekaż zdjęcia, linki i dokumenty z innych aplikacji prosto do bota.
+
+JEDEN CZAT NA BOTA
+Utwórz bota i nadaj mu nazwę oraz obrazek: jedną z 32 postaci lub własne zdjęcie. W każdej chwili zacznij nową rozmowę poleceniem /new; wcześniejsze pozostaną powyżej.
+
+SZCZEGÓŁY BOTA, UMIEJĘTNOŚCI I ZAPLANOWANE ZADANIA
+Przeglądaj umiejętności i narzędzia bota, czytaj i edytuj jego SOUL.md, a także wstrzymuj, wznawiaj, uruchamiaj lub usuwaj jego zaplanowane zadania (cron).
+
+STWORZONA DLA TELEFONÓW, SKŁADAKÓW I TABLETÓW
+Panel boczny na składanych telefonach i tabletach, obsługa klawiatury i myszy, elementy sterujące w stylu Liquid Glass oraz jasny i ciemny motyw.
+
+EKRAN BOTA, CZYTANIE NA GŁOS I POWIADOMIENIA
+Obserwuj, jak bot pracuje na własnym pulpicie, i przejmij sterowanie dotykiem i klawiaturą. Odsłuchaj odpowiedź czytaną własnym głosem bota. Odpowiedzi i pytania przychodzą jako powiadomienia, nawet przy wyłączonym ekranie, a Twoje boty są w menu udostępniania i w menu ikony aplikacji.
+
+SELF-HOSTED: TWÓJ SERWER, TWOJE DANE
+Pomelu łączy się wyłącznie z bramką Hermes Agent, którą sam uruchamiasz: na swoim Macu, PC, serwerze domowym lub VPS, w sieci domowej, przez VPN lub przez internet. Używaj dowolnego modelu LLM, który obsługuje Twój Hermes Agent. Royan AB nie zbiera żadnych danych: bez konta, bez analityki, bez reklam i bez śledzenia. Twoje hasło jest przechowywane w postaci zaszyfrowanej w Android Keystore.
+
+Aplikacja jest w języku angielskim.
+
+Aplikacja nie jest powiązana z Nous Research ani przez nią zatwierdzona.

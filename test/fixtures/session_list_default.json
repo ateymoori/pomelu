@@ -1,0 +1,48 @@
+{
+ "jsonrpc": "2.0",
+ "id": 2,
+ "result": {
+  "sessions": [
+   {
+    "id": "20260902_110752_5e49d213",
+    "title": "Say hello",
+    "preview": "Hi",
+    "started_at": 1788340072.321952,
+    "message_count": 9,
+    "source": "telegram"
+   },
+   {
+    "id": "20260901_214156_0cee2b",
+    "title": "Name and OK reply #2",
+    "preview": "Reply in one line: your agent name, then the word OK.",
+    "started_at": 1788291717.61241,
+    "message_count": 2,
+    "source": "cli"
+   },
+   {
+    "id": "20260901_214058_d9d9fc",
+    "title": "Name and OK reply",
+    "preview": "Reply in one line: your agent name, then the word OK.",
+    "started_at": 1788291660.145534,
+    "message_count": 2,
+    "source": "cli"
+   },
+   {
+    "id": "20260901_203707_5868c0",
+    "title": "Reply with OK",
+    "preview": "Reply with only the word OK.",
+    "started_at": 1788287829.436231,
+    "message_count": 2,
+    "source": "cli"
+   },
+   {
+    "id": "20260901_183751_ab9e23",
+    "title": "Short self introduction",
+    "preview": "In one line: what is your name as an agent?",
+    "started_at": 1788280673.212318,
+    "message_count": 2,
+    "source": "cli"
+   }
+  ]
+ }
+}

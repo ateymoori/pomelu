@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- flutter_local_notifications looks the status-bar icon up by name at
+     runtime (`NotificationChannels.smallIcon` in Dart), so the resource
+     shrinker cannot see the reference. -->
+<resources
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@drawable/ic_stat_notify" />

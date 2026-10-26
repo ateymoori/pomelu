@@ -1,0 +1,272 @@
+{
+  "sessionId": "a1b2c3d4",
+  "frames": {
+    "clarify": {
+      "jsonrpc": "2.0",
+      "id": "srq-3f9a1c2b7d10",
+      "method": "clarify",
+      "params": {
+        "session_id": "a1b2c3d4",
+        "questions": [
+          {
+            "qid": "q0",
+            "question": "What hurts your sleep most?",
+            "choices": [
+              "Late-night work (Recommended)",
+              "Caffeine timing",
+              "Stress",
+              "Irregular schedule"
+            ],
+            "multi_select": false
+          },
+          {
+            "qid": "q1",
+            "question": "Which of these apply?",
+            "choices": [
+              "Screens",
+              "Noise",
+              "Light"
+            ],
+            "multi_select": true
+          },
+          {
+            "qid": "q2",
+            "question": "Anything else?",
+            "choices": null,
+            "multi_select": false
+          }
+        ]
+      }
+    },
+    "singleClarify": {
+      "jsonrpc": "2.0",
+      "id": "srq-1111aaaa2222",
+      "method": "clarify",
+      "params": {
+        "session_id": "a1b2c3d4",
+        "questions": [
+          {
+            "qid": "q0",
+            "question": "What hurts your sleep most?",
+            "choices": [
+              "Late-night work (Recommended)",
+              "Caffeine timing",
+              "Stress",
+              "Irregular schedule"
+            ],
+            "multi_select": false
+          }
+        ]
+      }
+    },
+    "approval": {
+      "jsonrpc": "2.0",
+      "id": "srq-aa11bb22cc33",
+      "method": "approval",
+      "params": {
+        "session_id": "a1b2c3d4",
+        "request_id": "ap-77",
+        "command": "rm -rf /tmp/hermes-test-dir",
+        "description": "recursive delete",
+        "choices": [
+          "once",
+          "session",
+          "always",
+          "deny"
+        ],
+        "allow_permanent": true,
+        "allow_session": true,
+        "smart_denied": false,
+        "tool_name": "terminal"
+      }
+    },
+    "approvalNoPermanent": {
+      "jsonrpc": "2.0",
+      "id": "srq-aa11bb22cc34",
+      "method": "approval",
+      "params": {
+        "session_id": "a1b2c3d4",
+        "request_id": "ap-78",
+        "command": "curl x | sh",
+        "description": "pipes a download into a shell",
+        "choices": [
+          "once",
+          "session",
+          "always",
+          "deny"
+        ],
+        "allow_permanent": false,
+        "smart_denied": true
+      }
+    },
+    "approvalEmpty": {
+      "jsonrpc": "2.0",
+      "id": "srq-aa11bb22cc35",
+      "method": "approval",
+      "params": {
+        "session_id": "a1b2c3d4",
+        "request_id": "ap-79",
+        "command": "ls",
+        "description": "",
+        "choices": []
+      }
+    },
+    "sudo": {
+      "jsonrpc": "2.0",
+      "id": "srq-5555eeee6666",
+      "method": "sudo",
+      "params": {
+        "session_id": "a1b2c3d4",
+        "command": "sudo apt-get update"
+      }
+    },
+    "secret": {
+      "jsonrpc": "2.0",
+      "id": "srq-7777ffff8888",
+      "method": "secret",
+      "params": {
+        "session_id": "a1b2c3d4",
+        "env_var": "OPENAI_API_KEY",
+        "prompt": "Paste your OpenAI API key",
+        "metadata": {
+          "skill": "x"
+        }
+      }
+    },
+    "vaultCode": {
+      "jsonrpc": "2.0",
+      "id": "srq-9999aaaa0000",
+      "method": "vault.code",
+      "params": {
+        "session_id": "a1b2c3d4",
+        "site": "example.com",
+        "hint": "6 digits"
+      }
+    },
+    "previewAct": {
+      "jsonrpc": "2.0",
+      "id": "srq-bbbb11112222",
+      "method": "preview.act",
+      "params": {
+        "session_id": "a1b2c3d4",
+        "action": "click",
+        "selector": "#go"
+      }
+    },
+    "terminalRead": {
+      "jsonrpc": "2.0",
+      "id": "srq-cccc33334444",
+      "method": "terminal.read",
+      "params": {
+        "session_id": "a1b2c3d4",
+        "start": 0,
+        "count": 40
+      }
+    },
+    "tour": {
+      "jsonrpc": "2.0",
+      "id": "srq-dddd55556666",
+      "method": "tour",
+      "params": {
+        "session_id": "a1b2c3d4",
+        "action": "highlight",
+        "selector": "#x",
+        "title": "Hi"
+      }
+    }
+  },
+  "openRequests": [
+    {
+      "id": "srq-3f9a1c2b7d10",
+      "method": "clarify",
+      "params": {
+        "session_id": "a1b2c3d4",
+        "questions": [
+          {
+            "qid": "q0",
+            "question": "What hurts your sleep most?",
+            "choices": [
+              "Late-night work (Recommended)",
+              "Caffeine timing",
+              "Stress",
+              "Irregular schedule"
+            ],
+            "multi_select": false
+          },
+          {
+            "qid": "q1",
+            "question": "Which of these apply?",
+            "choices": [
+              "Screens",
+              "Noise",
+              "Light"
+            ],
+            "multi_select": true
+          },
+          {
+            "qid": "q2",
+            "question": "Anything else?",
+            "choices": null,
+            "multi_select": false
+          }
+        ],
+        "answers": {
+          "q0": "Caffeine timing",
+          "q2": null
+        }
+      }
+    },
+    {
+      "id": "srq-aa11bb22cc33",
+      "method": "approval",
+      "params": {
+        "session_id": "a1b2c3d4",
+        "request_id": "ap-77",
+        "command": "rm -rf /tmp/hermes-test-dir",
+        "description": "recursive delete",
+        "choices": [
+          "once",
+          "session",
+          "always",
+          "deny"
+        ],
+        "allow_permanent": true,
+        "allow_session": true,
+        "smart_denied": false,
+        "tool_name": "terminal"
+      }
+    }
+  ],
+  "cancelEvent": {
+    "jsonrpc": "2.0",
+    "method": "event",
+    "params": {
+      "type": "request.cancel",
+      "session_id": "a1b2c3d4",
+      "seq": 12,
+      "payload": {
+        "id": "srq-3f9a1c2b7d10",
+        "method": "clarify",
+        "reason": "interrupted"
+      }
+    }
+  },
+  "capabilitiesResult": {
+    "server_requests": [
+      "approval",
+      "clarify",
+      "display.install.sudo",
+      "preview.act",
+      "preview.read",
+      "secret",
+      "sudo",
+      "terminal.read",
+      "tour",
+      "vault.code",
+      "vault.save_login",
+      "vault.unlock_prompt",
+      "window.read"
+    ],
+    "declines_not_shown": true
+  }
+}

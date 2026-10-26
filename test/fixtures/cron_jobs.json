@@ -1,0 +1,70 @@
+[
+  {
+    "id": "a1b2c3d4e5f6",
+    "name": "daily-news",
+    "prompt": "Summarise the news and keep it short.",
+    "schedule": {"kind": "cron", "expr": "0 8 * * *", "display": "0 8 * * *"},
+    "schedule_display": "0 8 * * *",
+    "enabled": true,
+    "state": "scheduled",
+    "next_run_at": "2031-01-15T12:00:00+00:00",
+    "last_run_at": "2031-01-14T12:00:05.123456+00:00",
+    "last_status": "ok",
+    "last_error": null,
+    "last_delivery_error": null
+  },
+  {
+    "id": "b2c3d4e5f6a1",
+    "name": "weekday-digest",
+    "prompt": "Send the digest.",
+    "schedule": {"kind": "cron", "expr": "30 9 * * 1-5", "display": "30 9 * * 1-5"},
+    "schedule_display": "30 9 * * 1-5",
+    "enabled": false,
+    "state": "paused",
+    "paused_at": "2031-01-10T12:00:00+00:00",
+    "next_run_at": "2031-01-15T12:00:00+00:00",
+    "last_run_at": null,
+    "last_status": null,
+    "last_error": null
+  },
+  {
+    "id": "c3d4e5f6a1b2",
+    "name": "every-five",
+    "prompt": "Ping.",
+    "schedule": {"kind": "interval", "minutes": 5, "display": "every 5m"},
+    "schedule_display": "every 5m",
+    "enabled": true,
+    "state": "scheduled",
+    "next_run_at": "2031-01-15T12:05:00+00:00",
+    "last_run_at": "2031-01-15T12:00:00+00:00",
+    "last_status": "error",
+    "last_error": "Script exited with code 1",
+    "last_delivery_error": null
+  },
+  {
+    "id": "d4e5f6a1b2c3",
+    "name": "one-off",
+    "prompt": "Remind me once.",
+    "schedule": {"kind": "once", "run_at": "2031-01-12T12:00:00+00:00", "display": "once at 2031-01-12 12:00"},
+    "schedule_display": "once at 2031-01-12 12:00",
+    "enabled": false,
+    "state": "completed",
+    "next_run_at": null,
+    "last_run_at": "2031-01-12T12:00:04+00:00",
+    "last_status": "ok"
+  },
+  {
+    "id": "e5f6a1b2c3d4",
+    "name": "",
+    "prompt": "Check the weather\nthen tell me what to wear.",
+    "schedule": {"kind": "cron", "expr": "*/10 8-18 * * 1-5", "display": "*/10 8-18 * * 1-5"},
+    "schedule_display": "*/10 8-18 * * 1-5",
+    "enabled": true,
+    "state": "scheduled",
+    "next_run_at": "2031-01-15T12:10:00+00:00",
+    "last_run_at": "2031-01-15T12:00:00+00:00",
+    "last_status": "delivery_failed",
+    "last_error": null,
+    "last_delivery_error": "telegram: 502 Bad Gateway"
+  }
+]

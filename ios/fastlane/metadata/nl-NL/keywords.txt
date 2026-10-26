@@ -1,0 +1,1 @@
+chatbot,llm,selfhosted,zelfgehost,taalmodel,bots,automatisering,lokaal,server,homelab,mcp,tools

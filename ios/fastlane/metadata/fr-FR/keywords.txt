@@ -1,0 +1,1 @@
+IA,chatbot,LLM,auto-hébergé,bots,automatisation,local,serveur,homelab,MCP,outils,modèle,langage

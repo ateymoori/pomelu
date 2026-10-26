@@ -1,0 +1,1 @@
+KI,Chatbot,LLM,selbstgehostet,Sprachmodell,Bots,Automatisierung,lokal,Server,Homelab,MCP,Tools
