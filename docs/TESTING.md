@@ -10,7 +10,7 @@ flutter analyze && dart analyze && flutter test
 ```
 
 `riverpod_lint` runs under `dart analyze` only: `flutter analyze` alone passes
-code the Riverpod rules reject. `flutter test` today: 559 pass, 1 skipped (the
+code the Riverpod rules reject. `flutter test` today: 560 pass, 1 skipped (the
 live gateway test). Update the count here when it changes.
 
 ## Policy

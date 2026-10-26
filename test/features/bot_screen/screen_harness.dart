@@ -146,6 +146,9 @@ class FakeSurface implements ScreenSurface {
 
   @override
   Future<void> fit() async => calls.add('fit');
+
+  @override
+  Future<void> fill() async => calls.add('fill');
 }
 
 /// A client of a gateway at an address, for the web view's origin.

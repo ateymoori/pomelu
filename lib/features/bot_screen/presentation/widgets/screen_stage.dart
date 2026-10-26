@@ -105,7 +105,10 @@ class _ScreenStageState extends ConsumerState<ScreenStage>
         final code = message['code'];
         _session.onStreamClosed(code is int ? code : 0);
       case 'zoom':
-        _session.onZoom(zoomed: message['zoomed'] == true);
+        _session.onZoom(
+          zoomed: message['zoomed'] == true,
+          canFill: message['canFill'] == true,
+        );
       case 'drag':
         final drag = ScreenDrag.values.asNameMap()[message['state']];
         if (drag != null) _session.onDrag(drag);
@@ -202,6 +205,9 @@ class _ScreenStageState extends ConsumerState<ScreenStage>
 
   @override
   Future<void> fit() => _call('fit', const []);
+
+  @override
+  Future<void> fill() => _call('fill', const []);
 
   @override
   Widget build(BuildContext context) => Semantics(

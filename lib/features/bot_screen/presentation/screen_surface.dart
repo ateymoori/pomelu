@@ -31,4 +31,7 @@ abstract interface class ScreenSurface {
 
   /// Back to the whole desktop.
   Future<void> fit();
+
+  /// The desktop filling a tall window, following what changes on it.
+  Future<void> fill();
 }

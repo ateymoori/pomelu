@@ -16,7 +16,7 @@ import '../screen_session.dart';
 
 /// Take over, or (with control) drag and drop, the keyboard, paste and
 /// Hand back, on one glass capsule; Whole screen while the view is zoomed
-/// in.
+/// in, Fill screen while a tall window shows the whole desktop.
 class ScreenControls extends ConsumerWidget {
   const ScreenControls({
     required this.profile,
@@ -53,6 +53,13 @@ class ScreenControls extends ConsumerWidget {
               icon: CupertinoIcons.fullscreen_exit,
               tooltip: l10n.screenFit,
               onPressed: session.fit,
+            )
+          else if (view.canFill)
+            AppIconButton(
+              key: const Key('screen-fill'),
+              icon: CupertinoIcons.fullscreen,
+              tooltip: l10n.screenFill,
+              onPressed: session.fill,
             ),
           if (control == ScreenControl.you) ...[
             AppIconButton(

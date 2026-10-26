@@ -19,10 +19,16 @@ ScreenStatus? watchBotScreen(WidgetRef ref, String profile) {
 }
 
 /// Opens bot [profile]'s screen over its chat. The composer gives up focus
-/// first, or the route would hand it back on close and raise the keyboard.
+/// first, or the route would hand it back on close and raise the keyboard;
+/// on the next frame, after a menu that led here has given focus back.
 void openBotScreen(BuildContext context, String profile) {
-  FocusManager.instance.primaryFocus?.unfocus();
-  unawaited(GoRouter.of(context).push(Routes.screenPath(profile)));
+  final router = GoRouter.of(context);
+  WidgetsBinding.instance
+    ..addPostFrameCallback((_) {
+      FocusManager.instance.primaryFocus?.unfocus();
+      unawaited(router.push(Routes.screenPath(profile)));
+    })
+    ..ensureVisualUpdate();
 }
 
 /// The chat header's way to the bot's screen, shown only when it has one.

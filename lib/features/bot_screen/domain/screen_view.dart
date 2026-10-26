@@ -51,6 +51,9 @@ abstract class ScreenView with _$ScreenView {
 
     /// The view is closer than the whole desktop.
     @Default(false) bool zoomed,
+
+    /// The whole desktop shows in a window it could fill (a tall one).
+    @Default(false) bool canFill,
     @Default(ScreenDrag.off) ScreenDrag drag,
     ScreenNotice? notice,
   }) = _ScreenView;

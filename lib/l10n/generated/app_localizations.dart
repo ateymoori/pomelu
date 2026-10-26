@@ -2860,6 +2860,12 @@ abstract class AppLocalizations {
   /// **'Whole screen'**
   String get screenFit;
 
+  /// Button that zooms the view of the bot's desktop in until it fills a tall window, following where the bot works.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill screen'**
+  String get screenFill;
+
   /// No description provided for @screenKeyboard.
   ///
   /// In en, this message translates to:

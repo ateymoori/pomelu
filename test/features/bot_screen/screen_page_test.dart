@@ -329,4 +329,25 @@ void main() {
       expect(layout, contains('"top":'));
     });
   }
+
+  testWidgets('a tall window offers Fill screen while the desktop shows '
+      'whole, and Whole screen while it is closer', (tester) async {
+    await _open(tester, FakeScreenApi());
+    await _live(tester);
+    expect(find.byTooltip('Fill screen'), findsNothing);
+    expect(find.byTooltip('Whole screen'), findsNothing);
+
+    _view.send({'type': 'zoom', 'zoomed': false, 'canFill': true});
+    await tester.pump();
+    await tester.tap(find.byTooltip('Fill screen'));
+    await tester.pump();
+    expect(_ran('fill'), isTrue);
+
+    _view.send({'type': 'zoom', 'zoomed': true, 'canFill': false});
+    await tester.pump();
+    expect(find.byTooltip('Fill screen'), findsNothing);
+    await tester.tap(find.byTooltip('Whole screen'));
+    await tester.pump();
+    expect(_ran('fit'), isTrue);
+  });
 }

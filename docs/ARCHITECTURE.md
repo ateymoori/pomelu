@@ -382,7 +382,13 @@ reports open and close codes on the `Pomelu` channel; the session answers:
 4000 (another viewer took control) watch again with a notice, 4001 the
 screen stopped, anything else up to `AppConfig.screenReattachAttempts`
 tries, then Reconnect. Zoom and pan stay in the page (pinch, two fingers
-when zoomed, one finger and double tap while watching); with control, one
+when zoomed, one finger and double tap while watching). The home view
+suits the window: whole on a wide one; on a tall one (portrait, a folded
+cover screen) the desktop fills the height (when that is at least 1.25×
+closer) and the view follows what changes on the desktop (noVNC's drawn
+rects, less the top panel and changes over half the desktop), which is
+where the bot works. A pinch or pan stops following; a double tap goes
+home again; Whole screen and Fill screen switch between the two. With control, one
 finger is the mouse (a drag holds the left button) and two scroll. Drag
 and drop picks up on a tap, lets every gesture move the view, and on the
 next tap moves the held pointer there in steps before the release (a

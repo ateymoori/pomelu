@@ -599,6 +599,8 @@
   "@screenHandBackFailed": {"description": "Snack bar. {message} is the failure sentence.", "placeholders": {"message": {"type": "String"}}},
   "screenFit": "Whole screen",
   "@screenFit": {"description": "Button that zooms the view of the bot's desktop back out to all of it."},
+  "screenFill": "Fill screen",
+  "@screenFill": {"description": "Button that zooms the view of the bot's desktop in until it fills a tall window, following where the bot works."},
   "screenKeyboard": "Keyboard",
   "screenDrag": "Drag and drop",
   "@screenDrag": {"description": "Button on the screen page: the next tap picks up what is under it on the bot's desktop, the tap after drops it there."},

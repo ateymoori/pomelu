@@ -128,6 +128,9 @@ class ScreenSession extends _$ScreenSession {
   /// Back to the whole desktop (Whole screen).
   void fit() => unawaited(_surface?.fit());
 
+  /// The desktop filling a tall window again (Fill screen).
+  void fill() => unawaited(_surface?.fill());
+
   /// Drag on, or off again before the drop.
   void toggleDrag() {
     if (!_holding && state.drag == ScreenDrag.off) return;
@@ -159,8 +162,10 @@ class ScreenSession extends _$ScreenSession {
     _scheduleAttach();
   }
 
-  /// From the web view: the desktop is zoomed in, or back to whole.
-  void onZoom({required bool zoomed}) => state = state.copyWith(zoomed: zoomed);
+  /// From the web view: the desktop is zoomed in, or whole; [canFill] when
+  /// it is whole in a window it could fill.
+  void onZoom({required bool zoomed, required bool canFill}) =>
+      state = state.copyWith(zoomed: zoomed, canFill: canFill);
 
   /// From the web view: where Drag is.
   void onDrag(ScreenDrag drag) => state = state.copyWith(drag: drag);

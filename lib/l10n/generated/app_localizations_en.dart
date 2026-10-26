@@ -1683,6 +1683,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get screenFit => 'Whole screen';
 
   @override
+  String get screenFill => 'Fill screen';
+
+  @override
   String get screenKeyboard => 'Keyboard';
 
   @override

@@ -82,7 +82,7 @@ final class ScreenSessionProvider
   }
 }
 
-String _$screenSessionHash() => r'64bb6ea06d1a76b056ce4a34c41fb4cba2ba295e';
+String _$screenSessionHash() => r'ed23d76c59f4ef1a75dc4c602ab49b9d633b1481';
 
 /// An open Screen page of bot [profile]: its viewer, its stream, Take over
 /// and Hand back.

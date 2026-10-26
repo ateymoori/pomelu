@@ -7,7 +7,13 @@
 // desktop. While the bot is in control every gesture moves the view; once
 // you are, one finger is the mouse and two fingers scroll, or pan a zoomed
 // view. With Drag on, a tap picks up what is under it, every gesture then
-// moves the view, and the next tap drops it there. Build:
+// moves the view, and the next tap drops it there.
+//
+// The home view suits the window: whole on a wide one; on a tall one (a
+// phone held up, a folded cover screen) the desktop fills the height
+// instead of showing as a thin strip, and the view follows what changes on
+// the desktop, which is where the bot works. A pinch or a pan stops the
+// following; a double tap goes home again. Build:
 // `node tool/bot_screen/build.mjs`.
 
 import RFB from './node_modules/@novnc/novnc/core/rfb.js';
@@ -28,6 +34,18 @@ const DOUBLE_TAP_SLOP = 40;
 const DROP_STEPS = 12;
 const DROP_STEP_MS = 25;
 const DROP_SETTLE_MS = 150;
+// A tall window's home view fills it when that shows the desktop at least
+// this much closer than whole; else home is the whole desktop.
+const FILL_MIN_GAIN = 1.25;
+// Following: every beat the view moves to what changed in the last one,
+// unless that is already well inside it (this share of the view is kept
+// clear at each edge).
+const FOLLOW_BEAT_MS = 400;
+const FOLLOW_MARGIN = 0.12;
+// Changes that are no place to follow: the desktop's top panel (its clock)
+// and a change of more than this share of the desktop (a page loading).
+const PANEL_ROWS = 32;
+const MAX_ACTIVITY = 0.5;
 
 const KEYS = {
   escape: [KeyTable.XK_Escape, 'Escape'],
@@ -60,7 +78,14 @@ let panY = 0;
 let gesture = null;
 let lastTap = null;
 let animation = 0;
-let zoomedSent = false;
+let animating = false;
+let zoomSent = '';
+// At home (the view [homeZoom] gives, moving with the window) and
+// following what changes, until a gesture of the person moves the view.
+let atHome = true;
+let follow = true;
+// What changed on the desktop since the last beat, in desktop pixels.
+let activity = null;
 // Drag: 'off', 'pick' (the next tap picks up) or 'drop' (the left button is
 // held at `held`, a point of the desktop as a share of its width and height).
 let drag = 'off';
@@ -98,6 +123,13 @@ function maxZoom() {
   return Math.max(MIN_MAX_ZOOM, MAX_SCALE / fitScale());
 }
 
+/** The home zoom: the desktop filling a tall window, else whole (1). */
+function homeZoom(box = fitBox()) {
+  const f = frameSize();
+  const fill = Math.max(box.w / f.w, box.h / f.h) / fitScale(box);
+  return fill >= FILL_MIN_GAIN ? Math.min(fill, maxZoom()) : 1;
+}
+
 /** One axis of the pan: the desktop centred while it fits, else its edges
  *  kept at the box's. Lengths: `stageLen` the stage's, `content` the
  *  desktop's, `view` the box's. */
@@ -119,6 +151,35 @@ function clampView(z, x, y) {
   ];
 }
 
+/** The view at [z] with the desktop point [p] (a share of its width and
+ *  height) in the middle of the window, as far as the desktop allows. */
+function centerOn(z, p) {
+  const box = fitBox();
+  const f = frameSize();
+  const scale = fitScale(box) * z;
+  const cw = f.w * scale;
+  const ch = f.h * scale;
+  return clampView(
+    z,
+    box.w / 2 - (box.w * z - cw) / 2 - p.x * cw,
+    box.h / 2 - (box.h * z - ch) / 2 - p.y * ch,
+  );
+}
+
+/** The part of the desktop the window shows now, as shares of it. */
+function shown() {
+  const canvas = stage.querySelector('canvas');
+  const box = fitBox();
+  if (!canvas) return { x0: 0, y0: 0, x1: 1, y1: 1 };
+  const r = canvas.getBoundingClientRect();
+  return {
+    x0: (box.x - r.left) / r.width,
+    y0: (box.y - r.top) / r.height,
+    x1: (box.x + box.w - r.left) / r.width,
+    y1: (box.y + box.h - r.top) / r.height,
+  };
+}
+
 /** Lays the stage out at the committed view; noVNC scales the desktop
  *  into it, so pointer positions map through its own scale. */
 function place() {
@@ -132,10 +193,38 @@ function place() {
   poster.style.width = `${box.w}px`;
   poster.style.height = `${box.h}px`;
   const zoomed = zoom > 1.001;
-  if (zoomed !== zoomedSent) {
-    zoomedSent = zoomed;
-    post({ type: 'zoom', zoomed });
+  const canFill = !zoomed && homeZoom(box) > 1.001;
+  const sent = `${zoomed}${canFill}`;
+  if (sent !== zoomSent) {
+    zoomSent = sent;
+    post({ type: 'zoom', zoomed, canFill });
   }
+}
+
+/** The window or the desktop changed size: a view at home stays home,
+ *  around the same middle; any other keeps its zoom. */
+function relayout() {
+  if (atHome && !gesture && !animating) {
+    const s = shown();
+    [zoom, panX, panY] = centerOn(homeZoom(), {
+      x: Math.min(1, Math.max(0, (s.x0 + s.x1) / 2)),
+      y: Math.min(1, Math.max(0, (s.y0 + s.y1) / 2)),
+    });
+  }
+  place();
+}
+
+/** Home, around [p] (a desktop point as shares), following again. */
+function goHome(p) {
+  atHome = true;
+  follow = true;
+  animateTo(centerOn(homeZoom(), p));
+}
+
+/** The person moved the view: it stays where they put it. */
+function moved() {
+  atHome = false;
+  follow = false;
 }
 
 /** A view on the way to [z, x, y]: a transform of the committed stage, so
@@ -164,7 +253,11 @@ function zoomAround(z, cx, cy, from = { zoom, panX, panY }) {
 function animateTo(target) {
   cancelAnimationFrame(animation);
   const start = { zoom, panX, panY };
-  if (motionMs <= 0) return commit(...target);
+  if (motionMs <= 0) {
+    animating = false;
+    return commit(...target);
+  }
+  animating = true;
   const began = performance.now();
   const step = (now) => {
     const t = Math.min(1, (now - began) / motionMs);
@@ -176,6 +269,7 @@ function animateTo(target) {
       preview(z, x, y);
       animation = requestAnimationFrame(step);
     } else {
+      animating = false;
       commit(...target);
     }
   };
@@ -229,6 +323,7 @@ function pinchGesture(type, d) {
   if (!gesture?.distance) return;
   const view = zoomAround(gesture.zoom * (distance / gesture.distance), gesture.cx, gesture.cy, gesture);
   if (type === 'gestureend') {
+    moved();
     commit(...view);
     gesture = null;
   } else {
@@ -245,6 +340,7 @@ function panGesture(type, dx, dy) {
   if (!gesture) return;
   const view = clampView(zoom, gesture.panX + dx, gesture.panY + dy);
   if (type === 'gestureend') {
+    moved();
     commit(...view);
     gesture = null;
   } else {
@@ -258,8 +354,56 @@ function doubleTap(x, y) {
     Math.hypot(x - lastTap.x, y - lastTap.y) < DOUBLE_TAP_SLOP;
   lastTap = second ? null : { at: now, x, y };
   if (!second) return;
-  animateTo(zoom > 1.001 ? clampView(1, 0, 0) : zoomAround(DOUBLE_TAP_ZOOM, x, y));
+  if (!atHome) {
+    const s = shown();
+    goHome({ x: (s.x0 + s.x1) / 2, y: (s.y0 + s.y1) / 2 });
+    return;
+  }
+  moved();
+  animateTo(zoomAround(Math.max(homeZoom() * 2, DOUBLE_TAP_ZOOM), x, y));
 }
+
+// ------------------------------------------------------------ following
+
+/** A change of the desktop at (x, y, w, h), in its pixels. */
+function noteActivity(x, y, w, h) {
+  const f = frameSize();
+  if (w * h > MAX_ACTIVITY * f.w * f.h || y + h <= PANEL_ROWS) return;
+  const next = { left: x, top: y, right: x + w, bottom: y + h };
+  if (activity) {
+    const union = {
+      left: Math.min(activity.left, next.left),
+      top: Math.min(activity.top, next.top),
+      right: Math.max(activity.right, next.right),
+      bottom: Math.max(activity.bottom, next.bottom),
+    };
+    // Two far changes in one beat: the latest is where to look.
+    const area = (union.right - union.left) * (union.bottom - union.top);
+    activity = area > MAX_ACTIVITY * f.w * f.h ? next : union;
+  } else {
+    activity = next;
+  }
+}
+
+/** Each beat: the view moves to what changed, unless that already shows
+ *  well inside it, or the person is moving the view or dragging. */
+function followBeat() {
+  const a = activity;
+  activity = null;
+  if (!a || !follow || gesture || animating || drag !== 'off' || zoom <= 1.001) return;
+  const f = frameSize();
+  const s = shown();
+  const mx = (s.x1 - s.x0) * FOLLOW_MARGIN;
+  const my = (s.y1 - s.y0) * FOLLOW_MARGIN;
+  const ax0 = a.left / f.w;
+  const ay0 = a.top / f.h;
+  const ax1 = a.right / f.w;
+  const ay1 = a.bottom / f.h;
+  if (ax0 >= s.x0 + mx && ax1 <= s.x1 - mx && ay0 >= s.y0 + my && ay1 <= s.y1 - my) return;
+  animateTo(centerOn(zoom, { x: (ax0 + ax1) / 2, y: (ay0 + ay1) / 2 }));
+}
+
+setInterval(followBeat, FOLLOW_BEAT_MS);
 
 // ------------------------------------------------------------ drag
 
@@ -330,7 +474,7 @@ function cancelDrag() {
 for (const type of ['gesturestart', 'gesturemove', 'gestureend']) {
   stage.addEventListener(type, onGesture, true);
 }
-window.addEventListener('resize', place);
+window.addEventListener('resize', relayout);
 
 // ------------------------------------------------------------ the app's API
 
@@ -371,7 +515,7 @@ window.pomelu = {
     style.setProperty('--accent', accent);
     style.setProperty('--ring', `${ring}px`);
     style.setProperty('--motion', `${motion}ms`);
-    place();
+    relayout();
   },
 
   /** The latest still while the stream comes up; null hides it. */
@@ -399,10 +543,17 @@ window.pomelu = {
     client.qualityLevel = 7;
     client.viewOnly = viewOnly;
     stage.classList.toggle('control', !viewOnly);
+    // Every change noVNC draws is a place the bot may be working.
+    const display = client._display;
+    const damage = display._damage.bind(display);
+    display._damage = (x, y, w, h) => {
+      damage(x, y, w, h);
+      noteActivity(x, y, w, h);
+    };
     client.addEventListener('connect', () => {
       if (mine !== generation) return;
       poster.classList.remove('shown');
-      place();
+      relayout();
       post({ type: 'connect' });
     });
     client.addEventListener('disconnect', () => {
@@ -463,11 +614,20 @@ window.pomelu = {
     else if (!on) cancelDrag();
   },
 
-  /** Back to the whole desktop. */
+  /** Back to the whole desktop; it stays whole. */
   fit() {
+    moved();
+    atHome = homeZoom() <= 1.001;
     animateTo(clampView(1, 0, 0));
+  },
+
+  /** The home view of a tall window: the desktop filling it, following
+   *  what changes, around the middle of what shows now. */
+  fill() {
+    const s = shown();
+    goHome({ x: (s.x0 + s.x1) / 2, y: (s.y0 + s.y1) / 2 });
   },
 };
 
-place();
+relayout();
 post({ type: 'ready' });
