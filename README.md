@@ -8,6 +8,7 @@
 Chat with your self-hosted AI agent from your iPhone, iPad, Android phone, foldable or tablet.
 
 [![CI](https://github.com/ateymoori/pomelu/actions/workflows/ci.yml/badge.svg)](https://github.com/ateymoori/pomelu/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/ateymoori/pomelu)](https://github.com/ateymoori/pomelu/releases/latest)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Flutter 3.47](https://img.shields.io/badge/Flutter-3.47-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
 [![Android](https://img.shields.io/badge/Android-10%2B-3DDC84?logo=android&logoColor=white)](#get-the-app)
@@ -30,6 +31,10 @@ cloud machine; Pomelu connects to its gateway and puts every Hermes bot in
 your pocket. There is no Pomelu server, no account and no tracking: your
 chats go only between your phone and your own agent.
 
+**Android beta:** [download the APK](https://github.com/ateymoori/pomelu/releases/latest)
+or join the [Google Play beta](#get-the-app). You need your own
+[Hermes Agent](https://hermes-agent.nousresearch.com) 0.21.5 or newer.
+
 <p align="center">
   <img src="docs/images/iphone-01-hero.webp" alt="Pomelu on iPhone: chat with a Hermes Agent bot" width="19%">
   <img src="docs/images/iphone-02-answers.webp" alt="Live streamed Markdown answers from Hermes Agent" width="19%">
@@ -40,26 +45,28 @@ chats go only between your phone and your own agent.
 
 ## Features
 
-- 💬 **One chat per bot**, like a messenger. Every Hermes profile is a bot in
+- **One chat per bot**, like a messenger. Every Hermes profile is a bot in
   the side menu; a new conversation starts in the same chat.
-- ⚡ **Live answers** in Markdown with code, tables, tool activity and the
+- **Live answers** in Markdown with code, tables, tool activity and the
   agent's plan while a task runs. Stop a turn at any time.
-- ✅ **Answer the agent**: questions, approvals and secret input show up as
+- **Answer the agent**: questions, approvals and secret input show up as
   cards in the chat and as notifications.
-- 🎙️ **Voice, photos, video and files both ways**, plus a place from a map.
+- **Voice, photos, video and files both ways**, plus a place from a map.
   Replies can be read aloud in the bot's own voice.
-- 📤 **Share from any app** into a bot. Your bots sit in the share sheet and
+- **Share from any app** into a bot. Your bots sit in the share sheet and
   in the app icon's menu.
-- 🧠 **Bot details**: skills, tools, instructions, `SOUL.md` (editable) and
+- **Bot details**: skills, tools, instructions, `SOUL.md` (editable) and
   scheduled cron jobs (pause, resume, run now, delete). Create, rename and
   delete bots like Hermes Desktop.
-- 🖥️ **Bot Screen**: watch a bot work on its own Linux desktop, take over with
-  touch, keyboard, paste and drag and drop, then hand it back.
-- 🔔 **Notifications** for replies and questions. On Android the app can stay
+- **Bot Screen**: watch a bot work on its own Linux desktop, take over with
+  touch, keyboard, paste and drag and drop, then hand it back. Needs a Linux
+  gateway host with [Bot Screen](https://hermes-agent.nousresearch.com/docs/user-guide/features/bot-screen)
+  set up.
+- **Notifications** for replies and questions. On Android the app can stay
   connected in the background.
-- 🔒 **Private by design**: no analytics, no ads, no tracking. The sign-in is
+- **Private by design**: no analytics, no ads, no tracking. The sign-in is
   kept in the Android Keystore or the iOS Keychain.
-- 🎨 **Liquid Glass** design (iOS 27 style), light and dark mode, Dynamic
+- **Liquid Glass** design (iOS 27 style), light and dark mode, Dynamic
   Type, VoiceOver and TalkBack.
 
 ### Made for foldables and tablets
@@ -77,12 +84,15 @@ keyboard shortcuts and right-click.
 
 ## Get the app
 
-| Platform | Status |
+| Platform | How |
 |---|---|
-| **Android** 10+ (phones, foldables, tablets) | Beta on Google Play: join [the testers group](https://groups.google.com/g/pomelu-testers), then [become a tester](https://play.google.com/apps/testing/se.royan.pomelu) and install. |
-| **iPhone and iPad** (iOS 15+) | Coming soon to the App Store. |
+| **Android** 10+ (phones, foldables, tablets) | **[Download the APK](https://github.com/ateymoori/pomelu/releases/latest)**: signed; `arm64-v8a` for most phones, `universal` for the rest; SHA-256 sums on the release page |
+| Android, with updates | [Add to Obtainium](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/ateymoori/pomelu): it follows the GitHub releases |
+| Android, Google Play beta | Join [the testers group](https://groups.google.com/g/pomelu-testers), then [become a tester](https://play.google.com/apps/testing/se.royan.pomelu) and install from Play |
+| **iPhone and iPad** (iOS 15+) | Coming soon to the App Store. Until then, [build it from source](#build-from-source). |
 
-You can also [build it from source](#build-from-source). More at
+The Play build and the GitHub APK may be signed with different keys: to switch
+from one to the other, uninstall first. More at
 [royan.se/pomelu](https://royan.se/pomelu/).
 
 ## Connect to your Hermes Agent
