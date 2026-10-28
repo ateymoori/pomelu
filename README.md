@@ -91,7 +91,7 @@ keyboard shortcuts and right-click.
 | Android, Google Play beta | Join [the testers group](https://groups.google.com/g/pomelu-testers), then [become a tester](https://play.google.com/apps/testing/se.royan.pomelu) and install from Play |
 | **iPhone and iPad** (iOS 15+) | Coming soon to the App Store. Until then, [build it from source](#build-from-source). |
 
-The Play build and the GitHub APK may be signed with different keys: to switch
+The Play build and the GitHub APK are signed with different keys: to switch
 from one to the other, uninstall first. More at
 [royan.se/pomelu](https://royan.se/pomelu/).
 
