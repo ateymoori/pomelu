@@ -12,6 +12,8 @@ Chat with your self-hosted AI agent from your iPhone, iPad, Android phone, folda
 [![Flutter 3.47](https://img.shields.io/badge/Flutter-3.47-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
 [![Android](https://img.shields.io/badge/Android-10%2B-3DDC84?logo=android&logoColor=white)](#get-the-app)
 [![iOS and iPadOS](https://img.shields.io/badge/iOS%20%7C%20iPadOS-15%2B-000000?logo=apple&logoColor=white)](#get-the-app)
+[![Latest release](https://img.shields.io/github/v/release/ateymoori/pomelu?label=APK)](https://github.com/ateymoori/pomelu/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/ateymoori/pomelu/total)](https://github.com/ateymoori/pomelu/releases)
 
 [Website](https://royan.se/pomelu/) ·
 [Features](#features) ·
@@ -77,10 +79,20 @@ keyboard shortcuts and right-click.
 
 ## Get the app
 
+<p>
+  <a href="https://github.com/ateymoori/pomelu/releases/latest"><img src="https://img.shields.io/badge/Download-APK-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Download the APK" height="40"></a>
+  <a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/ateymoori/pomelu"><img src="https://raw.githubusercontent.com/ImranR98/Obtainium/main/assets/graphics/badge_obtainium.png" alt="Get it on Obtainium" height="40"></a>
+</p>
+
 | Platform | Status |
 |---|---|
-| **Android** 10+ (phones, foldables, tablets) | Beta on Google Play: join [the testers group](https://groups.google.com/g/pomelu-testers), then [become a tester](https://play.google.com/apps/testing/se.royan.pomelu) and install. |
+| **Android** 10+ (phones, foldables, tablets) | [Download the APK](https://github.com/ateymoori/pomelu/releases/latest) from GitHub Releases, or get updates with [Obtainium](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/ateymoori/pomelu). |
+| **Android** on Google Play | Beta: join [the testers group](https://groups.google.com/g/pomelu-testers), then [become a tester](https://play.google.com/apps/testing/se.royan.pomelu) and install. |
 | **iPhone and iPad** (iOS 15+) | Coming soon to the App Store. |
+
+Which APK: `arm64-v8a` fits almost every phone and tablet; `universal` runs
+everywhere. The GitHub APK and the Play build have different signatures:
+uninstall one before you install the other.
 
 You can also [build it from source](#build-from-source). More at
 [royan.se/pomelu](https://royan.se/pomelu/).
