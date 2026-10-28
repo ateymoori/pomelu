@@ -9,6 +9,7 @@ Chat with your self-hosted AI agent from your iPhone, iPad, Android phone, folda
 
 [![CI](https://github.com/ateymoori/pomelu/actions/workflows/ci.yml/badge.svg)](https://github.com/ateymoori/pomelu/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/ateymoori/pomelu)](https://github.com/ateymoori/pomelu/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/ateymoori/pomelu/total)](https://github.com/ateymoori/pomelu/releases)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Flutter 3.47](https://img.shields.io/badge/Flutter-3.47-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
 [![Android](https://img.shields.io/badge/Android-10%2B-3DDC84?logo=android&logoColor=white)](#get-the-app)
