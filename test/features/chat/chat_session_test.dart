@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/widgets.dart' show AppLifecycleState;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes/features/chat/domain/chat_target.dart';
@@ -48,6 +49,57 @@ void main() {
       expect(await c.deleteFrom('x'), DeleteOutcome.failed);
       expect(c.answerApproval('1', 'once'), isFalse);
       await expectLater(c.modelOptions(), throwsA(isA<NetworkFailure>()));
+    },
+  );
+
+  test(
+    'an idle chat lets go of its session while the app is away, and resumes',
+    () async {
+      final binding = TestWidgetsFlutterBinding.ensureInitialized();
+      addTearDown(
+        () => binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed),
+      );
+      final api = ScriptedApi();
+      final rig = bootChat(api: api);
+      await pumpEventQueue();
+      expect(api.resumedIds, ['stored-1']);
+
+      binding
+        ..handleAppLifecycleStateChanged(AppLifecycleState.inactive)
+        ..handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+      await pumpEventQueue();
+      expect(api.closedIds, ['rt-1']);
+      expect(rig.client.watched, isEmpty);
+
+      binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+      await pumpEventQueue();
+      expect(api.resumedIds, ['stored-1', 'stored-1']);
+      expect(rig.client.watched, ['rt-1']);
+    },
+  );
+
+  test(
+    'a turn running while the app is away keeps its session until it ends',
+    () async {
+      final binding = TestWidgetsFlutterBinding.ensureInitialized();
+      addTearDown(
+        () => binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed),
+      );
+      final api = ScriptedApi();
+      final rig = bootChat(api: api);
+      await pumpEventQueue();
+      rig.client.emit(ev(EventNames.messageStart));
+      await pumpEventQueue();
+
+      binding
+        ..handleAppLifecycleStateChanged(AppLifecycleState.inactive)
+        ..handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+      await pumpEventQueue();
+      expect(api.closedIds, isEmpty);
+
+      rig.client.emit(ev(EventNames.messageComplete, {'text': 'done'}));
+      await pumpEventQueue();
+      expect(api.closedIds, ['rt-1']);
     },
   );
 

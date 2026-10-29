@@ -131,6 +131,19 @@ gateway-owned `local-…` row takes the title, with no link back
 (`gateway/session_bot.py` `displaceable_bot_chat`). Earlier conversations
 follow it (below).
 
+**Messages the bot starts.** Only a cron job with `deliver: bot-chat[:<profile>]`
+writes into a Bot Chat; `send_message` cannot target one. A `gui` session has
+no cron origin, so a job made there without a target goes to a home channel
+(`origin_fallback`) or stays `local`, and Hermes' own create notice suggests
+`telegram`. The Pomelu Hermes plugin routes such jobs to `bot-chat`.
+Hermes delivers only into a Bot Chat its gateway owns. A chat the app made
+(`session.create`, a new conversation) is adopted on the first delivery,
+which Hermes refuses (`runtime_coordination_required`, "another session
+writer holds the Bot Chat") while `hermes serve` holds it open for the app.
+So the app sends `session.close {session_id}` for an idle chat when it leaves
+the screen (or when a turn ends while it is away), and resumes it when it is
+back.
+
 ## Methods used
 
 | Purpose | Call |

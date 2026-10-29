@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:flutter/widgets.dart' show AppLifecycleListener;
 import 'package:flutter_riverpod/misc.dart' show KeepAliveLink;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/config/app_config.dart';
 import '../../../core/platform/app_shortcuts.dart';
+import '../../../core/platform/app_visibility.dart';
 import '../../../core/utils/app_logger.dart';
 import '../../../core/utils/failure_text.dart';
 import '../../../core/utils/l10n_ext.dart';
@@ -66,6 +68,11 @@ class _Run {
   Future<void>? opening;
   Future<void>? reopening;
 
+  /// The app let go of the session while away (see `_release`); it
+  /// resumes when the app is back on screen.
+  bool released = false;
+  Future<void>? releasing;
+
   /// The socket came back while an open or a resume was on the old one:
   /// that attempt may still fail, so one more runs after it.
   bool openAgain = false;
@@ -116,7 +123,12 @@ class ChatController extends _$ChatController
     final run = _run = _Run(ref, api, client, store);
     _holdWhileWorking(queue);
     final conn = client.states.listen((s) => _onConnection(run, s));
+    final lifecycle = AppLifecycleListener(
+      onHide: () => _release(run),
+      onShow: () => unawaited(_comeBack(run)),
+    );
     ref.onDispose(() {
+      lifecycle.dispose();
       unawaited(conn.cancel());
       run.dispose();
     });

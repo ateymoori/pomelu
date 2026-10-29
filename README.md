@@ -109,6 +109,15 @@ You need [Hermes Agent](https://hermes-agent.nousresearch.com/docs/getting-start
    `http://192.168.1.20:9119` on the same Wi-Fi), sign in, then tap
    **Test connection** and **Save and connect**.
 
+4. So that reminders and scheduled jobs you make in Pomelu come to the app
+   (like they come to Telegram), install the
+   [Pomelu plugin](https://github.com/ateymoori/pomelu-hermes-plugin) on the
+   same computer, then restart Hermes:
+
+   ```bash
+   hermes plugins install ateymoori/pomelu-hermes-plugin --enable
+   ```
+
 Away from home, use a private network such as [Tailscale](https://tailscale.com)
 or put the gateway behind HTTPS. The same guide is in the app under
 Settings → "How to connect".
@@ -171,6 +180,12 @@ Llama or a local model). Pomelu shows what the agent sends.
 **Can I use it away from home?**
 Yes, through a private network such as Tailscale, or with the gateway behind
 HTTPS.
+
+**Can my bots message me first, like on Telegram?**
+Yes, with the [Pomelu plugin](https://github.com/ateymoori/pomelu-hermes-plugin)
+for Hermes: a reminder or a scheduled job made in Pomelu then comes to the
+bot's chat in the app, with a notification. On Android, keep "Stay connected
+in the background" on for notifications at once.
 
 **Is it free?**
 Yes. The app is free, with no ads and no in-app purchases, and the code is

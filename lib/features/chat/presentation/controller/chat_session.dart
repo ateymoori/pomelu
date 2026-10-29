@@ -19,6 +19,31 @@ mixin _Session on _$ChatController {
       run.draining ||
       run.deleting;
 
+  /// Lets go of an idle chat while the app is away. Hermes delivers a cron
+  /// report or a bot's message into a Bot Chat only once it owns the chat,
+  /// and it cannot take over one this app holds open: a chat the app
+  /// started would refuse every delivery while the app stays connected.
+  void _release(_Run run) {
+    final id = state.runtimeId;
+    if (!run.live || run.released || id.isEmpty || _busy(run)) return;
+    run.released = true;
+    run.client.unwatchSession(id);
+    run.watched = '';
+    run.releasing = run.api
+        .closeSession(id)
+        .catchError((Object e) => log.w('releasing $id failed', error: e))
+        .whenComplete(() => run.releasing = null);
+  }
+
+  /// Back on screen: the released chat resumes, with what came meanwhile.
+  Future<void> _comeBack(_Run run) async {
+    if (!run.live || !run.released) return;
+    await run.releasing;
+    if (!run.live || !run.released) return;
+    run.released = false;
+    await _reopen(run);
+  }
+
   Future<void> _reopen(_Run run) =>
       run.reopening ??= _reopenOnce(run).whenComplete(() {
         run.reopening = null;
@@ -197,6 +222,7 @@ mixin _Session on _$ChatController {
     final online = s is Connected;
     if (!run.live || online == state.online) return;
     state = state.copyWith(online: online);
+    if (run.released) return;
     if (!online) {
       // A dead socket sends no end of turn: a running one is gone from view.
       _cancelStopGuard(run);
@@ -221,7 +247,7 @@ mixin _Session on _$ChatController {
 
   void _onEvent(_Run run, GatewayEvent ev) {
     final rt = state.runtimeId;
-    if (!run.live || rt.isEmpty) return;
+    if (!run.live || rt.isEmpty || run.released) return;
     switch (ev.type) {
       case EventNames.sessionsChanged:
         _scheduleFollow(run);
@@ -242,6 +268,7 @@ mixin _Session on _$ChatController {
         _cancelStopGuard(run);
         // A turn typed while this one ran goes out now.
         if (wasRunning) unawaited(_drain(run));
+        if (wasRunning && !appIsVisible) _release(run);
     }
   }
 }

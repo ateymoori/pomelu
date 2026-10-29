@@ -337,7 +337,15 @@ message per bot; the row goes when that chat opens. When the app leaves the
 screen it stores, through `AwayStore` (uncached preferences, shared with the
 background isolate), the time and each bot's `message_count` from the roster:
 a changed count is what marks a chat as moved (Hermes stamps `last_active`
-at a turn's start, not when its reply lands). Two runners share it:
+at a turn's start, not when its reply lands). A Bot Chat gets such messages
+only from a cron job with `deliver: bot-chat`; a job made in an app chat has
+no origin, so Hermes sends it to a Telegram home channel or keeps it local.
+The [Pomelu plugin](https://github.com/ateymoori/pomelu-hermes-plugin) for
+Hermes (a `pre_tool_call` hook on `cronjob_manage` create, plus a prompt
+section in `gui` sessions) sets `bot-chat` when no target was chosen. An
+idle open chat lets go of its session while the app is away (`_release`,
+`session.close`) so the gateway can take the chat over and deliver; it
+resumes on return. Two runners share it:
 
 - the app, on `sessions.changed` and on every `Connected` while it is not
   visible (2 s debounce): with "Stay connected", at once, and what came

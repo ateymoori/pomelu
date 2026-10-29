@@ -256,6 +256,7 @@ abstract final class HermesMethods {
   static const String sessionCreate = 'session.create';
   static const String sessionResume = 'session.resume';
   static const String sessionActivate = 'session.activate';
+  static const String sessionClose = 'session.close';
   static const String sessionEventsSince = 'session.events.since';
   static const String sessionUndo = 'session.undo';
   static const String sessionHistory = 'session.history';

@@ -261,6 +261,12 @@ class ScriptedApi extends FakeApi {
     return actionDone;
   }
 
+  /// Runtime ids `session.close` let go of, in order.
+  final List<String> closedIds = [];
+
+  @override
+  Future<void> closeSession(String runtimeId) async => closedIds.add(runtimeId);
+
   @override
   Future<int> undoLastTurn(String runtimeId) async {
     undos++;
@@ -338,6 +344,8 @@ ChatRig bootChat({
   bool online = true,
   List<Override> overrides = const [],
 }) {
+  // The chat follows the app's lifecycle, which needs a binding.
+  TestWidgetsFlutterBinding.ensureInitialized();
   final fakeClient = client ?? (FakeClient()..connected = online);
   final gateway = api ?? ScriptedApi();
   final store = ChatStore(kv ?? MemoryKeyValueStore(), '');

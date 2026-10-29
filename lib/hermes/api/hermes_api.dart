@@ -133,6 +133,12 @@ class HermesApi
     }, HermesTimeouts.rpcStartup),
   );
 
+  /// Ends this app's hold on a live session; the stored chat stays and
+  /// resumes later.
+  Future<void> closeSession(String runtimeId) async {
+    await _client.call(HermesMethods.sessionClose, {'session_id': runtimeId});
+  }
+
   /// Drops the last user turn and all after it from an idle session;
   /// returns how many rows went.
   Future<int> undoLastTurn(String runtimeId) async {
