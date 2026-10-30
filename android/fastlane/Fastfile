@@ -14,15 +14,15 @@ platform :android do
     end
   end
 
-  # A draft until the app's first review passes: Play refuses any other
-  # release status for an app that was never published.
+  # Rolled out to the testers at once (the app is published, so Play takes
+  # any release status).
   desc 'Build and upload to the closed test (bump the build number in pubspec first)'
   lane :beta do
     build
     upload_to_play_store(
       track: 'alpha',
       aab: AAB,
-      release_status: 'draft',
+      release_status: 'completed',
       skip_upload_metadata: true,
       skip_upload_changelogs: true,
       skip_upload_images: true,
