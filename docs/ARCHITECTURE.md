@@ -134,6 +134,7 @@ Only `PlatformInfo` asks which OS runs (`AppPlatform.android / ios / other`;
 |---|---|---|---|
 | Share sheet (`ShareBridge`) | `ShareChannel` ← `MainActivity.kt` | `ShareChannel` ← `ShareBridge.swift` | `NoShareBridge` |
 | Notifications (`NotificationGateway`) | `LocalNotificationGateway` | same, Darwin settings | `NoopNotificationGateway` |
+| Push (`PushBridge`) | `ChannelPushBridge` ← `PushBridge.kt` (FCM token, the phone's key), `PushService.kt` opens and posts; Firebase starts from `BuildConfig` (`android/firebase.properties`, private) or not at all | `ChannelPushBridge` ← `PushBridge.swift` (APNs token); `NotificationService` extension opens and shows; `Shared/PushKey.swift` holds the key in the App Group | `NoPushBridge` |
 | "Stay connected" (`ConnectionServiceController`) | foreground service, `specialUse` | none; Settings hides the row | none |
 | Links | `app_links`, `pomelu://` intent filter, `flutter_deeplinking_enabled` false | `app_links`, `CFBundleURLTypes` `pomelu`, `FlutterDeepLinkingEnabled` false | `app_links` |
 | Gallery, geocoder, pickers | plugins (`gal`, `geocoding`, system pickers) | same plugins | fail softly |
@@ -321,8 +322,9 @@ arrive as one `skipped` item; the picker says so.
 
 ## Notifications
 
-All local (`flutter_local_notifications`); no push service: the gateway is
-the user's own server. `NotificationCenter` listens to `SessionSignals`
+Local rows (`flutter_local_notifications`) for what the socket brings, and
+push for the bots' messages when the gateway has the Pomelu plugin (below).
+`NotificationCenter` listens to `SessionSignals`
 (`notification.show/clear`, `background.complete`, runtime id → bot) and to
 the router's question arrivals and closes; `NotificationPolicy` (pure)
 decides, quiet for the chat on screen (`ActiveViewNotifier`). A question's
@@ -345,7 +347,7 @@ Hermes (a `pre_tool_call` hook on `cronjob_manage` create, plus a prompt
 section in `gui` sessions) sets `bot-chat` when no target was chosen. An
 idle open chat lets go of its session while the app is away (`_release`,
 `session.close`) so the gateway can take the chat over and deliver; it
-resumes on return. Two runners share it:
+resumes on return. Without push, two runners share it:
 
 - the app, on `sessions.changed` and on every `Connected` while it is not
   visible (2 s debounce): with "Stay connected", at once, and what came
@@ -357,6 +359,30 @@ resumes on return. Two runners share it:
   disposes the client. Secrets are kept "after first unlock, this device"
   so it can read them while the phone is locked; the app re-reads the
   credential on resume, as the check may have renewed it.
+
+**Push** (`PushRegistration`, `PushBridge`). With the
+[Pomelu plugin](https://github.com/ateymoori/pomelu-hermes-plugin) installed,
+a bot's reply in its Bot Chat rings the phone while the app is away, with no
+app code running. On each `Connected`, while Notify me is on and allowed, the
+app registers the phone: `PUT /api/plugins/pomelu/devices/{id}` with the
+push token and a 32-byte key the phone made (`PROTOCOL.md`). It tells the
+plugin when it comes on screen and leaves (`/presence`, again every 5 min on
+screen); the plugin pushes only while the app is away (or quiet for 10 min).
+The plugin seals each message with the phone's key (AES-256-GCM) and sends
+it through the Pomelu push relay (a Cloudflare Worker, `relay/` in the
+plugin repo) to APNs or FCM; the relay holds the app's push keys and cannot
+read the message. On the phone the native side opens it and posts the bot's
+message row, same id and tag as `forMessage`: Android `PushService.kt` (data
+message; quiet while the app is in front or Stay connected holds the
+socket, so a message rings once), iOS the `NotificationService` extension
+(the push's plain "New message" alert shows only if it cannot open it; no
+banner while the app is in front). A tap opens the bot's chat (Android: the
+`pomelu://chat` link; iOS: `PushBridge` → `taps`, or `launchBot` after a cold
+start). While push is active the background check is off and the app posts
+the bots' messages itself only with Stay connected. Another account gets a
+new phone id and a new key. Notify me off removes the phone from the plugin.
+A gateway without the plugin (404) keeps the runners above, and Settings
+says how to add it.
 
 - **Android.** "Stay connected" (on by default) runs a `specialUse`
   foreground service that holds the process, started only while the app is in

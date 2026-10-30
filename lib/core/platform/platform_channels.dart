@@ -1,9 +1,10 @@
 import '../config/app_config.dart';
 
 /// The app's own platform channels. The same names are spelled in
-/// `android/.../MainActivity.kt` (share, service, shortcuts) and `ios/Runner/`
-/// (`ShareBridge.swift`: the share pair; `AppDelegate.swift`: reduce
-/// transparency, shortcuts); change them together.
+/// `android/.../MainActivity.kt` (share, service, shortcuts, push) and
+/// `ios/Runner/` (`ShareBridge.swift`: the share pair; `AppDelegate.swift`:
+/// reduce transparency, shortcuts; `PushBridge.swift`: the push pair); change
+/// them together.
 abstract final class PlatformChannels {
   /// Share sheet: `initial` (the share that launched the app).
   static const String share = '${AppConfig.appId}/share';
@@ -23,4 +24,10 @@ abstract final class PlatformChannels {
   /// iOS's Reduce Transparency setting: `true`/`false` now and on change.
   static const String reduceTransparency =
       '${AppConfig.appId}/reduce_transparency';
+
+  /// Push (`PushBridge`): `register {newKey}`, `launchBot`.
+  static const String push = '${AppConfig.appId}/push';
+
+  /// Push: `{type: token}` and `{type: tap, bot}`.
+  static const String pushEvents = '${AppConfig.appId}/push/events';
 }

@@ -29,6 +29,8 @@
 			<key>NSPrivacyAccessedAPITypeReasons</key>
 			<array>
 				<string>CA92.1</string>
+				<!-- PushKey: the push key, shared with the notification extension. -->
+				<string>1C8F.1</string>
 			</array>
 		</dict>
 	</array>

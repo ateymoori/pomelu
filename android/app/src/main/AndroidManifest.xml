@@ -6,7 +6,7 @@
     <!-- Location share: the map opens on the phone's place. Asked at use. -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <!-- Local notifications only (no FCM). -->
+    <!-- Local notifications, and bot messages by push (FCM, PushService). -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <!-- "Stay connected" (off by default): specialUse, subtype on the service. -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
@@ -35,7 +35,7 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:enableOnBackInvokedCallback="true"
         android:resizeableActivity="true"
-        android:name="${applicationName}"
+        android:name=".PomeluApplication"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -113,6 +113,26 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+            <!-- Bot messages by push (FCM data messages); PushBridge.kt. -->
+        <service
+            android:name=".PushService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+        <!-- No token until the user has push (PushBridge.register), no
+             Analytics; Firebase starts from BuildConfig, not resources. -->
+        <meta-data
+            android:name="firebase_messaging_auto_init_enabled"
+            android:value="false"/>
+        <meta-data
+            android:name="firebase_analytics_collection_deactivated"
+            android:value="true"/>
+        <provider
+            android:name="com.google.firebase.provider.FirebaseInitProvider"
+            android:authorities="${applicationId}.firebaseinitprovider"
+            tools:node="remove"/>
     </application>
     <!-- PROCESS_TEXT for the engine; IMAGE_CAPTURE so image_picker sees the
          camera apps (package visibility). -->

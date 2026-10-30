@@ -17,6 +17,15 @@ if (hasReleaseKey) {
     keyPropertiesFile.inputStream().use { keyProperties.load(it) }
 }
 
+// Push (FCM): android/firebase.properties (not tracked) holds appId, apiKey,
+// projectId and senderId of the Firebase Android app. Without it the app
+// builds with no push (PushBridge.kt answers null) and notifies as before.
+val firebaseProperties = Properties()
+rootProject.file("firebase.properties").takeIf { it.exists() }?.inputStream()?.use {
+    firebaseProperties.load(it)
+}
+fun firebase(key: String) = "\"${firebaseProperties.getProperty(key, "")}\""
+
 android {
     namespace = "se.royan.pomelu"
     compileSdk = 37
@@ -41,6 +50,14 @@ android {
         // flag during build.
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        buildConfigField("String", "FIREBASE_APP_ID", firebase("appId"))
+        buildConfigField("String", "FIREBASE_API_KEY", firebase("apiKey"))
+        buildConfigField("String", "FIREBASE_PROJECT_ID", firebase("projectId"))
+        buildConfigField("String", "FIREBASE_SENDER_ID", firebase("senderId"))
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     signingConfigs {
@@ -91,4 +108,8 @@ flutter {
 
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
+    // Push only: no Analytics, no google-services plugin (PushBridge.kt
+    // starts Firebase from BuildConfig).
+    implementation(platform("com.google.firebase:firebase-bom:35.1.0"))
+    implementation("com.google.firebase:firebase-messaging")
 }

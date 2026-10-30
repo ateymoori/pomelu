@@ -4,8 +4,10 @@ import 'package:flutter/widgets.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../app/router.dart';
+import '../../../app/routes.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/platform/app_visibility.dart';
+import '../../../core/platform/push_bridge.dart';
 import '../../../core/utils/app_logger.dart';
 import '../../../core/utils/l10n_ext.dart';
 import '../../../hermes/client/connection_state.dart';
@@ -19,6 +21,7 @@ import '../domain/notification_policy.dart';
 import 'active_view_provider.dart';
 import 'background_redial_guard.dart';
 import 'notification_providers.dart';
+import 'push_registration.dart';
 
 part 'notification_center.g.dart';
 
@@ -52,9 +55,11 @@ class NotificationCenter extends _$NotificationCenter {
 
     Timer? check;
 
-    /// Only while away: on screen, the chat itself shows what came.
+    /// Only while away: on screen, the chat itself shows what came. With
+    /// push the phone's push service shows it, unless the socket stays open
+    /// (Android's Stay connected), which the push side then leaves to it.
     void checkSoon() {
-      if (appIsVisible) return;
+      if (appIsVisible || !_appPostsMessages) return;
       check?.cancel();
       check = Timer(
         AppConfig.messageCheckDelay,
@@ -81,6 +86,10 @@ class NotificationCenter extends _$NotificationCenter {
       signals.noticeClears.listen((key) => unawaited(gateway.cancel(key))),
       signals.storeChanges.listen((_) => checkSoon()),
       gateway.taps.listen(_openRoute),
+      ref
+          .read(pushBridgeProvider)
+          .taps
+          .listen((bot) => _openRoute(Routes.chatPath(bot))),
       // A question rings once on arrival (a replay is the same question) and
       // is retracted once answered or withdrawn.
       if (requests != null) ...[
@@ -119,6 +128,7 @@ class NotificationCenter extends _$NotificationCenter {
       _syncSoon();
     });
     ref.listen(backgroundRedialGuardProvider, (_, _) {});
+    ref.listen(pushRegistrationProvider, (_, _) => _syncSoon());
     // Also keeps the grant warm for the first notification.
     ref.listen(notificationPermissionProvider, (_, _) => _syncSoon());
     // The first live connection is when to ask for the permission: the app
@@ -164,6 +174,9 @@ class NotificationCenter extends _$NotificationCenter {
     final route = await gateway.launchRoute();
     if (!ref.mounted) return;
     if (route != null) _openRoute(route);
+    final bot = await ref.read(pushBridgeProvider).launchBot();
+    if (!ref.mounted) return;
+    if (bot != null) _openRoute(Routes.chatPath(bot));
     await _syncService();
     await _syncCheck();
   }
@@ -213,15 +226,25 @@ class NotificationCenter extends _$NotificationCenter {
   }
 
   /// The background check runs while notifications are on and the app can
-  /// sign in on its own.
+  /// sign in on its own, and push does not already bring the messages.
   Future<void> _syncCheck() async {
     if (!ref.mounted) return;
     await ref
         .read(backgroundCheckSchedulerProvider)
         .sync(
-          wanted: ref.read(notificationsEnabledSettingProvider) && _signedIn,
+          wanted:
+              ref.read(notificationsEnabledSettingProvider) &&
+              _signedIn &&
+              ref.read(pushRegistrationProvider) != PushStatus.active,
         );
   }
+
+  /// The app posts the bots' messages itself: without push, or while
+  /// Android's Stay connected holds the socket (the push side then stays
+  /// quiet, `PushService.kt`), so a message rings once.
+  bool get _appPostsMessages =>
+      ref.read(pushRegistrationProvider) != PushStatus.active ||
+      ref.read(connectionServiceControllerProvider).isRunning;
 
   /// The system shows its dialog once: spend it on a working app.
   Future<void> _promptOnce() async {

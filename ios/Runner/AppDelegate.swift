@@ -27,10 +27,57 @@ import workmanager_apple
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 
+  override func application(
+    _ application: UIApplication,
+    didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
+  ) {
+    PushBridge.shared.registered(deviceToken: deviceToken)
+    super.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
+  }
+
+  override func application(
+    _ application: UIApplication,
+    didFailToRegisterForRemoteNotificationsWithError error: Error
+  ) {
+    PushBridge.shared.failed(error)
+    super.application(application, didFailToRegisterForRemoteNotificationsWithError: error)
+  }
+
+  /// A bot's message by push opens its chat; the rest are
+  /// flutter_local_notifications'.
+  override func userNotificationCenter(
+    _ center: UNUserNotificationCenter,
+    didReceive response: UNNotificationResponse,
+    withCompletionHandler completionHandler: @escaping () -> Void
+  ) {
+    if let bot = response.notification.request.content.userInfo[PushKey.botKey] as? String {
+      PushBridge.shared.tapped(bot: bot)
+      return completionHandler()
+    }
+    super.userNotificationCenter(
+      center, didReceive: response, withCompletionHandler: completionHandler)
+  }
+
+  /// On screen the chat shows the message itself: no banner for a push.
+  override func userNotificationCenter(
+    _ center: UNUserNotificationCenter,
+    willPresent notification: UNNotification,
+    withCompletionHandler completionHandler:
+      @escaping (UNNotificationPresentationOptions) -> Void
+  ) {
+    let info = notification.request.content.userInfo
+    if info[PushKey.botKey] != nil || info["enc"] != nil { return completionHandler([]) }
+    super.userNotificationCenter(
+      center, willPresent: notification, withCompletionHandler: completionHandler)
+  }
+
   func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
     if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "ShareBridge") {
       ShareBridge.register(with: registrar)
+    }
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "PushBridge") {
+      PushBridge.register(with: registrar)
     }
     if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "BotSuggestions") {
       FlutterMethodChannel(

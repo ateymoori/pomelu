@@ -34,6 +34,11 @@ abstract final class HermesPaths {
       '$cronJobs/${_seg(id)}${action == null ? '' : '/$action'}';
   static String actionStatus(String name) => 'api/actions/${_seg(name)}/status';
 
+  /// A phone of the Pomelu Hermes plugin (`pomelu-hermes-plugin`).
+  static String pushDevice(String id) =>
+      'api/plugins/pomelu/devices/${_seg(id)}';
+  static String pushPresence(String id) => '${pushDevice(id)}/presence';
+
   /// [id] as one path segment; a dot segment would climb out of it.
   static String _seg(String id) {
     if (id.isEmpty || id == '.' || id == '..') {
@@ -46,6 +51,10 @@ abstract final class HermesPaths {
 /// How long the SDK waits.
 abstract final class HermesTimeouts {
   static const Duration http = Duration(seconds: 15);
+
+  /// The first registration turns the plugin on for each bot, one Hermes
+  /// command per bot.
+  static const Duration pushRegister = Duration(minutes: 2);
   static const Duration rpc = Duration(seconds: 30);
   static const Duration rpcStartup = Duration(seconds: 60);
   static const Duration slashExec = Duration(seconds: 90);

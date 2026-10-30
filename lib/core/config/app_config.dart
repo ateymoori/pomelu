@@ -88,6 +88,11 @@ abstract final class AppConfig {
   /// writes is one check.
   static const Duration messageCheckDelay = Duration(seconds: 2);
 
+  /// While on screen, how often the app tells the Pomelu plugin so again.
+  /// The plugin counts an app quiet for 10 minutes as away (it may have
+  /// left without saying so), and pushes again.
+  static const Duration pushPresenceBeat = Duration(minutes: 5);
+
   /// Newest rows of a chat read for its newest message.
   static const int messageCheckRows = 20;
 

@@ -3,7 +3,7 @@ description: "Pomelu: unofficial mobile app for Hermes Agent. Connects to a Herm
 publish_to: 'none'
 # The version code is a counter: +1 per release. It starts above the
 # epoch-seconds codes already installed, and stays under Play's 2.1 billion cap.
-version: 1.0.2+1792000005
+version: 1.0.3+1792000006
 
 environment:
   sdk: ^3.13.2
@@ -58,8 +58,8 @@ dependencies:
   # (a refused location or microphone permission).
   geolocator: ^14.1.2
 
-  # Notifications (local only — the gateway is the user's own server, there
-  # is no push service); the periodic check for bot messages while away
+  # Notifications: rows the app posts itself, and the periodic check for bot
+  # messages while away (push is native: PushBridge.kt/.swift)
   flutter_local_notifications: ^22.3.3
   workmanager: ^0.10.10
 

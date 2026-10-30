@@ -18,6 +18,7 @@ import '../models/json_converters.dart';
 import '../models/json_parse.dart';
 import '../models/model_options.dart';
 import '../models/profile.dart';
+import '../models/push_device.dart';
 import '../models/session_message.dart';
 import '../models/session_resume.dart';
 import '../models/session_summary.dart';
@@ -27,6 +28,7 @@ part 'dashboard_routes.dart';
 part 'media_routes.dart';
 part 'model_routes.dart';
 part 'profile_routes.dart';
+part 'push_routes.dart';
 part 'screen_routes.dart';
 
 /// Typed façade over the gateway RPCs and REST routes the app needs. A
@@ -37,6 +39,7 @@ class HermesApi
         _MediaRoutes,
         _ModelRoutes,
         _ProfileRoutes,
+        _PushRoutes,
         _ScreenRoutes {
   /// The API of [_client]'s gateway.
   const HermesApi(this._client);

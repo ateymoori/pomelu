@@ -20,6 +20,11 @@ abstract final class PreferenceKeys {
   /// Per bot, what the app has seen of its chat, with the account.
   static const String chatMarks = 'notifications.chatMarks';
 
+  /// This phone's id for the Pomelu Hermes plugin, and the account it is
+  /// registered with.
+  static const String pushDeviceId = 'notifications.pushDeviceId';
+  static const String pushAccount = 'notifications.pushAccount';
+
   /// Set once the secrets are stored readable while the phone is locked.
   static const String secretsReadableLocked = 'secrets.readableLocked';
 

@@ -144,6 +144,21 @@ So the app sends `session.close {session_id}` for an idle chat when it leaves
 the screen (or when a turn ends while it is away), and resumes it when it is
 back.
 
+**Push (Pomelu plugin).** The plugin's dashboard routes, behind the
+dashboard's normal sign-in; 404 means no plugin (or an unknown phone):
+
+| Route | Body | Meaning |
+|---|---|---|
+| `PUT /api/plugins/pomelu/devices/{id}` | `{platform: ios\|android, token, key, sandbox}` | add or renew this phone; `key` is 32 bytes, base64; `sandbox` is APNs development. Also turns the plugin on for every bot |
+| `PUT /api/plugins/pomelu/devices/{id}/presence` | `{visible}` | the app came on screen or left |
+| `DELETE /api/plugins/pomelu/devices/{id}` | — | no more pushes to this phone |
+
+A push carries `base64(nonce(12) || ciphertext || tag(16))` of
+`{"v": 1, "bot", "title", "body"}` (`body` cut to 240 characters, a file-only
+reply is a paperclip). iOS: APNs `alert` with `mutable-content`, the sealed
+text in `enc`, `apns-collapse-id` per phone and bot. Android: an FCM data
+message `{enc}`, high priority.
+
 ## Methods used
 
 | Purpose | Call |

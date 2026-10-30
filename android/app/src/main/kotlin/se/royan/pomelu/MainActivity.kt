@@ -95,6 +95,9 @@ class MainActivity : FlutterActivity() {
             .setMethodCallHandler(ConnectionService.handler(applicationContext))
         MethodChannel(messenger, SHORTCUTS_CHANNEL)
             .setMethodCallHandler(BotShortcuts.handler(applicationContext))
+        MethodChannel(messenger, PUSH_CHANNEL)
+            .setMethodCallHandler(PushBridge.handler(applicationContext))
+        EventChannel(messenger, PUSH_EVENTS).setStreamHandler(PushBridge.events)
         current = WeakReference(this)
         io.execute { SharedFiles.cleanUp(cacheDir) }
         handleShare(intent)
@@ -104,6 +107,16 @@ class MainActivity : FlutterActivity() {
     override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
         ConnectionService.stop(applicationContext)
         super.cleanUpFlutterEngine(flutterEngine)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        PushBridge.foreground = true
+    }
+
+    override fun onPause() {
+        PushBridge.foreground = false
+        super.onPause()
     }
 
     override fun onDestroy() {
@@ -267,5 +280,7 @@ class MainActivity : FlutterActivity() {
         private const val SHARE_EVENTS = "$PREFIX/share/events"
         private const val SERVICE_CHANNEL = "$PREFIX/connection_service"
         private const val SHORTCUTS_CHANNEL = "$PREFIX/shortcuts"
+        private const val PUSH_CHANNEL = "$PREFIX/push"
+        private const val PUSH_EVENTS = "$PREFIX/push/events"
     }
 }

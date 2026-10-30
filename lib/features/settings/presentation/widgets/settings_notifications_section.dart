@@ -8,10 +8,12 @@ import '../../../../core/theme/tokens.dart';
 import '../../../../core/ui/ui.dart';
 import '../../../../core/utils/l10n_ext.dart';
 import '../../../notifications/presentation/notification_providers.dart';
+import '../../../notifications/presentation/push_registration.dart';
 
-/// Notify me (needs the OS grant) and stay connected (a foreground service;
-/// asks for the grant so its row shows, works without it). A refused grant
-/// shows the way to the system settings; it is read again on resume.
+/// Notify me (needs the OS grant; says whether push from the Pomelu plugin
+/// works) and stay connected (a foreground service; asks for the grant so
+/// its row shows, works without it). A refused grant shows the way to the
+/// system settings; it is read again on resume.
 class SettingsNotificationsSection extends ConsumerStatefulWidget {
   const SettingsNotificationsSection({super.key});
 
@@ -54,7 +56,14 @@ class _SettingsNotificationsSectionState
           title: l10n.settingsNotificationsEnabled,
           subtitle: blocked
               ? l10n.settingsNotificationsDenied
-              : l10n.settingsNotificationsEnabledBody,
+              : switch (ref.watch(pushRegistrationProvider)) {
+                  _ when !enabled || granted != true =>
+                    l10n.settingsNotificationsEnabledBody,
+                  PushStatus.active => l10n.settingsNotificationsPushOn,
+                  PushStatus.unavailable =>
+                    l10n.settingsNotificationsPushMissing,
+                  PushStatus.off => l10n.settingsNotificationsEnabledBody,
+                },
           value: enabled && granted != false,
           onChanged: (value) => unawaited(_setEnabled(value: value)),
         ),

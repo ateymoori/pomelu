@@ -72,9 +72,9 @@ class NoopNotificationGateway implements NotificationGateway {
   Future<String?> launchRoute() async => null;
 }
 
-/// `flutter_local_notifications`. All local: the gateway is the user's own
-/// server, so there is no push service; the app posts from its socket or
-/// from the periodic background check.
+/// `flutter_local_notifications`: what the app posts from its socket or from
+/// the periodic background check. Pushes are posted natively
+/// (`PushService.kt`, the iOS notification extension).
 class LocalNotificationGateway implements NotificationGateway {
   LocalNotificationGateway({
     FlutterLocalNotificationsPlugin? plugin,

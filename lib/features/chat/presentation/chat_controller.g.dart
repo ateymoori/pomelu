@@ -67,7 +67,7 @@ final class ChatControllerProvider
   }
 }
 
-String _$chatControllerHash() => r'db676325f6db7f156ac448f716f70d4a1278fb7d';
+String _$chatControllerHash() => r'9b69c8e2fb17945ebef2dda5d52d0d9b339fdfe0';
 
 /// Owns one open chat: its [ChatState] and what the user can do to it. With
 /// no gateway configured it builds in an error state and every method does
