@@ -92,8 +92,8 @@ keyboard shortcuts and right-click.
 | **iPhone and iPad** (iOS 15+) | Coming soon to the App Store. Until then, [build it from source](#build-from-source). |
 
 The GitHub APK has a different signature from the Google Play build, so
-Android will not update one over the other. To switch, uninstall first and
-sign in again. More at [royan.se/pomelu](https://royan.se/pomelu/).
+Android will not update one over the other. To switch, uninstall the one you
+have and sign in again. More at [royan.se/pomelu](https://royan.se/pomelu/).
 
 ## Connect to your Hermes Agent
 
