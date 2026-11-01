@@ -242,7 +242,7 @@ bar (`selectedBar`) and a semibold name. Installed once above the navigator:
   `railMaxHeight` the capsule joins the top row. Off: Start; lost: Reconnect.
   The chat header's screen button (folded into ⋯ below `headerWideMin`)
   shows only for a bot with a screen, its dot lit while a person drives it.
-- **Bot details.** Glass sheet, 85 % tall, tabs Skills / Tools (read only),
+- **Bot details.** Opaque tall sheet, 85 % tall, tabs Skills / Tools (read only),
   Instructions (`SOUL.md`, editable in a full-screen editor), Cron (pause,
   resume, run now, delete).
 
