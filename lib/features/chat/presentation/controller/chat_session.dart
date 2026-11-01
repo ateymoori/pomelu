@@ -226,6 +226,7 @@ mixin _Session on _$ChatController {
     if (!online) {
       // A dead socket sends no end of turn: a running one is gone from view.
       _cancelStopGuard(run);
+      ref.read(reviewPromptProvider).notNow();
       state = state.copyWith(running: false, stopRequested: false);
       return;
     }
@@ -264,11 +265,26 @@ mixin _Session on _$ChatController {
       default:
         final wasRunning = state.running;
         state = ChatReducer.apply(state, ev, DateTime.now().toUtc());
+        _noteForReview(ev, wasRunning: wasRunning);
         if (state.running) return;
         _cancelStopGuard(run);
         // A turn typed while this one ran goes out now.
         if (wasRunning) unawaited(_drain(run));
         if (wasRunning && !appIsVisible) _release(run);
+    }
+  }
+
+  /// Only a turn seen to its good end counts; anything else holds the prompt.
+  void _noteForReview(GatewayEvent ev, {required bool wasRunning}) {
+    final review = ref.read(reviewPromptProvider);
+    if (state.running || ev.type == EventNames.error) {
+      review.notNow();
+    } else if (ev.type == EventNames.messageComplete) {
+      if (wasRunning && ev.turnComplete.status == TurnStatus.complete) {
+        unawaited(review.replyFinished());
+      } else {
+        review.notNow();
+      }
     }
   }
 }

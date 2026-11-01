@@ -35,6 +35,8 @@ import '../domain/outbox.dart';
 import '../domain/slash_command.dart';
 import '../domain/transcript.dart';
 
+import 'review_prompt.dart';
+
 part 'chat_controller.g.dart';
 part 'controller/chat_commands.dart';
 part 'controller/chat_conversations.dart';

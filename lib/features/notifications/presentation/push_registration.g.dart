@@ -53,7 +53,7 @@ final class PushRegistrationProvider
   }
 }
 
-String _$pushRegistrationHash() => r'ec8726101e918bd6825067af9053115653518f18';
+String _$pushRegistrationHash() => r'45dc24da67e3e131d5306a1ee92a3776c24a4ad8';
 
 /// This phone with the gateway's Pomelu plugin: registered on each
 /// connection while notifications are on and allowed, removed when they are

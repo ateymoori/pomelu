@@ -93,6 +93,12 @@ abstract final class AppConfig {
   /// left without saying so), and pushes again.
   static const Duration pushPresenceBeat = Duration(minutes: 5);
 
+  /// Real use before the store's review prompt: finished replies, on this
+  /// many different days, then this pause so the reply can be read.
+  static const int reviewMinReplies = 10;
+  static const int reviewMinDays = 3;
+  static const Duration reviewAskDelay = Duration(seconds: 10);
+
   /// Newest rows of a chat read for its newest message.
   static const int messageCheckRows = 20;
 

@@ -63,6 +63,9 @@ dependencies:
   flutter_local_notifications: ^22.3.3
   workmanager: ^0.10.10
 
+  # Google Play's review prompt
+  in_app_review: ^2.0.12
+
   # Bot Screen: noVNC (bundled in assets/bot_screen) in a web view
   webview_flutter: ^4.14.1
 

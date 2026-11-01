@@ -25,6 +25,12 @@ abstract final class PreferenceKeys {
   static const String pushDeviceId = 'notifications.pushDeviceId';
   static const String pushAccount = 'notifications.pushAccount';
 
+  /// Finished replies, the days they came on, and whether the store's review
+  /// prompt was asked for.
+  static const String reviewReplies = 'review.replies';
+  static const String reviewDays = 'review.days';
+  static const String reviewAsked = 'review.asked';
+
   /// Set once the secrets are stored readable while the phone is locked.
   static const String secretsReadableLocked = 'secrets.readableLocked';
 

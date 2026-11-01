@@ -135,6 +135,7 @@ Only `PlatformInfo` asks which OS runs (`AppPlatform.android / ios / other`;
 | Share sheet (`ShareBridge`) | `ShareChannel` ← `MainActivity.kt` | `ShareChannel` ← `ShareBridge.swift` | `NoShareBridge` |
 | Notifications (`NotificationGateway`) | `LocalNotificationGateway` | same, Darwin settings | `NoopNotificationGateway` |
 | Push (`PushBridge`) | `ChannelPushBridge` ← `PushBridge.kt` (FCM token, the phone's key), `PushService.kt` opens and posts; Firebase starts from `BuildConfig` (`android/firebase.properties`, private) or not at all | `ChannelPushBridge` ← `PushBridge.swift` (APNs token); `NotificationService` extension opens and shows; `Shared/PushKey.swift` holds the key in the App Group | `NoPushBridge` |
+| Store review (`StoreReview`) | `PlayStoreReview` (`in_app_review`) | `NoStoreReview` | `NoStoreReview` |
 | "Stay connected" (`ConnectionServiceController`) | foreground service, `specialUse` | none; Settings hides the row | none |
 | Links | `app_links`, `pomelu://` intent filter, `flutter_deeplinking_enabled` false | `app_links`, `CFBundleURLTypes` `pomelu`, `FlutterDeepLinkingEnabled` false | `app_links` |
 | Gallery, geocoder, pickers | plugins (`gal`, `geocoding`, system pickers) | same plugins | fail softly |
@@ -319,6 +320,15 @@ picker opens. The router never navigates for an external URI
 Caps on both: 50 MB per file, 64 MB per share, 10 files, copies older than 3
 days removed at start, names cut to 120 UTF-8 bytes on disk. Left-out files
 arrive as one `skipped` item; the picker says so.
+
+## Store review
+
+`ReviewPrompt` asks Google Play for its own review prompt once, after real
+use: `AppConfig.reviewMinReplies` finished replies on `reviewMinDays` different
+days, then `reviewAskDelay` on screen with nothing typed. A stopped or failed
+turn does not count, and a new turn, an error or a lost connection in the pause
+holds it until the next good reply. The app adds no question of its own and no
+reward, and nothing depends on the answer. Play decides whether the prompt shows.
 
 ## Notifications
 
