@@ -177,6 +177,8 @@ screenshots take a bare name and land in `--test-output-dir`.
 
 No flow covers these:
 
+- Google Play's review prompt: it shows only from a Play install. Use
+  Internal app sharing, with the rule in `AppConfig.reviewMin*` met.
 - Recovery: cut the link under the running app (Android: `adb reverse
   --remove-all`; iOS: stop the gateway), expect "Reconnecting…" or "Offline",
   restore it, expect "Connected" and queued turns going out.

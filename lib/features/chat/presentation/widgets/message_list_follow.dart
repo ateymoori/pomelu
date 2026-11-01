@@ -47,7 +47,17 @@ mixin _Follow on State<MessageList>, _RowCache {
 
   void _checkNearTop() {
     final ask = widget.onNearTop;
-    if (ask == null || widget.state.earlierDone || !_controller.hasClients) {
+    final state = widget.state;
+    if (ask == null || state.earlierDone) return;
+    if (!_controller.hasClients) {
+      // An empty conversation has no list to scroll, and the gateway may have
+      // moved the chat aside: the past is still this chat's.
+      if (state.runtimeId.isNotEmpty &&
+          !state.loading &&
+          !state.running &&
+          _items.isEmpty) {
+        ask();
+      }
       return;
     }
     final position = _controller.position;

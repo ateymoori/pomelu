@@ -124,6 +124,44 @@ void main() {
     expect(stateOf(rig).earlierCursor, 'aside');
   });
 
+  testWidgets('an empty chat shows the conversation the gateway moved aside', (
+    tester,
+  ) async {
+    final api = ScriptedApi();
+    api.chain['stored-1'] = SessionSummary(
+      id: 'stored-1',
+      startedAt: DateTime.utc(2026, 10, 21),
+    );
+    api.appListed = [
+      SessionSummary(
+        id: 'aside',
+        title: 'Bot Chat (gui y)',
+        startedAt: DateTime.utc(2026, 10, 20),
+      ),
+      SessionSummary(
+        id: 'aside-empty',
+        title: 'Bot Chat (gui z)',
+        startedAt: DateTime.utc(2026, 10, 19),
+      ),
+    ];
+    api.stored['aside'] = const [
+      SessionMessage(role: 'user', text: 'before the move'),
+    ];
+    final rig = bootChat(api: api);
+    await pumpChat(tester, rig);
+
+    expect(find.textContaining('before the move'), findsOneWidget);
+    expect(find.textContaining('Say hello'), findsNothing);
+  });
+
+  testWidgets('a chat with no past keeps its greeting', (tester) async {
+    final rig = bootChat(api: ScriptedApi());
+    await pumpChat(tester, rig);
+
+    expect(find.textContaining('Say hello'), findsOneWidget);
+    expect(stateOf(rig).earlierDone, isTrue);
+  });
+
   test(
     'a message another client wrote appears, the same words are not redrawn',
     () async {

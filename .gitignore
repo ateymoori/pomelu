@@ -30,6 +30,8 @@ google-services.json
 ios/fastlane/metadata/review_information
 ios/fastlane/report.xml
 ios/fastlane/README.md
+android/fastlane/report.xml
+android/fastlane/README.md
 
 # Bot Screen viewer build (tool/bot_screen)
 tool/bot_screen/node_modules/

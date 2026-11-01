@@ -235,7 +235,8 @@ chat.
 
 ### One chat per bot
 
-The open session is the bot's "Bot Chat". `startOver` (`/new`, `/reset`,
+An empty open session loads the conversation before it at once, because it has
+no list to scroll. The open session is the bot's "Bot Chat". `startOver` (`/new`, `/reset`,
 `/clear`) settles unconfirmed turns, creates the next session with
 `parent_session_id`, archives the old one, and moves the rows on screen above
 a "New conversation" line. Scrolling near the top calls `loadEarlier`: one hop
