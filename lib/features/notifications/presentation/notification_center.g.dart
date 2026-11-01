@@ -54,7 +54,7 @@ final class NotificationCenterProvider
 }
 
 String _$notificationCenterHash() =>
-    r'5b0a990bae0c33d5f6fdeaaabea5fbcbbeec4ded';
+    r'f377322deb1dde3b3743e10a98daa78bbfd8b12f';
 
 /// Gateway signals to system notifications, taps to the router, the
 /// "Stay connected" switch to the foreground service, and the bots' messages

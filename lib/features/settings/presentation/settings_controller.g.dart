@@ -143,7 +143,7 @@ final class SettingsControllerProvider
 }
 
 String _$settingsControllerHash() =>
-    r'98a466c62a899def2064a80c1ff42548900b8b74';
+    r'932dc3e44b565dc90fa81c1f7d53e48160188925';
 
 /// Drives the settings form: probe the URL, sign in, test, save.
 ///
