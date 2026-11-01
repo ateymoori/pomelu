@@ -9,6 +9,8 @@ Chat with your self-hosted AI agent from your iPhone, iPad, Android phone, folda
 
 <a href="https://play.google.com/store/apps/details?id=se.royan.pomelu"><img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" height="80"></a>
 
+**Pomelu needs a running [Hermes Agent](https://hermes-agent.nousresearch.com/docs/getting-started/installation) 0.21.5 or newer.** Install Hermes Agent before you install the app.
+
 [![CI](https://github.com/ateymoori/pomelu/actions/workflows/ci.yml/badge.svg)](https://github.com/ateymoori/pomelu/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/ateymoori/pomelu)](https://github.com/ateymoori/pomelu/releases/latest)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
@@ -32,9 +34,6 @@ agent by Nous Research. Hermes runs on your own Mac, PC, home server or
 cloud machine; Pomelu connects to its gateway and puts every Hermes bot in
 your pocket. There is no Pomelu server, no account and no tracking: your
 chats go only between your phone and your own agent.
-
-**Android:** [get Pomelu on Google Play](https://play.google.com/store/apps/details?id=se.royan.pomelu). You need your own
-[Hermes Agent](https://hermes-agent.nousresearch.com) 0.21.5 or newer.
 
 <p align="center">
   <img src="docs/images/iphone-01-hero.webp" alt="Pomelu on iPhone: chat with a Hermes Agent bot" width="19%">
