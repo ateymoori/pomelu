@@ -7,7 +7,10 @@
 **Open-source mobile client for [Hermes Agent](https://github.com/NousResearch/hermes-agent) by Nous Research.**
 Chat with your self-hosted AI agent from your iPhone, iPad, Android phone, foldable or tablet.
 
+<a href="https://play.google.com/store/apps/details?id=se.royan.pomelu"><img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" height="80"></a>
+
 [![CI](https://github.com/ateymoori/pomelu/actions/workflows/ci.yml/badge.svg)](https://github.com/ateymoori/pomelu/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/ateymoori/pomelu)](https://github.com/ateymoori/pomelu/releases/latest)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Flutter 3.47](https://img.shields.io/badge/Flutter-3.47-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
 [![Android](https://img.shields.io/badge/Android-10%2B-3DDC84?logo=android&logoColor=white)](#get-the-app)
@@ -30,6 +33,9 @@ cloud machine; Pomelu connects to its gateway and puts every Hermes bot in
 your pocket. There is no Pomelu server, no account and no tracking: your
 chats go only between your phone and your own agent.
 
+**Android:** [get Pomelu on Google Play](https://play.google.com/store/apps/details?id=se.royan.pomelu). You need your own
+[Hermes Agent](https://hermes-agent.nousresearch.com) 0.21.5 or newer.
+
 <p align="center">
   <img src="docs/images/iphone-01-hero.webp" alt="Pomelu on iPhone: chat with a Hermes Agent bot" width="19%">
   <img src="docs/images/iphone-02-answers.webp" alt="Live streamed Markdown answers from Hermes Agent" width="19%">
@@ -40,26 +46,28 @@ chats go only between your phone and your own agent.
 
 ## Features
 
-- 💬 **One chat per bot**, like a messenger. Every Hermes profile is a bot in
+- **One chat per bot**, like a messenger. Every Hermes profile is a bot in
   the side menu; a new conversation starts in the same chat.
-- ⚡ **Live answers** in Markdown with code, tables, tool activity and the
+- **Live answers** in Markdown with code, tables, tool activity and the
   agent's plan while a task runs. Stop a turn at any time.
-- ✅ **Answer the agent**: questions, approvals and secret input show up as
+- **Answer the agent**: questions, approvals and secret input show up as
   cards in the chat and as notifications.
-- 🎙️ **Voice, photos, video and files both ways**, plus a place from a map.
+- **Voice, photos, video and files both ways**, plus a place from a map.
   Replies can be read aloud in the bot's own voice.
-- 📤 **Share from any app** into a bot. Your bots sit in the share sheet and
+- **Share from any app** into a bot. Your bots sit in the share sheet and
   in the app icon's menu.
-- 🧠 **Bot details**: skills, tools, instructions, `SOUL.md` (editable) and
+- **Bot details**: skills, tools, instructions, `SOUL.md` (editable) and
   scheduled cron jobs (pause, resume, run now, delete). Create, rename and
   delete bots like Hermes Desktop.
-- 🖥️ **Bot Screen**: watch a bot work on its own Linux desktop, take over with
-  touch, keyboard, paste and drag and drop, then hand it back.
-- 🔔 **Notifications** for replies and questions. On Android the app can stay
+- **Bot Screen**: watch a bot work on its own Linux desktop, take over with
+  touch, keyboard, paste and drag and drop, then hand it back. Needs a Linux
+  gateway host with [Bot Screen](https://hermes-agent.nousresearch.com/docs/user-guide/features/bot-screen)
+  set up.
+- **Notifications** for replies and questions. On Android the app can stay
   connected in the background.
-- 🔒 **Private by design**: no analytics, no ads, no tracking. The sign-in is
+- **Private by design**: no analytics, no ads, no tracking. The sign-in is
   kept in the Android Keystore or the iOS Keychain.
-- 🎨 **Liquid Glass** design (iOS 27 style), light and dark mode, Dynamic
+- **Liquid Glass** design (iOS 27 style), light and dark mode, Dynamic
   Type, VoiceOver and TalkBack.
 
 ### Made for foldables and tablets
@@ -77,13 +85,15 @@ keyboard shortcuts and right-click.
 
 ## Get the app
 
-| Platform | Status |
+| Platform | How |
 |---|---|
-| **Android** 10+ (phones, foldables, tablets) | Beta on Google Play: join [the testers group](https://groups.google.com/g/pomelu-testers), then [become a tester](https://play.google.com/apps/testing/se.royan.pomelu) and install. |
-| **iPhone and iPad** (iOS 15+) | Coming soon to the App Store. |
+| **Android** 10+ (phones, foldables, tablets) | **[Get it on Google Play](https://play.google.com/store/apps/details?id=se.royan.pomelu)** |
+| Android, from GitHub | [Download the signed APK](https://github.com/ateymoori/pomelu/releases/latest) (`arm64-v8a` for most phones, `universal` for the rest; SHA-256 sums on the release page), or [add it to Obtainium](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/ateymoori/pomelu) to follow the GitHub releases |
+| **iPhone and iPad** (iOS 15+) | Coming soon to the App Store. Until then, [build it from source](#build-from-source). |
 
-You can also [build it from source](#build-from-source). More at
-[royan.se/pomelu](https://royan.se/pomelu/).
+The GitHub APK has a different signature from the Google Play build, so
+Android will not update one over the other. To switch, uninstall first and
+sign in again. More at [royan.se/pomelu](https://royan.se/pomelu/).
 
 ## Connect to your Hermes Agent
 
@@ -109,8 +119,8 @@ You need [Hermes Agent](https://hermes-agent.nousresearch.com/docs/getting-start
    `http://192.168.1.20:9119` on the same Wi-Fi), sign in, then tap
    **Test connection** and **Save and connect**.
 
-4. So that your bots can message you first, also while the app is closed
-   (like on Telegram), install the
+4. So that your bots can start a conversation, also while the app is closed
+   (like on Telegram), use Pomelu 1.0.3 or newer and install the
    [Pomelu plugin](https://github.com/ateymoori/pomelu-hermes-plugin) on the
    same computer, then restart Hermes:
 
@@ -166,7 +176,7 @@ go_router, freezed, dio, gpt_markdown, flutter_map and
 
 ## FAQ
 
-**Is Pomelu the official Hermes Agent app?**
+**Is Pomelu made by Nous Research?**
 No. Pomelu is an unofficial, community-made client by Royan AB. It is not
 affiliated with or endorsed by Nous Research.
 
@@ -182,9 +192,9 @@ Llama or a local model). Pomelu shows what the agent sends.
 Yes, through a private network such as Tailscale, or with the gateway behind
 HTTPS.
 
-**Can my bots message me first, like on Telegram?**
-Yes, with the [Pomelu plugin](https://github.com/ateymoori/pomelu-hermes-plugin)
-for Hermes: a reminder or a scheduled job made in Pomelu then comes to the
+**Can my bots start a conversation, like on Telegram?**
+Yes, with Pomelu 1.0.3 or newer and the
+[Pomelu plugin](https://github.com/ateymoori/pomelu-hermes-plugin) for Hermes: a reminder or a scheduled job made in Pomelu then comes to the
 bot's chat, and the phone rings by push, also while the app is closed. The
 message is sealed on your Hermes with a key only your phone has; the Pomelu
 push relay that hands it to Apple or Google cannot read it.
@@ -196,7 +206,7 @@ open source under Apache 2.0.
 ## Contributing
 
 Bug reports and pull requests are welcome. Read
-[CONTRIBUTING.md](CONTRIBUTING.md) first; new features start as an issue.
+[CONTRIBUTING.md](CONTRIBUTING.md) before you start; new features start as an issue.
 Security problems: [SECURITY.md](SECURITY.md).
 
 ## License
