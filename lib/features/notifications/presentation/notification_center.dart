@@ -113,6 +113,7 @@ class NotificationCenter extends _$NotificationCenter {
     ref.listen(activeViewProvider, (_, view) {
       if (view.isForeground && view.profile.isNotEmpty) {
         unawaited(gateway.cancel(NotificationPolicy.messageTag(view.profile)));
+        unawaited(ref.read(pushBridgeProvider).clear(view.profile));
       }
     }, fireImmediately: true);
     // The shade belongs to the account: another gateway, another user or a

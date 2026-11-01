@@ -32,8 +32,9 @@ Chat with your self-hosted AI agent from your iPhone, iPad, Android phone, folda
 [Hermes Agent](https://hermes-agent.nousresearch.com), the self-hosted AI
 agent by Nous Research. Hermes runs on your own Mac, PC, home server or
 cloud machine; Pomelu connects to its gateway and puts every Hermes bot in
-your pocket. There is no Pomelu server, no account and no tracking: your
-chats go only between your phone and your own agent.
+your pocket. There is no Pomelu account and no tracking. Your chats go between
+your phone and your own agent; optional push passes a relay that cannot read
+them.
 
 <p align="center">
   <img src="docs/images/iphone-01-hero.webp" alt="Pomelu on iPhone: chat with a Hermes Agent bot" width="19%">
@@ -119,7 +120,8 @@ You need [Hermes Agent](https://hermes-agent.nousresearch.com/docs/getting-start
    **Test connection** and **Save and connect**.
 
 4. So that your bots can start a conversation, also while the app is closed
-   (like on Telegram), use Pomelu 1.0.3 or newer and install the
+   (like on Telegram), use Pomelu 1.0.3 or newer and Hermes 0.22 or newer, and
+   install the
    [Pomelu plugin](https://github.com/ateymoori/pomelu-hermes-plugin) on the
    same computer, then restart Hermes:
 
@@ -180,8 +182,8 @@ No. Pomelu is an unofficial, community-made client by Royan AB. It is not
 affiliated with or endorsed by Nous Research.
 
 **Do I need an account or a cloud service?**
-No. Pomelu talks only to the Hermes Agent gateway that you run. Royan AB
-collects no data ([privacy policy](https://royan.se/pomelu/privacy/)).
+No. Pomelu talks to the Hermes Agent gateway that you run; optional push passes
+a relay that cannot read it. Royan AB collects no data ([privacy policy](https://royan.se/pomelu/privacy/)).
 
 **Which AI models does it support?**
 All the models your Hermes Agent uses (for example Claude, GPT, Gemini,

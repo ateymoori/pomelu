@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../hermes/models/push_device.dart';
+import '../config/app_config.dart';
 import '../utils/app_logger.dart';
 import 'platform_channels.dart';
 import 'platform_info.dart';
@@ -28,6 +29,10 @@ abstract interface class PushBridge {
 
   /// The bot of the tap that cold-started the app, once.
   Future<String?> launchBot();
+
+  /// Removes the rows of [bot] that came by push and that the app cannot
+  /// cancel by id (iOS).
+  Future<void> clear(String bot);
 }
 
 /// No push: other platforms and tests.
@@ -45,6 +50,9 @@ class NoPushBridge implements PushBridge {
 
   @override
   Future<String?> launchBot() async => null;
+
+  @override
+  Future<void> clear(String bot) async {}
 }
 
 /// The native side over [PlatformChannels.push]: `register {newKey}` gives
@@ -74,12 +82,16 @@ class ChannelPushBridge implements PushBridge {
   @override
   Future<PushDevice?> register({bool newKey = false}) async {
     try {
-      final raw = await _channel.invokeMapMethod<String, dynamic>('register', {
-        'newKey': newKey,
-      });
+      final raw = await _channel
+          .invokeMapMethod<String, dynamic>('register', {'newKey': newKey})
+          .timeout(AppConfig.pushTokenBudget);
       return raw == null ? null : PushDevice.fromJson(raw);
     } on PlatformException catch (e) {
       log.i('push: not available (${e.code}: ${e.message})');
+      return null;
+    } on TimeoutException {
+      // Apple may never answer without a network.
+      log.i('push: no token in time');
       return null;
     } on MissingPluginException {
       return null;
@@ -101,6 +113,17 @@ class ChannelPushBridge implements PushBridge {
       return null;
     } on MissingPluginException {
       return null;
+    }
+  }
+
+  @override
+  Future<void> clear(String bot) async {
+    try {
+      await _channel.invokeMethod<void>('clear', {'bot': bot});
+    } on PlatformException catch (e) {
+      log.w('push: rows not cleared', error: e);
+    } on MissingPluginException {
+      // A build without it: the rows stay until tapped.
     }
   }
 }

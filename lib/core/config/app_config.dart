@@ -89,9 +89,15 @@ abstract final class AppConfig {
   static const Duration messageCheckDelay = Duration(seconds: 2);
 
   /// While on screen, how often the app tells the Pomelu plugin so again.
-  /// The plugin counts an app quiet for 10 minutes as away (it may have
-  /// left without saying so), and pushes again.
-  static const Duration pushPresenceBeat = Duration(minutes: 5);
+  /// The plugin counts an app quiet for 3 minutes as away (it may have left
+  /// without saying so), and pushes again.
+  static const Duration pushPresenceBeat = Duration(minutes: 1);
+
+  /// How long the phone's push service gets to give a token.
+  static const Duration pushTokenBudget = Duration(seconds: 30);
+
+  /// How long a sign-out waits for the gateway to forget this phone.
+  static const Duration pushForgetBudget = Duration(seconds: 5);
 
   /// Real use before the store's review prompt: finished replies, on this
   /// many different days, then this pause so the reply can be read.

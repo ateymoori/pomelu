@@ -71,6 +71,27 @@ class PushRegistration extends _$PushRegistration {
 
   KeyValueStore get _kv => ref.read(keyValueStoreProvider);
 
+  /// Takes this phone off its gateway before the sign-in goes, so a
+  /// signed-out phone gets no more messages. A gateway out of reach keeps
+  /// sending: a new key then stops the phone from opening them.
+  Future<void> forget() async {
+    final id = _kv.getString(PreferenceKeys.pushDeviceId);
+    final api = ref.read(hermesApiProvider);
+    if (id == null || _kv.getString(PreferenceKeys.pushAccount) == null) return;
+    _sent = null;
+    await _kv.remove(PreferenceKeys.pushAccount);
+    try {
+      if (api == null) throw const NetworkFailure('no gateway');
+      await api.removePushDevice(id).timeout(AppConfig.pushForgetBudget);
+    } on NotSupportedFailure {
+      // Already gone.
+    } on Object catch (e) {
+      log.w('push: the gateway keeps this phone', error: e);
+      unawaited(ref.read(pushBridgeProvider).register(newKey: true));
+    }
+    _set(PushStatus.off);
+  }
+
   /// One sync at a time; a change during one runs one more after it.
   void _syncSoon() {
     if (_running != null) {
@@ -101,10 +122,13 @@ class PushRegistration extends _$PushRegistration {
       if (id != null && registeredWith == account) {
         try {
           await api.removePushDevice(id);
+          await _kv.remove(PreferenceKeys.pushAccount);
+        } on NotSupportedFailure {
+          await _kv.remove(PreferenceKeys.pushAccount);
         } on HermesFailure catch (e) {
+          // The account stays: the next connection removes it again.
           log.w('push: could not remove this phone', error: e);
         }
-        await _kv.remove(PreferenceKeys.pushAccount);
       }
       _sent = null;
       _set(PushStatus.off);
@@ -161,6 +185,7 @@ class PushRegistration extends _$PushRegistration {
       await api.setPushPresence(id, visible: visible);
     } on NotSupportedFailure {
       // The plugin forgot this phone (or went): register again.
+      _sent = null;
       _syncSoon();
     } on HermesFailure catch (e) {
       log.w('push: presence not sent', error: e);

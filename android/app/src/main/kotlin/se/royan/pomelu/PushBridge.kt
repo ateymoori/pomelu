@@ -57,6 +57,8 @@ object PushBridge {
         when (call.method) {
             "register" -> register(context, call.argument<Boolean>("newKey") == true, result)
             "launchBot" -> result.success(null)
+            // Dart's `cancel` already removes the row: same id and tag.
+            "clear" -> result.success(null)
             else -> result.notImplemented()
         }
     }
@@ -83,7 +85,8 @@ object PushBridge {
             // Off until the user has push: no token for an app that never asked.
             FirebaseMessaging.getInstance().isAutoInitEnabled = true
             FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-                val token = task.result.takeIf { task.isSuccessful }
+                // `result` throws on a failed task, here outside the try.
+                val token = if (task.isSuccessful) task.result else null
                 if (token == null) {
                     Log.w(TAG, "no FCM token", task.exception)
                     result.success(null)

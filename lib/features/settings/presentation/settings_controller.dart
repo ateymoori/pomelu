@@ -10,6 +10,7 @@ import '../../../hermes/hermes_constants.dart';
 import '../../../hermes/hermes_log.dart';
 import '../../connection/domain/gateway_config.dart';
 import '../../connection/presentation/connection_providers.dart';
+import '../../notifications/presentation/push_registration.dart';
 import '../domain/settings_form_state.dart';
 
 part 'settings_controller.g.dart';
@@ -213,7 +214,10 @@ class SettingsController extends _$SettingsController {
     final configs = ref.read(gatewayConfigProvider.notifier);
     final supervisor = ref.read(connectionSupervisorProvider.notifier);
     final oldClient = same ? null : ref.read(hermesClientProvider);
+    final push = ref.read(pushRegistrationProvider.notifier);
     try {
+      // While the old sign-in still works.
+      if (!same || changed) await push.forget();
       await oldClient?.disconnect();
       if (changed) {
         if (credential is! BearerCredential) {
@@ -250,7 +254,9 @@ class SettingsController extends _$SettingsController {
     final credentials = ref.read(credentialProvider.notifier);
     final storage = ref.read(credentialStorageProvider);
     final client = ref.read(hermesClientProvider);
+    final push = ref.read(pushRegistrationProvider.notifier);
     try {
+      await push.forget();
       await credentials.set(const NoCredential());
       await storage.savePassword(null);
     } on Object catch (e, st) {

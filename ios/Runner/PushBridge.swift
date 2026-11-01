@@ -1,12 +1,13 @@
 import Flutter
 import UIKit
+import UserNotifications
 import os
 
 /// iOS end of the push bridge (Dart: `ChannelPushBridge`; Android:
 /// `PushBridge.kt`). `register {newKey}` asks Apple for this phone's token
 /// and answers `{platform: ios, token, key, sandbox}`, or nil when Apple
 /// refuses; `launchBot` answers the bot of the tap that opened the app,
-/// once. Events: `{type: token}` when Apple gives a new token, `{type: tap,
+/// once; `clear {bot}` removes that bot's delivered rows. Events: `{type: token}` when Apple gives a new token, `{type: tap,
 /// bot}` for a tap while the app runs. The notification extension shows the
 /// push; this only routes the tap. Main thread only.
 final class PushBridge: NSObject, FlutterPlugin, FlutterStreamHandler {
@@ -41,6 +42,10 @@ final class PushBridge: NSObject, FlutterPlugin, FlutterStreamHandler {
     case "launchBot":
       result(launchBot)
       launchBot = nil
+    case "clear":
+      let bot = (call.arguments as? [String: Any])?["bot"] as? String ?? ""
+      Self.clearDelivered(bot: bot)
+      result(nil)
     default:
       result(FlutterMethodNotImplemented)
     }
@@ -56,6 +61,16 @@ final class PushBridge: NSObject, FlutterPlugin, FlutterStreamHandler {
   func onCancel(withArguments arguments: Any?) -> FlutterError? {
     sink = nil
     return nil
+  }
+
+  /// A push row has an id only Apple knows; the extension marks it by thread.
+  private static func clearDelivered(bot: String) {
+    let center = UNUserNotificationCenter.current()
+    center.getDeliveredNotifications { rows in
+      let ids = rows.filter { $0.request.content.threadIdentifier == "message/\(bot)" }
+        .map(\.request.identifier)
+      center.removeDeliveredNotifications(withIdentifiers: ids)
+    }
   }
 
   /// `didRegisterForRemoteNotificationsWithDeviceToken`.

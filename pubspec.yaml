@@ -3,7 +3,7 @@ description: "Pomelu: unofficial mobile app for Hermes Agent. Connects to a Herm
 publish_to: 'none'
 # The version code is a counter: +1 per release. It starts above the
 # epoch-seconds codes already installed, and stays under Play's 2.1 billion cap.
-version: 1.0.3+1792000006
+version: 1.0.4+1792000007
 
 environment:
   sdk: ^3.13.2

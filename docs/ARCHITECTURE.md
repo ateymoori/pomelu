@@ -57,7 +57,8 @@ lib/
                      with parts media_routes.dart (attachments, speech to
                      text, media URLs), model_routes.dart (model, effort),
                      dashboard_routes.dart (REST), profile_routes.dart
-                     (bot changes), screen_routes.dart (`display.*`)
+                     (bot changes), screen_routes.dart (`display.*`),
+                     push_routes.dart (phones, presence)
     auth/            AuthCredential (origin-bound), HermesAuth
     events/          GatewayEvent, EventNames, payload readers:
                      event_payloads.dart (notices, background results,
@@ -82,13 +83,16 @@ lib/
     share/           ShareIntakeService, share bridge, target picker
   l10n/              app_en.arb, generated/
 android/             MainActivity.kt (share bridge), SharedFiles.kt,
-                     ConnectionService.kt, BotShortcuts.kt
-ios/                 Runner (AppDelegate, ShareBridge.swift), ShareExtension,
-                     Shared/ShareInbox.swift (compiled into both targets)
+                     ConnectionService.kt, BotShortcuts.kt,
+                     PomeluApplication.kt, PushBridge.kt, PushService.kt
+ios/                 Runner (AppDelegate, ShareBridge.swift, PushBridge.swift),
+                     ShareExtension, NotificationService,
+                     Shared/ShareInbox.swift and Shared/PushKey.swift
+                     (compiled into the targets that use them)
 assets/bot_screen/   screen.html: noVNC 1.7.0 and tool/bot_screen/screen.js in
                      one page (built by tool/bot_screen/build.mjs), and the
                      noVNC and pako notices
-third_party/         gpt_markdown 1.3.4, patched ("Pomelu patch"): table
+third_party/         gpt_markdown 1.4.0, patched ("Pomelu patch"): table
                      fills clipped to the rounded border, header style kept;
                      a dependency_overrides path, dropped once upstream fixes it
 ```
@@ -143,14 +147,15 @@ Only `PlatformInfo` asks which OS runs (`AppPlatform.android / ios / other`;
 | Bots for the system (`AppShortcuts`): app icon menu, share sheet's top row | `AndroidAppShortcuts` → `BotShortcuts.kt`: long-lived dynamic shortcuts with each bot's round avatar as Dart draws it (`shortcutIcon`); a pick opens `pomelu://chat?profile=`; also Direct Share targets (`res/xml/shortcuts.xml`), ranked by `reportShortcutUsed` on each send | `IosAppShortcuts`: quick actions (`quick_actions`, no picture: iOS takes only monochrome symbols) and share suggestions (`BotSuggestions` in `AppDelegate.swift` donates an `INSendMessageIntent` per bot, again on each send; `NSUserActivityTypes`, the extension's `IntentsSupported`) | `NoAppShortcuts` |
 
 Channel names: `PlatformChannels` (`se.royan.pomelu/share`, `.../share/events`,
-`.../connection_service`, `.../shortcuts`). Kotlin and Swift spell the same strings.
+`.../connection_service`, `.../shortcuts`, `.../push`, `.../push/events`). Kotlin and Swift spell the same strings.
 
 iOS build: Swift Package Manager only (`enable-swift-package-manager`; no
 Podfile, no CocoaPods). Targets: Runner (`se.royan.pomelu`), ShareExtension
-(`se.royan.pomelu.ShareExtension`), both in App Group
+(`se.royan.pomelu.ShareExtension`), NotificationService
+(`se.royan.pomelu.NotificationService`), all in App Group
 `group.se.royan.pomelu`. Deployment target iOS 15. `Info.plist`: usage
 strings for camera, microphone, location when in use, photo library (add and
-read), local network; `hermes` URL scheme; ATS `NSAllowsArbitraryLoads` and
+read), local network; `pomelu` URL scheme; ATS `NSAllowsArbitraryLoads` and
 `NSAllowsLocalNetworking` (users reach their own gateway by IP, often over
 plain http); `ITSAppUsesNonExemptEncryption`
 false.
@@ -378,11 +383,11 @@ app code running. On each `Connected`, while Notify me is on and allowed, the
 app registers the phone: `PUT /api/plugins/pomelu/devices/{id}` with the
 push token and a 32-byte key the phone made (`PROTOCOL.md`). It tells the
 plugin when it comes on screen and leaves (`/presence`, again every 5 min on
-screen); the plugin pushes only while the app is away (or quiet for 10 min).
+screen); the plugin pushes only while the app is away (or quiet for 3 min).
 The plugin seals each message with the phone's key (AES-256-GCM) and sends
 it through the Pomelu push relay (a Cloudflare Worker, `relay/` in the
 plugin repo) to APNs or FCM; the relay holds the app's push keys and cannot
-read the message. On the phone the native side opens it and posts the bot's
+read the message. On the phone the platform code opens it and posts the bot's
 message row, same id and tag as `forMessage`: Android `PushService.kt` (data
 message; quiet while the app is in front or Stay connected holds the
 socket, so a message rings once), iOS the `NotificationService` extension
@@ -393,7 +398,9 @@ start). While push is active the background check is off and the app posts
 the bots' messages itself only with Stay connected. Another account gets a
 new phone id and a new key. Notify me off removes the phone from the plugin.
 A gateway without the plugin (404) keeps the runners above, and Settings
-says how to add it.
+says how to add it. A sign-out or another sign-in takes the phone off its gateway first
+(`PushRegistration.forget`); a gateway out of reach keeps it, and a new key
+stops the phone from opening what it still sends.
 
 - **Android.** "Stay connected" (on by default) runs a `specialUse`
   foreground service that holds the process, started only while the app is in

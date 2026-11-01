@@ -30,19 +30,31 @@ class _PluginApi extends Fake implements HermesApi {
   final presence = <bool>[];
   final removed = <String>[];
   bool installed = true;
+  bool reachable = true;
+  bool forgotten = false;
+  int registrations = 0;
 
   @override
   Future<void> registerPushDevice(String id, PushDevice device) async {
     if (!installed) throw const NotSupportedFailure('push is not supported');
+    registrations++;
     registered[id] = device;
   }
 
   @override
-  Future<void> removePushDevice(String id) async => removed.add(id);
+  Future<void> removePushDevice(String id) async {
+    if (!reachable) throw const NetworkFailure('out of reach');
+    removed.add(id);
+  }
 
   @override
-  Future<void> setPushPresence(String id, {required bool visible}) async =>
-      presence.add(visible);
+  Future<void> setPushPresence(String id, {required bool visible}) async {
+    if (forgotten) {
+      forgotten = false;
+      throw const NotSupportedFailure('no such phone');
+    }
+    presence.add(visible);
+  }
 }
 
 class _Bridge implements PushBridge {
@@ -65,6 +77,9 @@ class _Bridge implements PushBridge {
 
   @override
   Future<String?> launchBot() async => null;
+
+  @override
+  Future<void> clear(String bot) async {}
 }
 
 void main() {
@@ -194,6 +209,50 @@ void main() {
     await pumpEventQueue();
 
     expect(api.registered, {id: _phone.copyWith(token: 'tok-2')});
+  });
+
+  test('signing out takes the phone off its gateway', () async {
+    final container = await mount();
+    final id = api.registered.keys.single;
+
+    await container.read(pushRegistrationProvider.notifier).forget();
+
+    expect(api.removed, [id]);
+    expect(kv.getString(PreferenceKeys.pushAccount), isNull);
+    expect(bridge.newKeys.where((renewed) => renewed), isEmpty);
+  });
+
+  test('signing out with the gateway out of reach makes a new key', () async {
+    final container = await mount();
+    api.reachable = false;
+
+    await container.read(pushRegistrationProvider.notifier).forget();
+
+    expect(bridge.newKeys.where((renewed) => renewed), hasLength(1));
+  });
+
+  test('a failed removal is kept for the next connection', () async {
+    final container = await mount();
+    final account = kv.getString(PreferenceKeys.pushAccount);
+    api.reachable = false;
+
+    await container
+        .read(notificationsEnabledSettingProvider.notifier)
+        .set(false);
+    await pumpEventQueue();
+
+    expect(kv.getString(PreferenceKeys.pushAccount), account);
+  });
+
+  test('a phone the plugin forgot registers again', () async {
+    await mount();
+    final before = api.registrations;
+    api.forgotten = true;
+
+    goBackground();
+    await pumpEventQueue();
+
+    expect(api.registrations, before + 1);
   });
 
   test('another account gets a new phone id and a new key', () async {

@@ -279,7 +279,7 @@ iOS, on the iPhone Duo simulator:
    SwiftPM only) and the app runs, light and dark.
 9. Maestro: `smoke`, `slash_palette`, `rotate`, `reconnect`,
    `location_sheet`, `bot_details`, and `share_text` via a link (`maestro/README.md`).
-10. A share from Photos to Hermes lands in the picker with the picture
+10. A share from Photos to Pomelu lands in the picker with the picture
     attached; Settings shows no "Stay connected".
 
 Release builds: the fastlane lanes in `ios/fastlane` and `android/fastlane`.
