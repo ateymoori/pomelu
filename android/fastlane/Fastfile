@@ -30,6 +30,23 @@ platform :android do
     )
   end
 
+  desc 'Send the Alpha build of this pubspec version to production, full rollout'
+  lane :production do
+    code = File.read("#{ROOT}/pubspec.yaml")[/^version: .*\+(\d+)/, 1]
+    upload_to_play_store(
+      track: 'alpha',
+      track_promote_to: 'production',
+      track_promote_release_status: 'completed',
+      version_code: code,
+      skip_upload_aab: true,
+      skip_upload_apk: true,
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+    )
+  end
+
   desc 'Push store text, icon, feature graphic and screenshots'
   lane :metadata do
     upload_to_play_store(

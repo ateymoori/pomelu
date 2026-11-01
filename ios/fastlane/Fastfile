@@ -25,6 +25,9 @@ platform :ios do
   # ("Copy failed", --extended-attributes unknown).
   desc 'Release IPA; keep build/symbols-ios for crash stacks'
   lane :build do
+    # `flutter build ipa` exits 0 when the export fails: an IPA left from an
+    # earlier build must not be what gets uploaded.
+    FileUtils.rm_rf("#{ROOT}/build/ios/ipa")
     Dir.chdir(ROOT) do
       sh({ 'PATH' => "/usr/bin:/bin:#{ENV['PATH']}" },
          'flutter', 'build', 'ipa', '--release', '--obfuscate',
@@ -35,8 +38,10 @@ platform :ios do
   desc 'Build and upload to TestFlight (bump the build number in pubspec first)'
   lane :beta do
     build
+    ipa = Dir["#{ROOT}/build/ios/ipa/*.ipa"].first
+    UI.user_error!('No IPA: is Xcode signed in (Settings → Apple Accounts)?') unless ipa
     upload_to_testflight(
-      ipa: Dir["#{ROOT}/build/ios/ipa/*.ipa"].first,
+      ipa: ipa,
       skip_waiting_for_build_processing: true,
     )
   end
