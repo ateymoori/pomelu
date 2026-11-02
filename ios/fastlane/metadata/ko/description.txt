@@ -27,4 +27,7 @@ Pomelu는 사용자가 운영하는 Hermes Agent 게이트웨이와만 통신합
 
 앱은 영어로 제공됩니다.
 
+오픈 소스
+Pomelu는 무료이며 인앱 구매가 없습니다. 소스 코드는 Apache-2.0 라이선스로 GitHub에 공개되어 있습니다: https://github.com/ateymoori/pomelu
+
 Nous Research와 제휴 관계가 없으며 Nous Research의 보증을 받지 않았습니다.

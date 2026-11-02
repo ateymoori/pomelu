@@ -27,4 +27,7 @@ Pomelu taler kun med den Hermes Agent-gateway, du selv kører: på din Mac, pc, 
 
 Appen er på engelsk.
 
+ÅBEN KILDEKODE
+Pomelu er gratis uden køb i appen. Kildekoden ligger på GitHub under Apache-2.0-licensen: https://github.com/ateymoori/pomelu
+
 Ikke tilknyttet eller godkendt af Nous Research.

@@ -30,4 +30,7 @@ Pomelu 只會與你自己執行的 Hermes Agent 閘道通訊：可以在你的 M
 
 本 App 為英文介面。
 
+開放原始碼
+Pomelu 免費使用，沒有 App 內購買。原始碼以 Apache-2.0 授權發布於 GitHub：https://github.com/ateymoori/pomelu
+
 與 Nous Research 無任何關係，亦未獲其背書。

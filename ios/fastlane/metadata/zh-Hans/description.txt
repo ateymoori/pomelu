@@ -27,4 +27,7 @@ Pomelu 只与你自己运行的 Hermes Agent 网关通信：可以在你的 Mac�
 
 本应用为英文界面。
 
+开源
+Pomelu 免费使用，没有应用内购买。源代码以 Apache-2.0 许可证发布在 GitHub：https://github.com/ateymoori/pomelu
+
 与 Nous Research 无关联，也未获其认可。

@@ -27,4 +27,7 @@ Pomelu communique uniquement avec la passerelle Hermes Agent que vous exécutez 
 
 L'app est en anglais.
 
+OPEN SOURCE
+Pomelu est gratuit, sans achats intégrés. Le code source est sur GitHub sous licence Apache-2.0 : https://github.com/ateymoori/pomelu
+
 Pomelu n'est ni affiliée à Nous Research ni approuvée par celle-ci.

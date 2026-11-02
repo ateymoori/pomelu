@@ -27,4 +27,7 @@ Pomelu kommunicerar bara med den Hermes Agent-gateway som du själv kör: på di
 
 Appen är på engelska.
 
+ÖPPEN KÄLLKOD
+Pomelu är gratis, utan köp i appen. Källkoden finns på GitHub under licensen Apache-2.0: https://github.com/ateymoori/pomelu
+
 Inte ansluten till eller godkänd av Nous Research.

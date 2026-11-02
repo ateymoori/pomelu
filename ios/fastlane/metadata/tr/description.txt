@@ -27,4 +27,7 @@ Pomelu yalnızca sizin çalıştırdığınız Hermes Agent ağ geçidiyle ileti
 
 Uygulama İngilizcedir.
 
+AÇIK KAYNAK
+Pomelu ücretsizdir, uygulama içi satın alma yoktur. Kaynak kodu Apache-2.0 lisansıyla GitHub'da: https://github.com/ateymoori/pomelu
+
 Nous Research ile bağlantılı değildir ve Nous Research tarafından onaylanmamıştır.

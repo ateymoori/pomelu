@@ -30,4 +30,7 @@ Pomelu kommuniziert nur mit dem Gateway von Hermes Agent, das du selbst betreibs
 
 Die App ist auf Englisch.
 
+OPEN SOURCE
+Pomelu ist kostenlos, ohne In-App-Käufe. Der Quellcode liegt auf GitHub unter der Apache-2.0-Lizenz: https://github.com/ateymoori/pomelu
+
 Weder mit Nous Research verbunden noch von Nous Research unterstützt.

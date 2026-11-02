@@ -27,4 +27,7 @@ Pomelu が通信するのは、あなたが運用する Hermes Agent ゲート�
 
 アプリは英語表示です。
 
+オープンソース
+Pomelu は無料で、アプリ内課金はありません。ソースコードは Apache-2.0 ライセンスで GitHub に公開しています: https://github.com/ateymoori/pomelu
+
 Nous Research とは提携しておらず、同社の承認を受けたものでもありません。

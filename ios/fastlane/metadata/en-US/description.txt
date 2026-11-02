@@ -25,4 +25,7 @@ A two-pane layout on the iPhone Duo, Liquid Glass controls, and a light and a da
 SELF-HOSTED: YOUR SERVER, YOUR DATA
 Pomelu talks only to the Hermes Agent gateway that you run: on your Mac, PC, home server or VPS, on your home network, over a VPN or on the internet. Use any LLM that your Hermes Agent supports. Royan AB collects no data: no account, no analytics, no ads and no tracking. Your password stays in the iOS Keychain.
 
+OPEN SOURCE
+Pomelu is free, with no in-app purchases. The source code is on GitHub under the Apache-2.0 license: https://github.com/ateymoori/pomelu
+
 Not affiliated with or endorsed by Nous Research.

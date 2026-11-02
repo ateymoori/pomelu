@@ -30,4 +30,7 @@ Pomelu on yhteydessä vain itse ylläpitämääsi Hermes Agent -yhdyskäytävä�
 
 Sovellus on englanninkielinen.
 
+AVOIN LÄHDEKOODI
+Pomelu on maksuton, eikä siinä ole sovelluksen sisäisiä ostoja. Lähdekoodi on GitHubissa Apache-2.0-lisenssillä: https://github.com/ateymoori/pomelu
+
 Ei Nous Researchin hyväksymä eikä siihen sidoksissa.

@@ -27,4 +27,7 @@ Pomelu solo se comunica con el gateway de Hermes Agent que tú ejecutas: en tu M
 
 La app está en inglés.
 
+CÓDIGO ABIERTO
+Pomelu es gratis, sin compras dentro de la app. El código fuente está en GitHub con licencia Apache-2.0: https://github.com/ateymoori/pomelu
+
 No está afiliada a Nous Research ni cuenta con su respaldo.

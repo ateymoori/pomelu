@@ -30,4 +30,7 @@ Pomelu łączy się wyłącznie z bramką Hermes Agent, którą sam uruchamiasz:
 
 Aplikacja jest w języku angielskim.
 
+OTWARTE ŹRÓDŁO
+Pomelu jest bezpłatna, bez zakupów w aplikacji. Kod źródłowy jest na GitHubie na licencji Apache-2.0: https://github.com/ateymoori/pomelu
+
 Aplikacja nie jest powiązana z Nous Research ani przez nią zatwierdzona.
