@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/images/social-preview.png" alt="Pomelu, the open-source Hermes Agent app for Android and iOS: your Hermes Agent bots in your pocket" width="100%">
+<a href="#watch-the-film"><img src="docs/images/film-teaser.webp" alt="Pomelu, the open-source Hermes Agent app for Android and iOS: your bots in a messenger, two panes on iPhone Duo, Bot Screen, images, video and voice" width="100%"></a>
 
 # Pomelu: the Hermes Agent app for Android and iOS
 
@@ -19,6 +19,7 @@ Chat with your self-hosted AI agent from your iPhone, iPad, Android phone, folda
 [![iOS and iPadOS](https://img.shields.io/badge/iOS%20%7C%20iPadOS-15%2B-000000?logo=apple&logoColor=white)](#get-the-app)
 
 [Website](https://royan.se/pomelu/) ·
+[Watch the film](#watch-the-film) ·
 [Features](#features) ·
 [Get the app](#get-the-app) ·
 [Connect to Hermes](#connect-to-your-hermes-agent) ·
@@ -37,12 +38,35 @@ your phone and your own agent; optional push passes a relay that cannot read
 them.
 
 <p align="center">
-  <img src="docs/images/iphone-01-hero.webp" alt="Pomelu on iPhone: chat with a Hermes Agent bot" width="19%">
-  <img src="docs/images/iphone-02-answers.webp" alt="Live streamed Markdown answers from Hermes Agent" width="19%">
-  <img src="docs/images/iphone-03-questions.webp" alt="Answer the agent's questions and approvals in the chat" width="19%">
-  <img src="docs/images/iphone-04-code.webp" alt="Code blocks with syntax highlighting and copy" width="19%">
-  <img src="docs/images/iphone-05-plan.webp" alt="The agent's plan and tool activity while a task runs" width="19%">
+  <img src="docs/images/iphone-01-bots.webp" alt="Your Hermes bots in a messenger: the bot list with each bot's character" width="19%">
+  <img src="docs/images/iphone-02-images.webp" alt="Images right in the chat: a poster made by a bot" width="19%">
+  <img src="docs/images/iphone-03-video.webp" alt="Video plays in place in the chat" width="19%">
+  <img src="docs/images/iphone-06-questions.webp" alt="The agent asks a question and you answer in the chat" width="19%">
+  <img src="docs/images/iphone-05-code.webp" alt="Code blocks in dark mode, with a file to download" width="19%">
 </p>
+
+<p align="center">
+  <img src="docs/images/iphone-04-voice.webp" alt="A voice note from a bot, with a player in the chat" width="19%">
+  <img src="docs/images/iphone-07-approvals.webp" alt="Approve a command with one tap" width="19%">
+  <img src="docs/images/iphone-08-answers.webp" alt="Answers stream in live, with photos and lists" width="19%">
+  <img src="docs/images/iphone-09-jobs.webp" alt="A bot's skills, tools and scheduled jobs" width="19%">
+  <img src="docs/images/iphone-10-open.webp" alt="Open source, no account, no tracking: Settings with Reachable" width="19%">
+</p>
+
+## Watch the film
+
+https://github.com/user-attachments/assets/d6deabe6-0c50-4f96-8567-aca11d544ada
+
+<details>
+<summary><b>Two short vertical cuts</b></summary>
+
+https://github.com/user-attachments/assets/936a13ac-f90e-48a5-9f6e-bdb6ef3d886a
+
+https://github.com/user-attachments/assets/37da4dae-1f24-4ed4-ac13-465b4d80dafe
+
+</details>
+
+<sub>Real app, real Hermes Agent, demo bots. iPhone Duo 3D model by Pikkme Studio (CC BY 4.0). Music: Dirty Thinkin' (Mixkit).</sub>
 
 ## Features
 
@@ -77,10 +101,20 @@ pane with your bots next to the chat, a reading-width column, hardware
 keyboard shortcuts and right-click.
 
 <p align="center">
-  <img src="docs/images/fold-01-side-menu.webp" alt="Pomelu on a Galaxy Z Fold: Hermes bots and the chat side by side" width="49%">
-  <img src="docs/images/duo-01-hero.webp" alt="Pomelu on iPhone Duo, folded and open" width="49%">
-  <img src="docs/images/ipad-01-hero.webp" alt="Pomelu on iPad: the Hermes Agent app on the big screen" width="49%">
+  <img src="docs/images/fold-01-panes.webp" alt="Pomelu on an Android foldable: Hermes bots and the chat side by side" width="49%">
+  <img src="docs/images/duo-01-panes.webp" alt="Pomelu on iPhone Duo: two panes when it is open" width="49%">
+  <img src="docs/images/ipad-01-panes.webp" alt="Pomelu on iPad: the Hermes Agent app on the big screen" width="49%">
   <img src="docs/images/android-tablet-skills.webp" alt="Pomelu on an Android tablet: a bot's skills, tools and scheduled jobs" width="49%">
+</p>
+
+### Bot Screen
+
+Watch a bot work on its own Linux desktop, live in the app. When it needs you, tap
+**Take over**, do your part, and hand it back.
+
+<p align="center">
+  <img src="docs/images/duo-03-screen.webp" alt="Bot Screen on iPhone Duo: the bot picks a train on its own desktop" width="49%">
+  <img src="docs/images/duo-04-takeover.webp" alt="Bot Screen on iPhone Duo: you took over and typed the code" width="49%">
 </p>
 
 ## Get the app
@@ -213,8 +247,8 @@ Security problems: [SECURITY.md](SECURITY.md).
 ## License
 
 The code is licensed under the [Apache License 2.0](LICENSE). The name
-"Pomelu", the logo, the mascot, the bot characters and the store art are not
-covered: see [TRADEMARKS.md](TRADEMARKS.md) and [NOTICE](NOTICE).
+"Pomelu", the logo, the mascot, the bot characters, the promo films and the
+store art are not covered: see [TRADEMARKS.md](TRADEMARKS.md) and [NOTICE](NOTICE).
 
 Made by [Royan AB](https://royan.se) in Sweden ·
 [royan.se/pomelu](https://royan.se/pomelu/). "Hermes Agent" and

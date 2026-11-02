@@ -8,8 +8,9 @@ That license does not grant rights to the brand.
 - The name **Pomelu** and the **Pomelu** logo, app icon and mascot
   (`assets/images/`).
 - The bot characters (`assets/characters/`).
-- The store listings, screenshots and store art (`ios/fastlane/metadata`,
-  `ios/fastlane/screenshots`, `android/fastlane/metadata`).
+- The store listings, screenshots, store art and promo films
+  (`ios/fastlane/metadata`, `ios/fastlane/screenshots`,
+  `android/fastlane/metadata`, `docs/images`).
 
 These belong to Royan AB. You may show them when you write about Pomelu or
 link to it.
