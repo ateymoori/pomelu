@@ -58,7 +58,7 @@ platform :ios do
 
   # A pending submission is cancelled first; the cancel takes a few seconds,
   # so then the lane fails once and the second run submits.
-  desc 'Submit the pubspec build for App Review, replacing a pending one (manual release)'
+  desc 'Submit the pubspec build for App Review, replacing a pending one; live on approval'
   lane :release do
     deliver(
       build_number: BUILD,
@@ -67,7 +67,7 @@ platform :ios do
       skip_screenshots: true,
       submit_for_review: true,
       reject_if_possible: true,
-      automatic_release: false,
+      automatic_release: true,
       force: true,
       run_precheck_before_submit: false,
       submission_information: { add_id_info_uses_idfa: false },
