@@ -211,6 +211,12 @@ No flow covers these:
   the phone to watching; close while in control and check the lease went
   back (`ssh <host> 'cat ~/.hermes/bot-desktop/lease.json'`). Never stop a
   screen or restart the gateway that hosts it.
+- Video and audio: a bot that sends `MEDIA:` lines (a scripted
+  OpenAI-compatible model behind a gateway with its own `HERMES_HOME`):
+  poster and length after a moment, play in
+  place, full screen and back on the same player, drag down to close, Save
+  (Android: `Pictures/Pomelu`), a second player pauses the first, audio
+  speed. Android shows its own "Viewing full screen" hint the first time.
 - Voice: hold the mic while the computer speaks (`say "..."`).
 - Read aloud: a long reply's menu → Read aloud; the bar stays until it
   ends; Stop reading in the bar or the menu; a voice note started meanwhile

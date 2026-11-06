@@ -1432,6 +1432,50 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mediaSeek => 'Seek';
 
   @override
+  String get mediaReplay => 'Play again';
+
+  @override
+  String get mediaMute => 'Mute';
+
+  @override
+  String get mediaUnmute => 'Unmute';
+
+  @override
+  String get mediaFullScreen => 'Full screen';
+
+  @override
+  String mediaSkipBack(int seconds) {
+    return 'Back $seconds seconds';
+  }
+
+  @override
+  String mediaSkipForward(int seconds) {
+    return 'Forward $seconds seconds';
+  }
+
+  @override
+  String get mediaSpeed => 'Playback speed';
+
+  @override
+  String mediaSpeedValue(String speed) {
+    return '$speed×';
+  }
+
+  @override
+  String mediaRemaining(String time) {
+    return '−$time';
+  }
+
+  @override
+  String get mediaVideoActions => 'Video actions';
+
+  @override
+  String get mediaVideoSaveFailed => 'Could not save video';
+
+  @override
+  String get mediaAudioTitle => 'Audio';
+
+  @override
   String mediaViewerCounter(int index, int count) {
     return '$index / $count';
   }

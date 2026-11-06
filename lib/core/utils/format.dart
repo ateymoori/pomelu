@@ -20,6 +20,10 @@ abstract final class Format {
 
   static const int _unit = 1024;
 
+  /// A playback speed: `1×`, `1.25×`, `0.5×`.
+  static String speed(AppLocalizations l10n, double s) =>
+      l10n.mediaSpeedValue(NumberFormat('0.##', l10n.localeName).format(s));
+
   /// Local calendar days from [from] to [to], counted on dates: across DST
   /// two midnights are 23 or 25 hours apart.
   static int calendarDays(DateTime from, DateTime to) {
@@ -32,9 +36,11 @@ abstract final class Format {
     ).difference(DateTime.utc(a.year, a.month, a.day)).inDays;
   }
 
+  /// `0:07`, `12:30`, `1:02:05`: a player's clock.
   static String duration(Duration d) {
-    final m = d.inMinutes;
-    final s = d.inSeconds % 60;
-    return '$m:${s.toString().padLeft(2, '0')}';
+    String two(int n) => n.toString().padLeft(2, '0');
+    final h = d.inHours;
+    final s = two(d.inSeconds % 60);
+    return h == 0 ? '${d.inMinutes}:$s' : '$h:${two(d.inMinutes % 60)}:$s';
   }
 }

@@ -287,7 +287,11 @@ Media refs in text (`MEDIA:`, `@image:`, data URLs) resolve to
 gateway's origin only. A file chip's size is a `Range: bytes=0-0` GET of
 the download (the total is in `Content-Range`). `MediaCache` downloads to `<name>.part` and renames
 when whole, joins duplicate fetches, and prunes files older than 7 days at
-start. Video and audio open the player on first tap. Voice: hold the mic,
+start. A video row loads its first frame and length once it has been on
+screen 400 ms (`AppConfig.videoPosterDelay`), so scrolling past opens no
+stream; full screen (`VideoPage`) takes over the row's controller and hands
+it back. Audio opens its player on the first tap. One player plays at a
+time (`nowPlayingProvider`). Voice: hold the mic,
 the gateway transcribes (`/api/audio/transcribe`), the words are sent.
 Location is text (`Location:` / `Latitude:` / `Longitude:` lines) from an
 OpenStreetMap picker and the system geocoder (6 s timeout).

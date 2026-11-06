@@ -94,6 +94,7 @@ dev_dependencies:
   fake_async: ^1.3.3
   geolocator_platform_interface: ^4.4.1
   webview_flutter_platform_interface: ^2.15.1
+  video_player_platform_interface: ^6.9.0
 
 # Upstream constraints lag the latest releases; each override is checked by
 # analyze, tests and both platform builds. Drop it once upstream catches up.

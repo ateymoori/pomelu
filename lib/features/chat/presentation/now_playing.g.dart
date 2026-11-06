@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'media_audio.dart';
+part of 'now_playing.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,19 +9,19 @@ part of 'media_audio.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// The player playing now, as the token it claimed with: a player that
-/// starts claims it and every other one pauses, so two voice notes never
-/// play over each other.
+/// starts claims it and every other one pauses, so a voice note, a video
+/// and a reading aloud never play over each other.
 
 @ProviderFor(NowPlaying)
 final nowPlayingProvider = NowPlayingProvider._();
 
 /// The player playing now, as the token it claimed with: a player that
-/// starts claims it and every other one pauses, so two voice notes never
-/// play over each other.
+/// starts claims it and every other one pauses, so a voice note, a video
+/// and a reading aloud never play over each other.
 final class NowPlayingProvider extends $NotifierProvider<NowPlaying, Object?> {
   /// The player playing now, as the token it claimed with: a player that
-  /// starts claims it and every other one pauses, so two voice notes never
-  /// play over each other.
+  /// starts claims it and every other one pauses, so a voice note, a video
+  /// and a reading aloud never play over each other.
   NowPlayingProvider._()
     : super(
         from: null,
@@ -52,8 +52,8 @@ final class NowPlayingProvider extends $NotifierProvider<NowPlaying, Object?> {
 String _$nowPlayingHash() => r'8e78d06f50aca8515d4a54a4dac30d9d1062bd9d';
 
 /// The player playing now, as the token it claimed with: a player that
-/// starts claims it and every other one pauses, so two voice notes never
-/// play over each other.
+/// starts claims it and every other one pauses, so a voice note, a video
+/// and a reading aloud never play over each other.
 
 abstract class _$NowPlaying extends $Notifier<Object?> {
   Object? build();

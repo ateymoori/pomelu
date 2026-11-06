@@ -171,6 +171,14 @@ abstract final class MediaCache {
     }
   }
 
+  /// A video file into the gallery, in the app's album where allowed.
+  static Future<void> galleryVideo(String path) async {
+    final album = await Gal.hasAccess(toAlbum: true)
+        ? AppConfig.galleryAlbum
+        : null;
+    await Gal.putVideo(path, album: album);
+  }
+
   /// Bytes behind a plain web URL, for saving a Markdown picture.
   static Future<Uint8List> download(String url, {Dio? http}) async {
     final dio =

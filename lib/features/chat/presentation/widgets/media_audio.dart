@@ -4,41 +4,24 @@ import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../../core/config/app_config.dart';
 import '../../../../core/theme/tokens.dart';
 import '../../../../core/ui/ui.dart';
 import '../../../../core/utils/app_logger.dart';
 import '../../../../core/utils/format.dart';
 import '../../../../core/utils/l10n_ext.dart';
+import '../now_playing.dart';
+import 'media_scrubber.dart';
 import 'media_strip.dart';
 
-part 'media_audio.g.dart';
-
-/// The player playing now, as the token it claimed with: a player that
-/// starts claims it and every other one pauses, so two voice notes never
-/// play over each other.
-@Riverpod(keepAlive: true)
-class NowPlaying extends _$NowPlaying {
-  @override
-  Object? build() => null;
-
-  void claim(Object token) {
-    if (ref.mounted && !identical(state, token)) state = token;
-  }
-
-  /// [token] stopped; another player's claim stays.
-  void release(Object token) {
-    if (ref.mounted && identical(state, token)) state = null;
-  }
-}
-
-/// Pill audio player: play/pause, scrubber, position and duration.
+/// Audio card: play/pause, the file's name, a seek bar with the time played
+/// and the time left, and a speed button (1×, 1.5×, 2×).
 ///
 /// The stream opens on the first play, not when the row is built: a transcript
 /// of voice notes would otherwise start a native player and a network request
-/// per note as it scrolls past, only to drop them again. One note plays at a
-/// time ([NowPlaying]): starting one pauses the one playing.
+/// per note as it scrolls past, only to drop them again. One player plays at
+/// a time ([NowPlaying]): starting one pauses the one playing.
 ///
 /// [player] makes the player; tests pass their own.
 class MediaAudio extends ConsumerStatefulWidget {
@@ -46,6 +29,7 @@ class MediaAudio extends ConsumerStatefulWidget {
     required this.url,
     required this.headers,
     super.key,
+    this.name = '',
     this.player = AudioPlayer.new,
   });
 
@@ -54,6 +38,9 @@ class MediaAudio extends ConsumerStatefulWidget {
 
   /// Auth headers for [url].
   final Map<String, String> headers;
+
+  /// The file's name; empty shows a plain "Audio".
+  final String name;
 
   /// Makes the native player, on the first play.
   final AudioPlayer Function() player;
@@ -73,9 +60,12 @@ class _MediaAudioState extends ConsumerState<MediaAudio> {
 
   AudioPlayer? _player;
   Duration _position = Duration.zero;
+  Duration _buffered = Duration.zero;
   Duration _duration = Duration.zero;
   bool _playing = false;
+  bool _loading = false;
   bool _failed = false;
+  double _speed = 1;
   final List<StreamSubscription<Object?>> _subs = [];
 
   Future<AudioPlayer?> _open() async {
@@ -83,30 +73,57 @@ class _MediaAudioState extends ConsumerState<MediaAudio> {
     if (existing != null) return existing;
     final player = widget.player();
     _player = player;
-    _subs.add(
-      player.positionStream.listen((p) {
-        if (mounted) setState(() => _position = p);
-      }),
-    );
-    _subs.add(
-      player.playerStateStream.listen((s) {
-        if (!mounted) return;
-        setState(
-          () => _playing =
-              s.playing && s.processingState != ProcessingState.completed,
-        );
-      }),
-    );
+    _subs
+      ..add(
+        player.positionStream.listen((p) {
+          if (mounted) setState(() => _position = p);
+        }),
+      )
+      ..add(
+        player.bufferedPositionStream.listen((b) {
+          if (mounted) setState(() => _buffered = b);
+        }),
+      )
+      ..add(
+        player.durationStream.listen((d) {
+          if (mounted && d != null) setState(() => _duration = d);
+        }),
+      )
+      ..add(
+        player.playerStateStream.listen((s) {
+          if (!mounted) return;
+          final done = s.processingState == ProcessingState.completed;
+          setState(() {
+            _playing = s.playing && !done;
+            _loading =
+                s.playing &&
+                (s.processingState == ProcessingState.loading ||
+                    s.processingState == ProcessingState.buffering);
+          });
+          if (done) _nowPlaying.release(this);
+        }),
+      );
+    setState(() => _loading = true);
     try {
       final d = await player.setUrl(
         widget.url.toString(),
         headers: widget.headers,
       );
-      if (mounted) setState(() => _duration = d ?? Duration.zero);
+      if (!mounted) return null;
+      setState(() {
+        _loading = false;
+        if (d != null) _duration = d;
+      });
+      await player.setSpeed(_speed);
       return player;
     } on Object catch (e, st) {
       log.w('audio failed to load', error: e, stackTrace: st);
-      if (mounted) setState(() => _failed = true);
+      if (mounted) {
+        setState(() {
+          _loading = false;
+          _failed = true;
+        });
+      }
       return null;
     }
   }
@@ -135,6 +152,7 @@ class _MediaAudioState extends ConsumerState<MediaAudio> {
       _failed = false;
       _playing = false;
       _position = Duration.zero;
+      _buffered = Duration.zero;
       _duration = Duration.zero;
     });
     unawaited(_toggle());
@@ -158,9 +176,16 @@ class _MediaAudioState extends ConsumerState<MediaAudio> {
     await player.play();
   }
 
+  void _nextSpeed() {
+    const speeds = AppConfig.audioSpeeds;
+    final next = speeds[(speeds.indexOf(_speed) + 1) % speeds.length];
+    setState(() => _speed = next);
+    unawaited(_player?.setSpeed(next));
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Another note started: this one gives way.
+    // Another player started: this one gives way.
     ref.listen(nowPlayingProvider, (_, playing) {
       if (!identical(playing, this) && _playing) {
         unawaited(_player?.pause());
@@ -178,75 +203,99 @@ class _MediaAudioState extends ConsumerState<MediaAudio> {
       );
     }
 
+    final colors = context.colors;
     final spacing = context.spacing;
-    final total = _duration.inMilliseconds;
-    final value = total == 0
-        ? 0.0
-        : (_position.inMilliseconds / total).clamp(0.0, 1.0);
+    final text = Theme.of(context).textTheme;
+    final clock = text.labelSmall?.copyWith(
+      color: colors.textSecondary,
+      // Digits of one width: the clock does not shake as it counts.
+      fontFeatures: const [FontFeature.tabularFigures()],
+    );
+    final left = _duration - _position;
 
-    return AppSurface(
-      borderRadius: BorderRadius.circular(context.radii.pill),
-      // Pill arcs cut deep into the slider track.
-      clip: true,
-      padding: EdgeInsets.symmetric(horizontal: spacing.xs),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          AppIconButton(
-            icon: _playing
-                ? CupertinoIcons.pause_fill
-                : CupertinoIcons.play_fill,
-            tooltip: _playing ? l10n.mediaPause : l10n.mediaPlay,
-            onPressed: () => unawaited(_toggle()),
+    return Align(
+      alignment: AlignmentDirectional.centerStart,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: spacing.audioCardMaxWidth),
+        child: AppSurface(
+          color: colors.toolSurface,
+          border: false,
+          padding: EdgeInsetsDirectional.only(
+            start: spacing.sm,
+            top: spacing.sm,
+            bottom: spacing.xs,
           ),
-          SizedBox(width: spacing.xs),
-          Flexible(
-            // A full touch target to scrub in, not the sliver the thumb
-            // would give.
-            child: SizedBox(
-              height: spacing.minTouch,
-              child: SliderTheme(
-                data: SliderTheme.of(context).copyWith(
-                  trackHeight: spacing.xs,
-                  overlayShape: SliderComponentShape.noOverlay,
-                ),
-                // One control for a screen reader: a name, the position, and
-                // the slider's own increase / decrease.
-                child: MergeSemantics(
-                  child: Semantics(
-                    label: l10n.mediaSeek,
-                    child: Slider(
-                      value: value,
-                      semanticFormatterCallback: (v) => l10n.mediaAudioTime(
-                        Format.duration(
-                          Duration(milliseconds: (v * total).round()),
-                        ),
-                        Format.duration(_duration),
+          child: Row(
+            children: [
+              AppIconButton(
+                icon: _playing
+                    ? CupertinoIcons.pause_fill
+                    : CupertinoIcons.play_fill,
+                tooltip: _playing ? l10n.mediaPause : l10n.mediaPlay,
+                filled: true,
+                busy: _loading,
+                onPressed: () => unawaited(_toggle()),
+              ),
+              SizedBox(width: spacing.sm),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: EdgeInsetsDirectional.only(end: spacing.md),
+                      child: Text(
+                        widget.name.isEmpty
+                            ? l10n.mediaAudioTitle
+                            : widget.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: text.bodyMedium,
                       ),
-                      onChanged: total == 0
-                          ? null
-                          : (v) => unawaited(
-                              _player!.seek(
-                                Duration(milliseconds: (v * total).round()),
-                              ),
-                            ),
+                    ),
+                    MediaScrubber(
+                      position: _position,
+                      duration: _duration,
+                      buffered: _buffered,
+                      onSeek: (at) => unawaited(_player?.seek(at)),
+                    ),
+                    Padding(
+                      padding: EdgeInsetsDirectional.only(end: spacing.md),
+                      child: Row(
+                        children: [
+                          Text(Format.duration(_position), style: clock),
+                          const Spacer(),
+                          Text(
+                            _duration == Duration.zero
+                                ? ''
+                                : l10n.mediaRemaining(
+                                    Format.duration(
+                                      left.isNegative ? Duration.zero : left,
+                                    ),
+                                  ),
+                            style: clock,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              TextButton(
+                onPressed: _nextSpeed,
+                child: Semantics(
+                  label: l10n.mediaSpeed,
+                  child: Text(
+                    Format.speed(l10n, _speed),
+                    style: text.labelMedium?.copyWith(
+                      fontFeatures: const [FontFeature.tabularFigures()],
                     ),
                   ),
                 ),
               ),
-            ),
+            ],
           ),
-          Padding(
-            padding: EdgeInsetsDirectional.only(end: spacing.md),
-            child: Text(
-              l10n.mediaAudioTime(
-                Format.duration(_position),
-                Format.duration(_duration),
-              ),
-              style: Theme.of(context).textTheme.labelMedium,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

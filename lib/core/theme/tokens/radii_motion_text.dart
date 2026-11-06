@@ -44,6 +44,9 @@ class Motion {
   /// Dimmest a full-screen viewer fades while dragged to close.
   final double viewerDragMinOpacity = 0.4;
 
+  /// How long a playing video keeps its controls after the last touch.
+  final Duration videoControlsLinger = const Duration(seconds: 3);
+
   /// One blink of the caret at the end of a streaming reply.
   final Duration streamCaretPeriod = const Duration(milliseconds: 900);
 }

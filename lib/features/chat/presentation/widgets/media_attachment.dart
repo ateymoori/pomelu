@@ -51,10 +51,16 @@ class MediaAttachment extends ConsumerWidget {
         null => chip,
       },
       AttachmentKind.video => play(
-        (url, headers) => MediaVideo(url: url, headers: headers),
+        (url, headers) => MediaVideo(
+          url: url,
+          headers: headers,
+          path: media.path,
+          name: media.fileName,
+        ),
       ),
       AttachmentKind.audio => play(
-        (url, headers) => MediaAudio(url: url, headers: headers),
+        (url, headers) =>
+            MediaAudio(url: url, headers: headers, name: media.fileName),
       ),
       AttachmentKind.file => chip,
     };

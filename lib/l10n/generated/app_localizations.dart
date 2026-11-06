@@ -2470,6 +2470,78 @@ abstract class AppLocalizations {
   /// **'Seek'**
   String get mediaSeek;
 
+  /// No description provided for @mediaReplay.
+  ///
+  /// In en, this message translates to:
+  /// **'Play again'**
+  String get mediaReplay;
+
+  /// No description provided for @mediaMute.
+  ///
+  /// In en, this message translates to:
+  /// **'Mute'**
+  String get mediaMute;
+
+  /// No description provided for @mediaUnmute.
+  ///
+  /// In en, this message translates to:
+  /// **'Unmute'**
+  String get mediaUnmute;
+
+  /// No description provided for @mediaFullScreen.
+  ///
+  /// In en, this message translates to:
+  /// **'Full screen'**
+  String get mediaFullScreen;
+
+  /// Button of a video player. {seconds} is how far it skips.
+  ///
+  /// In en, this message translates to:
+  /// **'Back {seconds} seconds'**
+  String mediaSkipBack(int seconds);
+
+  /// Button of a video player. {seconds} is how far it skips.
+  ///
+  /// In en, this message translates to:
+  /// **'Forward {seconds} seconds'**
+  String mediaSkipForward(int seconds);
+
+  /// No description provided for @mediaSpeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Playback speed'**
+  String get mediaSpeed;
+
+  /// A playback speed, as 1.5×. {speed} is already formatted.
+  ///
+  /// In en, this message translates to:
+  /// **'{speed}×'**
+  String mediaSpeedValue(String speed);
+
+  /// Time left in a video, as −1:05. {time} is already formatted.
+  ///
+  /// In en, this message translates to:
+  /// **'−{time}'**
+  String mediaRemaining(String time);
+
+  /// No description provided for @mediaVideoActions.
+  ///
+  /// In en, this message translates to:
+  /// **'Video actions'**
+  String get mediaVideoActions;
+
+  /// No description provided for @mediaVideoSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save video'**
+  String get mediaVideoSaveFailed;
+
+  /// No description provided for @mediaAudioTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Audio'**
+  String get mediaAudioTitle;
+
   /// Position in the media viewer. {index} is the picture shown, {count} all of them.
   ///
   /// In en, this message translates to:

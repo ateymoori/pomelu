@@ -8,7 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../hermes/api/hermes_api.dart';
 import '../../../hermes/hermes_failure.dart';
 import '../../connection/presentation/connection_providers.dart';
-import 'widgets/media_audio.dart';
+import 'now_playing.dart';
 
 part 'read_aloud.g.dart';
 

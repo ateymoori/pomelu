@@ -81,6 +81,9 @@ class Spacing {
   /// Aspect of a video or link preview before its own is known.
   final double mediaAspect = 16 / 9;
 
+  /// Widest an audio player in a reply grows.
+  final double audioCardMaxWidth = 420;
+
   /// Row share a transcript separator's label may span before it wraps.
   final double separatorLabelFraction = 0.8;
 

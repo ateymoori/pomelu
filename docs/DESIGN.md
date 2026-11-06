@@ -199,7 +199,14 @@ bar (`selectedBar`) and a semibold name. Installed once above the navigator:
   corners, header in `toolSurface`, every other row in `tableStripe`); reasoning is one collapsed
   "Thinking" row; tool calls are one-line rows (two or more fold into one
   group). User messages are right-aligned bubbles, at most 80 % of the column.
-  Pictures are square tiles that open a full-screen viewer. A file from the
+  Pictures are square tiles that open a full-screen viewer. A video shows
+  its first frame and length; a tap plays it in place with glass controls
+  (play/pause, seek, mute, full screen) that hide after 3 s of play. Full
+  screen is dark, drag down to close: skip ±10 s (buttons, double tap,
+  arrow keys), time left, speed, Save to gallery, Share; status bar hides
+  with the controls. Long-press a video for the same actions. Audio is a
+  card: play, name, seek bar, time played and left, speed (1×, 1.5×, 2×).
+  A file from the
   bot is a chip with a `FileBadge` and its size: tap opens it in the phone's
   default app; its ⋯ (or a long
   press) offers Open, Save to Files (a folder the user picks) and Share.

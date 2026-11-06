@@ -123,6 +123,20 @@ abstract final class AppConfig {
   /// Deepest zoom of a picture in the viewer, in screen fits.
   static const double viewerMaxZoom = 4;
 
+  /// A player's skip back and forward (buttons, double tap, arrow keys).
+  static const Duration mediaSkip = Duration(seconds: 10);
+
+  /// Speeds a video offers, and the ones an audio player steps through.
+  static const List<double> videoSpeeds = [0.5, 1, 1.25, 1.5, 2];
+  static const List<double> audioSpeeds = [1, 1.5, 2];
+
+  /// A video row on screen this long loads its first frame and length. A
+  /// row only scrolled past opens no stream.
+  static const Duration videoPosterDelay = Duration(milliseconds: 400);
+
+  /// Video sizes remembered, so a row built again keeps its shape.
+  static const int videoAspectCacheLimit = 64;
+
   /// Context-window fill at which the header ring warns, then alarms.
   static const double contextWarnAt = 0.75;
   static const double contextDangerAt = 0.90;
