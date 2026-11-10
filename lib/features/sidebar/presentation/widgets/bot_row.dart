@@ -6,6 +6,7 @@ import '../../../../core/ui/ui.dart';
 import '../../../../core/utils/bidi_text.dart';
 import '../../../../core/utils/format.dart';
 import '../../../../core/utils/l10n_ext.dart';
+import '../../../../hermes/hermes_constants.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../domain/bot_group.dart';
 import 'avatar.dart';
@@ -34,9 +35,12 @@ class BotRow extends StatelessWidget {
     final spacing = context.spacing;
     final theme = Theme.of(context).textTheme;
     final profile = group.profile;
-    final preview = activity
-        ? plainPreview(profile.canonicalSession?.preview ?? '')
-        : '';
+    final last = activity ? profile.canonicalSession?.preview ?? '' : '';
+    final words = plainPreview(last);
+    // A message that is only a file has no words of its own.
+    final preview = words.isEmpty && last.trim().isNotEmpty
+        ? l10n.notificationMessageAttachment
+        : words;
     final fallback = profile.description.trim().isNotEmpty
         ? profile.description.trim()
         : profile.model;
@@ -113,8 +117,16 @@ String relativeTime(AppLocalizations l10n, DateTime? time, DateTime now) {
 
 final RegExp _markdownMarks = RegExp(r'[*_`#>~]+|\[(.*?)\]\(.*?\)');
 
-/// One plain line for a preview: Markdown marks dropped, spaces collapsed.
+/// A file the bot sent: a `MEDIA:` path on the gateway's disk.
+final RegExp _mediaPath = RegExp(
+  '''(^|\\s)[`"']?${RegExp.escape(HermesProtocol.mediaLinePrefix)}'''
+  r'''\s*(`[^`\n]+`|"[^"\n]+"|'[^'\n]+'|\S+)[`"']?''',
+);
+
+/// One plain line for a preview: file paths and Markdown marks dropped,
+/// spaces collapsed.
 String plainPreview(String text) => text
+    .replaceAllMapped(_mediaPath, (m) => m.group(1) ?? '')
     .replaceAllMapped(_markdownMarks, (m) => m.group(1) ?? '')
     .replaceAll(RegExp(r'\s+'), ' ')
     .trim();

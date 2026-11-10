@@ -15,6 +15,15 @@ void main() {
     expect(plainPreview('  plain  '), 'plain');
   });
 
+  test('plainPreview shows the words of a message, not its file path', () {
+    expect(
+      plainPreview('Here is the film. MEDIA:/tmp/out/film_a.mp4'),
+      'Here is the film.',
+    );
+    expect(plainPreview('MEDIA: "/tmp/my film.mp4"\nEnjoy'), 'Enjoy');
+    expect(plainPreview('MEDIA:/tmp/film.mp4'), isEmpty);
+  });
+
   // 2026-03-29 and 2026-10-25 are the EU daylight-saving changes: in a zone
   // that observes them, those local days are 23 and 25 hours long.
   group('calendar days across a DST change', () {

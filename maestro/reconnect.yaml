@@ -24,7 +24,7 @@ appId: se.royan.pomelu
     commands:
       - tapOn: "Open menu"
 - extendedWaitUntil:
-    visible: "Connected"
+    visible: '(?s)(.*\n)?Connected'
     timeout: 30000
 - assertNotVisible: "Sign in required"
 - assertNotVisible: "Offline"

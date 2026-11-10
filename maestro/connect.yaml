@@ -34,7 +34,7 @@ env:
       notVisible: "Open menu"
     commands:
       - extendedWaitUntil:
-          visible: "Connected"
+          visible: '(?s)(.*\n)?Connected'
           timeout: 25000
 - runFlow:
     when:
@@ -42,7 +42,7 @@ env:
     commands:
       - tapOn: "Open menu"
       - extendedWaitUntil:
-          visible: "Connected"
+          visible: '(?s)(.*\n)?Connected'
           timeout: 25000
       - tapOn:
           point: "95%,50%"
