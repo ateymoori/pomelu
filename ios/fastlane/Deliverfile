@@ -1,5 +1,7 @@
 # App Store text, screenshots and review details: `fastlane metadata`.
-app_version('1.0.4')
+# The version is the part before `+` in pubspec.yaml, as the build number is
+# the part after it (Fastfile).
+app_version(File.read(File.expand_path('../../pubspec.yaml', __dir__))[/^version: ([\d.]+)\+/, 1])
 platform('ios')
 app_review_information(
   demo_user: ENV.fetch('POMELU_REVIEW_USER', ''),

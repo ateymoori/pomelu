@@ -32,7 +32,7 @@ Both apps are `se.royan.pomelu`, so one `appId` serves both platforms.
 | `rotate.yaml` | landscape and back keep the chat and the composer text | configured app | both |
 | `reconnect.yaml` | stop and start the app: it finds the gateway again | configured app | both |
 | `location_sheet.yaml` | attach → Location: the map opens and closes. Shares nothing | configured app | both |
-| `bot_details.yaml` | the gear opens the sheet and its four tabs. Read only | configured app | both |
+| `bot_details.yaml` | the bot's name in the chat header opens the sheet and its four tabs. Read only | configured app | both |
 | `share_text.yaml` | a shared text opens the picker; picking a bot seeds the composer | trigger (below), `BOT` | both |
 | `share_image.yaml` | a shared picture is attached and sends without failing | trigger (below), `BOT` | both |
 | `share_from_files.yaml` | shares `picture.png` from the Files app (trigger for `share_image.yaml`) | Pictures folder open in Files | Android |

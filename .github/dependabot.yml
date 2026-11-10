@@ -5,6 +5,14 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+  - package-ecosystem: gradle
+    directory: /android
+    schedule:
+      interval: monthly
+  - package-ecosystem: npm
+    directory: /tool/bot_screen
+    schedule:
+      interval: monthly
   - package-ecosystem: github-actions
     directory: /
     schedule:

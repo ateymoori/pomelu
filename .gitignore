@@ -13,6 +13,7 @@ coverage/
 android/.gradle/
 android/local.properties
 android/key.properties
+android/firebase.properties
 android/app/release/
 *.keystore
 *.jks

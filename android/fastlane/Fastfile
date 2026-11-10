@@ -8,6 +8,10 @@ AAB = "#{ROOT}/build/app/outputs/bundle/release/app-release.aab"
 platform :android do
   desc 'Release AAB; keep build/symbols for crash stacks'
   lane :build do
+    # Gradle builds without them (debug signing, no push): never a store build.
+    %w[key.properties firebase.properties].each do |f|
+      UI.user_error!("android/#{f} is missing") unless File.exist?("#{ROOT}/android/#{f}")
+    end
     Dir.chdir(ROOT) do
       sh('flutter', 'build', 'appbundle', '--release', '--obfuscate',
          '--split-debug-info=build/symbols')

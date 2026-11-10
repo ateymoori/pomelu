@@ -141,6 +141,6 @@ class CronJobActions extends _$CronJobActions {
   void _list(void Function(BotCronJobs jobs) change) {
     if (!ref.mounted) return;
     final list = botCronJobsProvider(profile);
-    if (ref.exists(list)) change(ref.read(list.notifier));
+    if (ref.read(list.exists)) change(ref.read(list.notifier));
   }
 }

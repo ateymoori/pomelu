@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <!-- Local notifications, and bot messages by push (FCM, PushService). -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-    <!-- "Stay connected" (off by default): specialUse, subtype on the service. -->
+    <!-- "Stay connected" (on by default, one switch in Settings): specialUse, subtype on the service. -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
     <!-- Optional: a device without them still gets the app. -->
