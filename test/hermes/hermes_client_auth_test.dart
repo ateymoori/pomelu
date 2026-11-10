@@ -68,6 +68,30 @@ void main() {
     return reached;
   }
 
+  test('a Host guard that refuses the ticket is HostRefused', () async {
+    cred = BearerCredential(
+      accessToken: 'new',
+      refreshToken: 'rt',
+      provider: 'basic',
+      expiresAt: DateTime.utc(2999),
+    );
+    gateway.routes['POST /api/auth/ws-ticket'] =
+        gateway.routes['GET /api/status'] = (_) =>
+            reply('Invalid host header', status: 400);
+
+    final state = await connectUntil((s) => s is Disconnected);
+
+    expect((state as Disconnected).failure, isA<HostRefusedFailure>());
+    expect(states.whereType<AuthRequired>(), isEmpty);
+    expect(net.connections, isEmpty);
+    await Future<void>.delayed(const Duration(seconds: 1));
+    expect(
+      gateway.requests.where((r) => r.path.endsWith('ws-ticket')),
+      hasLength(1),
+      reason: 'no redial',
+    );
+  });
+
   test('a token near expiry is refreshed before the dial', () async {
     refreshAnswers(200, {'access_token': 'new', 'refresh_token': 'rt2'});
 

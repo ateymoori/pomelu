@@ -31,8 +31,8 @@ WebSocket at `{base}/api/ws`. Checked against Hermes 0.22.2. The SDK in
 - Credentials go to the gateway's origin only. Every credential names the
   origin that issued it; HTTP and the dial refuse one bound elsewhere. REST
   follows no redirect (a 3xx is a `ServerFailure`). A download sends auth
-  headers only to the gateway's origin, writes `<path>.part` and renames when
-  whole.
+  headers only to the gateway's origin; the media cache saves it under a
+  temporary name and renames it when whole.
 
 ### Discovery and sign-in
 

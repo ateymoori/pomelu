@@ -20,7 +20,8 @@ export 'ws_connection.dart';
 /// backoff, and stops when the credential or the address is refused.
 class WebSocketTransport implements MessageChannel {
   /// Builds each dial with [dialBuilder]. [hostRefused] is asked after an
-  /// upgrade refused with 403: true when the Host guard refused it. The
+  /// upgrade refused with 403, or a dial that could not be built for a 400:
+  /// true when the Host guard refused it. The
   /// [connector], [stableAfter] and [random] are for tests.
   WebSocketTransport({
     required this.dialBuilder,
@@ -203,27 +204,37 @@ class WebSocketTransport implements MessageChannel {
     } on HermesFailure catch (e) {
       if (dial != _dial) return;
       final auth = e is UnauthorizedFailure || e is ForbiddenFailure;
+      // The ticket and the token page are plain HTTP: the guard answers 400.
+      final guard =
+          e is ServerFailure &&
+          e.httpStatus == HermesHttpStatus.badRequest &&
+          await _hostRefused();
+      if (_disposed || dial != _dial) return;
       _onClosed(
         TransportClose(
           error: e,
           httpStatus: auth ? HermesHttpStatus.unauthorized : null,
+          hostRefused: guard,
         ),
       );
     } on Object catch (e) {
       if (dial != _dial) return;
       final status = upgradeStatusOf(e);
-      var guard = false;
-      if (status == HermesHttpStatus.forbidden) {
-        try {
-          guard = await hostRefused?.call() ?? false;
-        } on Object {
-          guard = false;
-        }
-      }
+      final guard =
+          status == HermesHttpStatus.forbidden && await _hostRefused();
       if (_disposed || dial != _dial) return;
       _onClosed(
         TransportClose(error: e, httpStatus: status, hostRefused: guard),
       );
+    }
+  }
+
+  /// A probe that fails is no proof of the guard: the dial fails as it was.
+  Future<bool> _hostRefused() async {
+    try {
+      return await hostRefused?.call() ?? false;
+    } on Object {
+      return false;
     }
   }
 

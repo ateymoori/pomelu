@@ -29,7 +29,8 @@ class _GatewayChecks {
 
   final HermesClient _c;
 
-  String _checkedEpoch = '';
+  /// Null until a check ran: a gateway too old to send an epoch has `''`.
+  String? _checkedEpoch;
 
   /// Once per gateway process, refuse one older than
   /// [HermesProtocol.minGatewayVersion]: the socket closes with a
@@ -54,7 +55,7 @@ class _GatewayChecks {
       HermesProtocol.minGatewayVersion,
     );
     _c.log('refusing the gateway', failure);
-    _checkedEpoch = '';
+    _checkedEpoch = null;
     _c._liveness.stop();
     await _c._transport.disconnect();
     _c._setState(Disconnected(failure: failure));

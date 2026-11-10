@@ -74,7 +74,7 @@ class HermesApi
   Future<String?> profileAvatar(String name) async {
     final res = await _client.call(HermesMethods.profilesGetAsset, {
       'name': name,
-      'asset': 'avatar',
+      'asset': HermesProtocol.avatarAsset,
     });
     final d = res['data'];
     return res['found'] == true && d is String && d.isNotEmpty ? d : null;

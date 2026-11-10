@@ -115,6 +115,21 @@ void main() {
       expect(gateway.requests, hasLength(2));
     });
 
+    test('goes again with a credential renewed while it was out', () async {
+      var token = 'old';
+      gateway.routes['GET /api/x'] = (r) {
+        if (tokenOf(r) == 'new') return reply({'ok': 1});
+        token = 'new';
+        return reply({}, status: 401);
+      };
+      final h = http(
+        credential: () => SessionTokenCredential(token),
+        onUnauthorized: () async => fail('nothing left to renew'),
+      );
+
+      expect(await h.json('GET', 'api/x'), {'ok': 1});
+    });
+
     test('stands when the renewal is refused', () async {
       gateway.routes['GET /api/x'] = (_) => reply({}, status: 401);
       final h = http(onUnauthorized: () async => false);
@@ -167,18 +182,19 @@ void main() {
     'a redirect is not followed: the target never sees the request',
     () async {
       other.routes['GET /api/x'] = (_) => reply({'leaked': true});
-      gateway.routes['GET /api/x'] = (_) => reply(
-        null,
-        status: 302,
-        headers: {'location': other.url.resolve('/api/x').toString()},
+      gateway.routes['GET /api/x'] = gateway.routes['DELETE /api/x'] = (_) =>
+          reply(
+            null,
+            status: 302,
+            headers: {'location': other.url.resolve('/api/x').toString()},
+          );
+      final redirect = throwsA(
+        isA<ServerFailure>().having((f) => f.httpStatus, 'status', 302),
       );
 
-      await expectLater(
-        http().json('GET', 'api/x'),
-        throwsA(
-          isA<ServerFailure>().having((f) => f.httpStatus, 'status', 302),
-        ),
-      );
+      await expectLater(http().json('GET', 'api/x'), redirect);
+      // A route with no body to read: it must not pass as done.
+      await expectLater(http().send('DELETE', 'api/x'), redirect);
       expect(other.requests, isEmpty);
     },
   );

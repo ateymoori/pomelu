@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hermes/hermes/hermes_constants.dart';
+import 'package:hermes/hermes/transport/redial_backoff.dart';
 import 'package:hermes/hermes/transport/websocket_transport.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -23,6 +26,12 @@ void main() {
     ]) {
       expect(upgradeStatusOf(WebSocketException(text)), isNull, reason: text);
     }
+  });
+
+  test('a long outage keeps its wait: the ceiling never wraps to zero', () {
+    final backoff = RedialBackoff(_Half());
+    final waits = [for (var i = 0; i < 100; i++) backoff.next()];
+    expect(waits.skip(20).toSet(), {HermesTimeouts.backoffLongMax * 0.5});
   });
 
   group('over a loopback socket', () {
@@ -118,4 +127,15 @@ void main() {
     await expectLater(connection.ready, throwsA(isA<Object>()));
     await hungUp.future.timeout(const Duration(seconds: 5));
   });
+}
+
+class _Half implements Random {
+  @override
+  double nextDouble() => 0.5;
+
+  @override
+  bool nextBool() => true;
+
+  @override
+  int nextInt(int max) => max ~/ 2;
 }

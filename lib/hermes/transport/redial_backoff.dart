@@ -8,6 +8,8 @@ class RedialBackoff {
   RedialBackoff([Random? random]) : _random = random ?? Random();
   final Random _random;
 
+  static const _maxDoublings = 20;
+
   /// Redials since the last [reset].
   int attempt = 0;
 
@@ -18,9 +20,12 @@ class RedialBackoff {
     final cap = attempt >= HermesLimits.backoffLongAfter
         ? HermesTimeouts.backoffLongMax
         : HermesTimeouts.backoffMax;
+    // The exponent stops where the cap is long passed: 2^62 and up wraps
+    // to zero or below, which would redial with no wait at all.
     final grown =
-        HermesTimeouts.backoffInitial.inMilliseconds * pow(2, attempt++);
-    final ceiling = min(cap.inMilliseconds.toDouble(), grown.toDouble());
+        HermesTimeouts.backoffInitial.inMilliseconds *
+        pow(2, min(attempt++, _maxDoublings));
+    final ceiling = min(cap.inMilliseconds, grown);
     return Duration(milliseconds: (_random.nextDouble() * ceiling).round());
   }
 }

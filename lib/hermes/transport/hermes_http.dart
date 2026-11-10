@@ -84,9 +84,12 @@ class HermesHttp {
   }
 
   /// One request; the answer as it came (cookies are in its headers). An
-  /// error status throws. A [body] that is a String goes out as it is (JSON
-  /// encoded off the UI isolate). [timeout] replaces the send and receive
-  /// timeouts; [headers] go out next to the credential.
+  /// error status throws, and so does a redirect (it would be followed
+  /// without the credential, or with it to a host that did not issue it)
+  /// unless the answer is [plain] text read as it is. A [body] that is a
+  /// String goes out as it is (JSON encoded off the UI isolate). [timeout]
+  /// replaces the send and receive timeouts; [headers] go out next to the
+  /// credential. A 401 renews the credential and tries once more.
   Future<Response<dynamic>> send(
     String method,
     String path, {
@@ -99,14 +102,14 @@ class HermesHttp {
   }) async {
     if (_closed) throw const NetworkFailure('http client closed');
     final uri = resolve(path, query);
-    Future<Response<dynamic>> attempt() async {
+    Future<Response<dynamic>> attempt(Map<String, String> credential) async {
       try {
         return await _dio.requestUri<dynamic>(
           uri,
           data: body,
           options: Options(
             method: method,
-            headers: {...?headers, if (auth) ..._headers()},
+            headers: {...?headers, ...credential},
             contentType: body == null ? null : Headers.jsonContentType,
             sendTimeout: timeout,
             receiveTimeout: timeout,
@@ -118,12 +121,17 @@ class HermesHttp {
       }
     }
 
-    var res = await attempt();
+    final sent = auth ? _headers() : const <String, String>{};
+    var res = await attempt(sent);
     if (auth && res.statusCode == HermesHttpStatus.unauthorized) {
-      if (await _renew()) res = await attempt();
+      if (await _renewed(sent)) res = await attempt(_headers());
     }
-    final failure = failureForStatus(res.statusCode ?? 0, res.data);
+    final code = res.statusCode ?? 0;
+    final failure = failureForStatus(code, res.data);
     if (failure != null) throw failure;
+    if (code >= 300 && !plain) {
+      throw ServerFailure('unexpected redirect', httpStatus: code);
+    }
     return res;
   }
 
@@ -162,13 +170,8 @@ class HermesHttp {
     throw ProtocolFailure('expected a JSON array', cause: data);
   }
 
-  /// The body; a redirect is refused (it would be followed without the
-  /// credential, or with it to a host that did not issue it).
+  /// The body; an empty one is null.
   static Object? _data(Response<dynamic> res) {
-    final code = res.statusCode ?? 0;
-    if (code >= 300) {
-      throw ServerFailure('unexpected redirect', httpStatus: code);
-    }
     final data = res.data;
     return data is String && data.isEmpty ? null : data;
   }
@@ -186,11 +189,11 @@ class HermesHttp {
         uri.scheme == baseUrl.scheme &&
         uri.host == baseUrl.host &&
         uri.port == baseUrl.port;
-    Future<void> attempt() => _dio.downloadUri(
+    Future<void> attempt(Map<String, String>? credential) => _dio.downloadUri(
       uri,
       savePath,
       options: Options(
-        headers: ours ? _headers() : null,
+        headers: credential,
         receiveTimeout: HermesTimeouts.upload,
         followRedirects: !ours,
         validateStatus: (s) => s != null && s < 300,
@@ -198,22 +201,33 @@ class HermesHttp {
       onReceiveProgress: onProgress,
       cancelToken: cancelToken,
     );
+    final sent = ours ? _headers() : null;
     try {
-      await attempt();
+      await attempt(sent);
     } on DioException catch (e) {
       final unauthorized =
           e.response?.statusCode == HermesHttpStatus.unauthorized;
-      if (!ours || !unauthorized || !await _renew()) throw failureForDio(e);
+      if (sent == null || !unauthorized || !await _renewed(sent)) {
+        throw failureForDio(e);
+      }
       try {
-        await attempt();
+        await attempt(_headers());
       } on DioException catch (e) {
         throw failureForDio(e);
       }
     }
   }
 
-  /// [onUnauthorized], with anything that is no [HermesFailure] as one.
-  Future<bool> _renew() async {
+  /// Whether a request refused with [sent] has a newer credential to go out
+  /// with: one renewed while it was out (by the dial or another request), or
+  /// one [onUnauthorized] renews now (anything it throws that is no
+  /// [HermesFailure] becomes one).
+  Future<bool> _renewed(Map<String, String> sent) async {
+    final now = _headers();
+    if (now.length != sent.length ||
+        now.entries.any((e) => sent[e.key] != e.value)) {
+      return true;
+    }
     final renew = onUnauthorized;
     if (renew == null) return false;
     try {

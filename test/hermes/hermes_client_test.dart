@@ -329,6 +329,8 @@ void main() {
 
     test('a gateway too old is refused, an unreadable version is not', () {
       fakeAsync((async) {
+        // A gateway that old sends no replay epoch.
+        net.epoch = '';
         build(status: () async => const GatewayStatus(version: '0.20.1'));
         connect(async);
         final failure = (client.state as Disconnected).failure;

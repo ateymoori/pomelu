@@ -6,6 +6,13 @@ part of 'hermes_api.dart';
 mixin _ProfileRoutes {
   HermesClient get _client;
 
+  List<T> _rows<T>(
+    Object? raw,
+    T Function(Map<String, dynamic>) fromJson,
+    String what, [
+    bool Function(T)? keep,
+  ]);
+
   /// Creates bot [name], a profile id. It starts with the gateway's own
   /// model, keys and bundled skills.
   Future<void> createProfile(String name) => _client.call(
@@ -45,12 +52,13 @@ mixin _ProfileRoutes {
       final res = await _client.call(HermesMethods.profilesList, const {
         'include_sessions': false,
       });
-      final row = (res['profiles'] as List?)
-          ?.whereType<Map<String, dynamic>>()
-          .where((p) => p['name'] == name)
-          .firstOrNull;
-      if (row == null) throw ServerFailure('there is no bot "$name"');
-      final profile = HermesProfile.fromJson(row);
+      final profile = _rows(
+        res['profiles'],
+        HermesProfile.fromJson,
+        'profile',
+        (p) => p.name == name,
+      ).firstOrNull;
+      if (profile == null) throw ServerFailure('there is no bot "$name"');
       final current = profile.uiMeta?[key];
       // `chat` is a pin Desktop no longer writes back either.
       final meta = {
