@@ -1,6 +1,6 @@
 WAŻNE: Pomelu wymaga Hermes Agent i nie działa samodzielnie. Najpierw zainstaluj i uruchom Hermes Agent (od Nous Research) na własnym komputerze lub serwerze, a następnie połącz z nim Pomelu. Instrukcja instalacji: https://hermes-agent.nousresearch.com
 
-Pomelu to aplikacja mobilna dla Hermes Agent: nieoficjalny klient na iPhone'a dla open source'owego agenta AI od Nous Research. Rozmawiaj z botami AI z własnej, samodzielnie hostowanej (self-hosted) bramki Hermes Agent, gdziekolwiek jesteś. Twój osobisty asystent AI, Twoje modele, Twój serwer.
+Pomelu to aplikacja mobilna dla Hermes Agent: nieoficjalny klient na iPhone'a i iPada dla open source'owego agenta AI od Nous Research. Rozmawiaj z botami AI z własnej, samodzielnie hostowanej (self-hosted) bramki Hermes Agent, gdziekolwiek jesteś. Twój osobisty asystent AI, Twoje modele, Twój serwer.
 
 Każdy bot (profil Hermes) ma jeden czat, jak kontakt w komunikatorze. Odpowiedzi pojawiają się na żywo, a Ty widzisz, co agent AI robi podczas pracy: wywołania narzędzi, pytania i ukończone zadania.
 
@@ -19,8 +19,8 @@ Utwórz bota i nadaj mu nazwę oraz obrazek: jedną z 32 postaci lub własne zdj
 SZCZEGÓŁY BOTA, UMIEJĘTNOŚCI I ZAPLANOWANE ZADANIA
 Przeglądaj umiejętności i narzędzia bota, czytaj i edytuj jego SOUL.md, a także wstrzymuj, wznawiaj, uruchamiaj lub usuwaj jego zaplanowane zadania (cron).
 
-STWORZONA DLA KAŻDEGO IPHONE'A
-Układ z dwoma panelami na iPhone Duo, elementy sterujące w stylu Liquid Glass oraz jasny i ciemny motyw.
+STWORZONA DLA IPHONE'A I IPADA
+Układ z dwoma panelami na iPadzie i iPhone Duo, elementy sterujące w stylu Liquid Glass oraz jasny i ciemny motyw.
 
 SELF-HOSTED: TWÓJ SERWER, TWOJE DANE
 Pomelu łączy się wyłącznie z bramką Hermes Agent, którą sam uruchamiasz: na swoim Macu, PC, serwerze domowym lub VPS, w sieci domowej, przez VPN lub przez internet. Używaj dowolnego modelu LLM, który obsługuje Twój Hermes Agent. Royan AB nie zbiera żadnych danych: bez konta, bez analityki, bez reklam i bez śledzenia. Twoje hasło pozostaje w pęku kluczy iOS.

@@ -1,0 +1,3 @@
+• Nuovo lettore video: anteprima e durata, controlli, schermo intero, salvataggio e condivisione.
+• Nuova scheda audio con velocità di riproduzione e tempo rimanente.
+• Correzioni per video, registrazione vocale e riconnessione.

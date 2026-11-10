@@ -1,6 +1,6 @@
 ÖNEMLİ: Pomelu, Hermes Agent gerektirir ve tek başına çalışmaz. Önce Hermes Agent'ı (Nous Research) kendi bilgisayarınıza veya sunucunuza kurup çalıştırın, ardından Pomelu'yu ona bağlayın. Kurulum kılavuzu: https://hermes-agent.nousresearch.com
 
-Pomelu, Hermes Agent için mobil uygulamadır: Nous Research tarafından geliştirilen açık kaynaklı yapay zeka ajanı için resmî olmayan bir iPhone istemcisi. Kendi sunucunuzda barındırdığınız (self-hosted) Hermes Agent ağ geçidinin yapay zeka sohbet botlarıyla (chatbot) nerede olursanız olun konuşun. Kişisel yapay zeka asistanınız, sizin modelleriniz, sizin sunucunuz.
+Pomelu, Hermes Agent için mobil uygulamadır: Nous Research tarafından geliştirilen açık kaynaklı yapay zeka ajanı için resmî olmayan bir iPhone ve iPad istemcisi. Kendi sunucunuzda barındırdığınız (self-hosted) Hermes Agent ağ geçidinin yapay zeka sohbet botlarıyla (chatbot) nerede olursanız olun konuşun. Kişisel yapay zeka asistanınız, sizin modelleriniz, sizin sunucunuz.
 
 Her bot (Hermes profili), mesajlaşma uygulamasındaki bir kişi gibi tek bir sohbete sahiptir. Yanıtlar canlı olarak akar ve yapay zeka ajanının çalışırken ne yaptığını görürsünüz: araç çağrıları, sorular ve tamamlanan görevler.
 
@@ -19,8 +19,8 @@ Bir bot oluşturun, ona bir ad ve resim verin: 32 hazır karakterden biri veya k
 BOT AYRINTILARI, BECERİLER VE ZAMANLANMIŞ GÖREVLER
 Bir botun becerilerini ve araçlarını görün, SOUL.md dosyasını okuyup düzenleyin, zamanlanmış (cron) görevlerini duraklatın, sürdürün, çalıştırın veya silin.
 
-HER iPhone İÇİN TASARLANDI
-iPhone Duo'da iki bölmeli düzen, Liquid Glass denetimleri, açık ve koyu tema.
+iPhone VE iPad İÇİN TASARLANDI
+iPad'de ve iPhone Duo'da iki bölmeli düzen, Liquid Glass denetimleri, açık ve koyu tema.
 
 SELF-HOSTED: KENDİ SUNUCUNUZ, KENDİ VERİNİZ
 Pomelu yalnızca sizin çalıştırdığınız Hermes Agent ağ geçidiyle iletişim kurar: Mac'inizde, PC'nizde, ev sunucunuzda veya VPS'inizde; ev ağınızda, VPN üzerinden ya da internet üzerinden. Hermes Agent'ınızın desteklediği herhangi bir LLM'i kullanın. Royan AB hiçbir veri toplamaz: hesap yok, analiz yok, reklam yok, izleme yok. Parolanız iOS Anahtar Zinciri'nde saklanır.

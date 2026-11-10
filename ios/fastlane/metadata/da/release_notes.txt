@@ -1,0 +1,3 @@
+• Ny videoafspiller: forhåndsvisning og længde, betjeningsknapper, fuld skærm, gem og del.
+• Nyt lydkort med afspilningshastighed og resterende tid.
+• Rettelser til video, stemmeoptagelse og genopretning af forbindelsen.

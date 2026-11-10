@@ -1,6 +1,6 @@
 重要提示：Pomelu 需要配合 Hermes Agent 使用，无法单独运行。请先在你自己的电脑或服务器上安装并运行 Hermes Agent（由 Nous Research 开发），然后再将 Pomelu 连接到它。安装指南：https://hermes-agent.nousresearch.com
 
-Pomelu 是 Hermes Agent 的移动应用：一款面向 Nous Research 开源 AI 智能体的非官方 iPhone 客户端。无论身在何处，都能与你自托管的 Hermes Agent 网关上的 AI 聊天机器人对话。你的专属 AI 助手，你的模型，你的服务器。
+Pomelu 是 Hermes Agent 的移动应用：一款面向 Nous Research 开源 AI 智能体的非官方 iPhone 和 iPad 客户端。无论身在何处，都能与你自托管的 Hermes Agent 网关上的 AI 聊天机器人对话。你的专属 AI 助手，你的模型，你的服务器。
 
 每个机器人（Hermes 配置文件）都有一个对话，就像聊天软件里的一个联系人。回答实时流式呈现，你还能看到 AI 智能体工作时在做什么：工具调用、提问和已完成的任务。
 
@@ -19,8 +19,8 @@ Pomelu 是 Hermes Agent 的移动应用：一款面向 Nous Research 开源 AI �
 【机器人详情、技能与定时任务】
 查看机器人的技能和工具，阅读并编辑它的 SOUL.md，还可以暂停、恢复、立即运行或删除它的定时任务（cron）。
 
-【为每一款 iPhone 打造】
-在 iPhone Duo 上采用双栏布局，搭配 Liquid Glass 控件以及浅色和深色主题。
+【为 iPhone 和 iPad 打造】
+在 iPad 和 iPhone Duo 上采用双栏布局，搭配 Liquid Glass 控件以及浅色和深色主题。
 
 【自托管：你的服务器，你的数据】
 Pomelu 只与你自己运行的 Hermes Agent 网关通信：可以在你的 Mac、PC、家庭服务器或 VPS 上，通过家庭网络、VPN 或互联网连接。你的 Hermes Agent 支持的任何 LLM 大模型都能使用。Royan AB 不收集任何数据：无需账户，没有分析、广告或跟踪。你的密码保存在 iOS 钥匙串中。

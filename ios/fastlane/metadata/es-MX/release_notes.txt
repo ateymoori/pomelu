@@ -1,0 +1,3 @@
+• Nuevo reproductor de video: vista previa y duración, controles, pantalla completa, guardar y compartir.
+• Nueva tarjeta de audio con velocidad de reproducción y tiempo restante.
+• Correcciones en video, grabación de voz y reconexión.

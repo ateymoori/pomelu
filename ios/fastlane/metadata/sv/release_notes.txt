@@ -1,0 +1,3 @@
+• Ny videospelare: förhandsvisning och längd, reglage, helskärm, spara och dela.
+• Nytt ljudkort med uppspelningshastighet och återstående tid.
+• Rättningar för video, röstinspelning och återanslutning.

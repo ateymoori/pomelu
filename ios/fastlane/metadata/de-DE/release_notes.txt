@@ -1,0 +1,3 @@
+• Neuer Videoplayer: Vorschau und Länge, Bedienelemente, Vollbild, Sichern und Teilen.
+• Neue Audiokarte mit Wiedergabegeschwindigkeit und Restzeit.
+• Fehlerbehebungen bei Video, Sprachaufnahme und Wiederverbindung.

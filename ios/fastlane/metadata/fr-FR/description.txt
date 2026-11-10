@@ -1,6 +1,6 @@
 IMPORTANT : Pomelu nécessite Hermes Agent et ne fonctionne pas seule. Installez et lancez d'abord Hermes Agent (de Nous Research) sur votre propre ordinateur ou serveur, puis connectez-y Pomelu. Guide d'installation : https://hermes-agent.nousresearch.com
 
-Pomelu est l'app mobile pour Hermes Agent : un client iPhone non officiel pour l'agent IA open source de Nous Research. Discutez avec les chatbots IA de votre propre passerelle Hermes Agent auto-hébergée, où que vous soyez. Votre assistant IA personnel, vos modèles, votre serveur.
+Pomelu est l'app mobile pour Hermes Agent : un client iPhone et iPad non officiel pour l'agent IA open source de Nous Research. Discutez avec les chatbots IA de votre propre passerelle Hermes Agent auto-hébergée, où que vous soyez. Votre assistant IA personnel, vos modèles, votre serveur.
 
 Chaque bot (un profil Hermes) a une seule conversation, comme un contact dans une messagerie. Les réponses s'affichent en direct et vous voyez ce que fait l'agent IA pendant qu'il travaille : appels d'outils, questions et tâches terminées.
 
@@ -19,8 +19,8 @@ Créez un bot, puis donnez-lui un nom et une image : l'un des 32 personnages ou 
 DÉTAILS DU BOT, COMPÉTENCES ET TÂCHES PLANIFIÉES
 Consultez les compétences et les outils d'un bot, lisez et modifiez son SOUL.md, et mettez en pause, reprenez, exécutez ou supprimez ses tâches planifiées (cron).
 
-CONÇU POUR CHAQUE IPHONE
-Une disposition à deux panneaux sur l'iPhone Duo, des commandes en Liquid Glass, ainsi qu'un thème clair et un thème sombre.
+CONÇU POUR IPHONE ET IPAD
+Une disposition à deux panneaux sur l'iPad et l'iPhone Duo, des commandes en Liquid Glass, ainsi qu'un thème clair et un thème sombre.
 
 AUTO-HÉBERGÉ : VOTRE SERVEUR, VOS DONNÉES
 Pomelu communique uniquement avec la passerelle Hermes Agent que vous exécutez vous-même : sur votre Mac, votre PC, votre serveur domestique ou un VPS, sur votre réseau domestique, via un VPN ou sur Internet. Utilisez n'importe quel LLM (grand modèle de langage) pris en charge par votre Hermes Agent. Royan AB ne collecte aucune donnée : pas de compte, pas d'analyse, pas de publicité et pas de suivi. Votre mot de passe reste dans le trousseau iOS.

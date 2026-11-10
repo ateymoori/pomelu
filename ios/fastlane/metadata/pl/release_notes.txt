@@ -1,0 +1,3 @@
+• Nowy odtwarzacz wideo: podgląd i długość, sterowanie, pełny ekran, zapisywanie i udostępnianie.
+• Nowa karta audio z prędkością odtwarzania i pozostałym czasem.
+• Poprawki dotyczące wideo, nagrywania głosu i ponownego łączenia.

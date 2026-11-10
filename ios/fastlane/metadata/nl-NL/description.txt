@@ -1,6 +1,6 @@
 BELANGRIJK: Pomelu heeft Hermes Agent nodig en werkt niet op zichzelf. Installeer en start eerst Hermes Agent (van Nous Research) op je eigen computer of server en verbind Pomelu daarna ermee. Installatiegids: https://hermes-agent.nousresearch.com
 
-Pomelu is de mobiele app voor Hermes Agent: een onofficiële iPhone-client voor de opensource AI-agent van Nous Research. Chat waar je ook bent met de AI-bots van je eigen, zelfgehoste Hermes Agent-gateway. Je persoonlijke AI-assistent, je eigen modellen, je eigen server.
+Pomelu is de mobiele app voor Hermes Agent: een onofficiële client voor iPhone en iPad voor de opensource AI-agent van Nous Research. Chat waar je ook bent met de AI-bots van je eigen, zelfgehoste Hermes Agent-gateway. Je persoonlijke AI-assistent, je eigen modellen, je eigen server.
 
 Elke bot (Hermes-profiel) heeft één chat, net als een contact in een berichtenapp. Antwoorden verschijnen live en je ziet wat de AI-agent doet terwijl hij werkt: toolaanroepen, vragen en afgeronde taken.
 
@@ -19,8 +19,8 @@ Maak een bot aan en geef hem een naam en een afbeelding: een van 32 personages o
 BOTDETAILS, VAARDIGHEDEN EN GEPLANDE TAKEN
 Bekijk de vaardigheden en tools van een bot, lees en bewerk zijn SOUL.md, en pauzeer, hervat, start of verwijder zijn geplande taken (cron).
 
-GEMAAKT VOOR ELKE IPHONE
-Een indeling met twee panelen op de iPhone Duo, bedieningselementen in Liquid Glass en een licht en een donker thema.
+GEMAAKT VOOR IPHONE EN IPAD
+Een indeling met twee panelen op de iPad en de iPhone Duo, bedieningselementen in Liquid Glass en een licht en een donker thema.
 
 ZELFGEHOST: JOUW SERVER, JOUW DATA
 Pomelu communiceert alleen met de Hermes Agent-gateway die je zelf draait: op je Mac, pc, thuisserver of VPS, in je thuisnetwerk, via een VPN of via internet. Gebruik elk LLM (taalmodel) dat je Hermes Agent ondersteunt. Royan AB verzamelt geen gegevens: geen account, geen analytics, geen advertenties en geen tracking. Je wachtwoord blijft in de iOS-sleutelhanger.
