@@ -20,8 +20,11 @@ import 'package:hermes/features/chat/presentation/widgets/mic_button.dart';
 import 'package:hermes/features/chat/presentation/widgets/picture_actions.dart';
 import 'package:hermes/features/connection/presentation/connection_providers.dart';
 import 'package:hermes/hermes/api/hermes_api.dart';
+import 'package:hermes/hermes/client/hermes_client.dart';
 import 'package:hermes/hermes/hermes_constants.dart';
+import 'package:hermes/hermes/hermes_failure.dart';
 import 'package:hermes/hermes/models/local_attachment.dart';
+import 'package:hermes/hermes/transport/hermes_http.dart';
 import 'package:record/record.dart';
 
 import '../../support/app_host.dart';
@@ -41,12 +44,17 @@ class _FakeRecorder implements AudioRecorder {
   String? _path;
   bool cancelled = false;
 
+  /// The microphone is taken: a start throws.
+  bool busy = false;
+
   @override
   Future<bool> hasPermission({bool request = true}) async => true;
 
   @override
-  Future<void> start(RecordConfig config, {required String path}) async =>
-      _path = path;
+  Future<void> start(RecordConfig config, {required String path}) async {
+    if (busy) throw StateError('the microphone is in use');
+    _path = path;
+  }
 
   @override
   Future<String?> stop() async {
@@ -68,6 +76,36 @@ class _FakeRecorder implements AudioRecorder {
 class _SizedFiles extends Fake implements HermesApi {
   @override
   Future<int?> mediaSize(String path) async => 26 * 1024;
+}
+
+/// A gateway with one file, whose bytes the test changes.
+class _OneFile extends Fake implements HermesApi, HermesClient, HermesHttp {
+  String content = 'first';
+  bool reachable = true;
+  int downloads = 0;
+
+  @override
+  HermesHttp get http => this;
+
+  @override
+  Uri mediaDownloadUrl(String path) => Uri.parse('http://gw/files?path=$path');
+
+  @override
+  Future<int?> mediaSize(String path) async {
+    if (!reachable) throw const NetworkFailure('out of reach');
+    return content.length;
+  }
+
+  @override
+  Future<void> download(
+    Uri uri,
+    String savePath, {
+    void Function(int received, int total)? onProgress,
+    Object? cancelToken,
+  }) async {
+    downloads++;
+    await File(savePath).writeAsString(content);
+  }
 }
 
 class _Geo extends GeolocatorPlatform {
@@ -167,6 +205,38 @@ void main() {
         throwsStateError,
       );
     });
+  });
+
+  test('a file the bot wrote again downloads again; out of reach, the copy '
+      'on the phone stands', () async {
+    final dir = await Directory.systemTemp.createTemp('media_cache_test');
+    final before = MediaCache.root;
+    MediaCache.root = () async => dir;
+    addTearDown(() {
+      MediaCache.root = before;
+      return dir.delete(recursive: true);
+    });
+    final gw = _OneFile();
+    Future<String> read() async => (await MediaCache.fetch(
+      gw,
+      gw,
+      '/out/report.md',
+      'report.md',
+    )).readAsString();
+
+    expect(await read(), 'first');
+    expect(await read(), 'first');
+    expect(gw.downloads, 1);
+
+    gw.content = 'second, longer';
+    expect(await read(), 'second, longer');
+    expect(gw.downloads, 2);
+
+    gw
+      ..content = 'third'
+      ..reachable = false;
+    expect(await read(), 'second, longer');
+    expect(gw.downloads, 2);
   });
 
   test('a file opens as its own type, a text format falls back to plain '
@@ -280,6 +350,7 @@ void main() {
     late _FakeRecorder recorder;
     late List<LocalAttachment> takes;
     late int tooShort;
+    late int failed;
 
     Future<void> pumpMic(
       WidgetTester tester, {
@@ -288,6 +359,7 @@ void main() {
       recorder = _FakeRecorder();
       takes = [];
       tooShort = 0;
+      failed = 0;
       await pumpApp(
         tester,
         MicButton(
@@ -297,6 +369,7 @@ void main() {
           onRecorded: takes.add,
           onDenied: () {},
           onTooShort: () => tooShort++,
+          onFailed: () => failed++,
         ),
         alignment: Alignment.center,
         direction: direction,
@@ -357,6 +430,22 @@ void main() {
       await settle(tester, () => recorder.cancelled);
       expect(takes, isEmpty);
       expect(recorder.cancelled, isTrue);
+    });
+
+    testWidgets('a recorder that does not start says so, not how to hold', (
+      tester,
+    ) async {
+      await pumpMic(tester);
+      recorder.busy = true;
+      final finger = await tester.startGesture(
+        tester.getCenter(find.byType(MicButton)),
+      );
+      await settle(tester, () => failed > 0);
+      await finger.up();
+      await tester.pump();
+      expect(failed, 1);
+      expect(tooShort, 0);
+      expect(takes, isEmpty);
     });
 
     testWidgets('right to left, the slide that cancels goes right', (

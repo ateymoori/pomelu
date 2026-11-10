@@ -13,8 +13,7 @@ data           stores, platform bridges, file work        lib/features/*/data
 hermes SDK     transport, JSON-RPC, typed API, events     lib/hermes
 ```
 
-Dependencies point down. `lib/hermes/` is pure Dart (no Flutter import) and
-every public member has a doc comment (`lib/hermes/analysis_options.yaml`).
+Dependencies point down. `lib/hermes/` is pure Dart (no Flutter import).
 Presentation calls `HermesApi` and `HermesClient` directly; there is no
 repository layer between them.
 
@@ -92,7 +91,7 @@ ios/                 Runner (AppDelegate, ShareBridge.swift, PushBridge.swift),
 assets/bot_screen/   screen.html: noVNC 1.7.0 and tool/bot_screen/screen.js in
                      one page (built by tool/bot_screen/build.mjs), and the
                      noVNC and pako notices
-third_party/         gpt_markdown 1.4.0, patched ("Pomelu patch"): table
+third_party/         gpt_markdown 1.4.1, patched ("Pomelu patch"): table
                      fills clipped to the rounded border, header style kept;
                      a dependency_overrides path, dropped once upstream fixes it
 ```
@@ -155,8 +154,8 @@ Podfile, no CocoaPods). Targets: Runner (`se.royan.pomelu`), ShareExtension
 (`se.royan.pomelu.NotificationService`), all in App Group
 `group.se.royan.pomelu`. Deployment target iOS 15. `Info.plist`: usage
 strings for camera, microphone, location when in use, photo library (add and
-read), local network; `pomelu` URL scheme; ATS `NSAllowsArbitraryLoads` and
-`NSAllowsLocalNetworking` (users reach their own gateway by IP, often over
+read), local network; `pomelu` URL scheme; ATS `NSAllowsArbitraryLoads`
+(users reach their own gateway by IP, often over
 plain http); `ITSAppUsesNonExemptEncryption`
 false.
 
@@ -286,13 +285,17 @@ Media refs in text (`MEDIA:`, `@image:`, data URLs) resolve to
 `/api/files/download` or `/api/files/stream` with auth headers for the
 gateway's origin only. A file chip's size is a `Range: bytes=0-0` GET of
 the download (the total is in `Content-Range`). `MediaCache` downloads to `<name>.part` and renames
-when whole, joins duplicate fetches, and prunes files older than 7 days at
-start. A video row loads its first frame and length once it has been on
+when whole, joins duplicate fetches, downloads again when the gateway's file
+has another size (out of reach, the copy stands), and prunes files older
+than 7 days at start. A video row loads its first frame and length once it has been on
 screen 400 ms (`AppConfig.videoPosterDelay`), so scrolling past opens no
 stream; full screen (`VideoPage`) takes over the row's controller and hands
-it back. Audio opens its player on the first tap. One player plays at a
+it back; a stream that breaks shows Retry; a row narrower than
+`spacing.videoBarMinWidth` keeps only play and full screen. Audio opens its
+player on the first tap. One player plays at a
 time (`nowPlayingProvider`). Voice: hold the mic,
-the gateway transcribes (`/api/audio/transcribe`), the words are sent.
+the gateway transcribes (`/api/audio/transcribe`), the words are sent; a
+recorder that does not start (a call is on) says so.
 Location is text (`Location:` / `Latitude:` / `Longitude:` lines) from an
 OpenStreetMap picker and the system geocoder (6 s timeout).
 
@@ -386,15 +389,17 @@ a bot's reply in its Bot Chat rings the phone while the app is away, with no
 app code running. On each `Connected`, while Notify me is on and allowed, the
 app registers the phone: `PUT /api/plugins/pomelu/devices/{id}` with the
 push token and a 32-byte key the phone made (`PROTOCOL.md`). It tells the
-plugin when it comes on screen and leaves (`/presence`, again every 5 min on
+plugin when it comes on screen and leaves (`/presence`, again every minute on
 screen); the plugin pushes only while the app is away (or quiet for 3 min).
 The plugin seals each message with the phone's key (AES-256-GCM) and sends
 it through the Pomelu push relay (a Cloudflare Worker, `relay/` in the
 plugin repo) to APNs or FCM; the relay holds the app's push keys and cannot
 read the message. On the phone the platform code opens it and posts the bot's
 message row, same id and tag as `forMessage`: Android `PushService.kt` (data
-message; quiet while the app is in front or Stay connected holds the
-socket, so a message rings once), iOS the `NotificationService` extension
+message; quiet while the app is in front or Stay connected holds a live
+socket; with that socket down it posts and tells the app, whose next check
+starts after that message, so a message rings once), iOS the
+`NotificationService` extension
 (the push's plain "New message" alert shows only if it cannot open it; no
 banner while the app is in front). A tap opens the bot's chat (Android: the
 `pomelu://chat` link; iOS: `PushBridge` → `taps`, or `launchBot` after a cold

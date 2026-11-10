@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/config/app_config.dart';
 import '../../../../core/theme/tokens.dart';
 import '../../../../core/ui/ui.dart';
 import '../../../../core/utils/data_url.dart';
@@ -35,12 +36,12 @@ class MediaItem {
   /// Web URL of a Markdown picture.
   final String? sourceUrl;
 
-  static const int _cacheLimit = 64;
-
   static final Map<Object, MediaItem> _cache = {};
 
   static MediaItem _remember(Object key, MediaItem item) {
-    if (_cache.length >= _cacheLimit) _cache.remove(_cache.keys.first);
+    if (_cache.length >= AppConfig.mediaItemCacheLimit) {
+      _cache.remove(_cache.keys.first);
+    }
     return _cache[key] = item;
   }
 

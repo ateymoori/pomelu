@@ -197,6 +197,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chatRecord => 'Hold to record';
 
   @override
+  String get chatRecordFailed => 'Could not start recording';
+
+  @override
   String get chatRecording =>
       'Recording… release to send, slide back to cancel';
 
@@ -1465,9 +1468,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String mediaRemaining(String time) {
     return '−$time';
   }
-
-  @override
-  String get mediaVideoActions => 'Video actions';
 
   @override
   String get mediaVideoSaveFailed => 'Could not save video';

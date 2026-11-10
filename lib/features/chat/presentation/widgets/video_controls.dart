@@ -251,7 +251,11 @@ class _VideoViewState extends State<VideoView> {
     );
     final bar = Padding(
       padding: EdgeInsets.all(widget.full ? spacing.gutter : spacing.sm),
-      child: _bar(context, value),
+      child: LayoutBuilder(
+        builder: (context, box) => box.maxWidth < spacing.videoBarMinWidth
+            ? _narrowBar(context)
+            : _bar(context, value),
+      ),
     );
     return Stack(
       fit: StackFit.expand,
@@ -283,6 +287,21 @@ class _VideoViewState extends State<VideoView> {
           child: widget.full ? SafeArea(top: false, child: bar) : bar,
         ),
       ],
+    );
+  }
+
+  /// No room for a seek bar: full screen has every control.
+  Widget _narrowBar(BuildContext context) {
+    final open = widget.onFullScreen;
+    if (open == null) return const SizedBox.shrink();
+    return Align(
+      alignment: AlignmentDirectional.bottomEnd,
+      heightFactor: 1,
+      child: AppIconButton(
+        icon: CupertinoIcons.arrow_up_left_arrow_down_right,
+        tooltip: context.l10n.mediaFullScreen,
+        onPressed: open,
+      ),
     );
   }
 

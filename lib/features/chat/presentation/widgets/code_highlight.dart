@@ -36,14 +36,9 @@ import 'package:re_highlight/languages/xml.dart';
 import 'package:re_highlight/languages/yaml.dart';
 import 'package:re_highlight/re_highlight.dart';
 
+import '../../../../core/config/app_config.dart';
 import '../../../../core/theme/tokens.dart';
 import '../../../../core/utils/app_logger.dart';
-
-/// Longest source we colour. Beyond this the grammar walk costs more than the
-/// colour is worth on a 120 Hz panel, so the block stays plain mono text.
-const int kHighlightLimit = 20000;
-
-const int _cacheLimit = 64;
 
 final Map<String, Mode> _languages = {
   'bash': langBash,
@@ -220,7 +215,7 @@ abstract final class CodeHighlight {
     required String language,
     required TextStyle base,
   }) {
-    if (code.length > kHighlightLimit) return null;
+    if (code.length > AppConfig.highlightMaxChars) return null;
     final grammar = resolve(language);
     if (grammar == null || grammar == 'plaintext') return null;
 
@@ -242,7 +237,9 @@ abstract final class CodeHighlight {
       return null;
     }
     if (parsed == null) return null;
-    if (_cache.length >= _cacheLimit) _cache.remove(_cache.keys.first);
+    if (_cache.length >= AppConfig.highlightCacheLimit) {
+      _cache.remove(_cache.keys.first);
+    }
     _cache[key] = parsed;
     return TextSpan(style: base, children: [parsed]);
   }

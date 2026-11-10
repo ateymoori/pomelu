@@ -137,6 +137,20 @@ abstract final class AppConfig {
   /// Video sizes remembered, so a row built again keeps its shape.
   static const int videoAspectCacheLimit = 64;
 
+  /// Pictures of the transcript kept as viewer items, so a row built again
+  /// gives the viewer the same one.
+  static const int mediaItemCacheLimit = 64;
+
+  /// Longest source a code block colours. Beyond it the grammar walk costs
+  /// more than the colour is worth on a 120 Hz panel: the block stays plain.
+  static const int highlightMaxChars = 20000;
+
+  /// Coloured code blocks kept, so a row built again does not walk again.
+  static const int highlightCacheLimit = 64;
+
+  /// The longest a cached file waits for the gateway to say it is current.
+  static const Duration mediaFreshCheckBudget = Duration(seconds: 3);
+
   /// Context-window fill at which the header ring warns, then alarms.
   static const double contextWarnAt = 0.75;
   static const double contextDangerAt = 0.90;

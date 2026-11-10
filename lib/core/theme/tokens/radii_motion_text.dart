@@ -32,6 +32,9 @@ class Motion {
   /// Share of its height a centred sheet rises while it fades in.
   final double sheetRise = 0.04;
 
+  /// Size a pull-down menu grows from, as a share of its own.
+  final double menuScaleFrom = 0.9;
+
   /// Dim end of the idle pulse (a busy dot).
   final double pulseMin = 0.5;
 

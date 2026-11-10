@@ -98,14 +98,18 @@ class _MenuRoute<T> extends PopupRoute<T> {
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    final curved = CurvedAnimation(parent: animation, curve: Curves.easeOut);
+    final motion = context.motion;
+    final curved = CurvedAnimation(parent: animation, curve: motion.enter);
     if (context.reduceMotion) {
       return FadeTransition(opacity: curved, child: child);
     }
     return FadeTransition(
       opacity: curved,
       child: ScaleTransition(
-        scale: Tween<double>(begin: 0.9, end: 1).animate(curved),
+        scale: Tween<double>(
+          begin: motion.menuScaleFrom,
+          end: 1,
+        ).animate(curved),
         alignment: _growFrom(context, anchor),
         child: child,
       ),

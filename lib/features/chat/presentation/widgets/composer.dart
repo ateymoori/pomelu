@@ -165,6 +165,7 @@ class _ComposerState extends ConsumerState<Composer> with _ComposerInput {
           ),
         ),
         onTooShort: () => _snack(l10n.chatRecord),
+        onFailed: () => _snack(l10n.chatRecordFailed),
       );
     }
 

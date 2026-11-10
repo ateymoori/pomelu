@@ -136,7 +136,16 @@ mixin _Conversations on _$ChatController, _Session, _Outbox, _Stop {
       final created = await _startNext(run, before.runtimeId, before.storedId);
       await _bind(run, created);
     } on HermesFailure catch (e) {
-      if (run.live) state = before.copyWith(error: e);
+      if (!run.live) return;
+      // Only what moved goes back: the rest is as it is now (the connection
+      // may be what failed).
+      state = state.copyWith(
+        earlier: before.earlier,
+        messages: before.messages,
+        earlierCursor: before.earlierCursor,
+        loading: before.loading,
+        error: e,
+      );
     }
   }
 

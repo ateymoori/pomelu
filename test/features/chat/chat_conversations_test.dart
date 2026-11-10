@@ -7,6 +7,7 @@ import 'package:hermes/hermes/hermes_constants.dart';
 import 'package:hermes/hermes/hermes_failure.dart';
 import 'package:hermes/hermes/models/gateway_action.dart';
 import 'package:hermes/hermes/models/session_message.dart';
+import 'package:hermes/hermes/models/session_resume.dart';
 import 'package:hermes/hermes/models/session_summary.dart';
 
 import '../../support/scripted_api.dart';
@@ -16,6 +17,24 @@ const _rows = [
   SessionMessage(role: 'user', text: 'my cat is Miso', rowId: 1),
   SessionMessage(role: 'assistant', text: 'ok', rowId: 2),
 ];
+
+/// The socket goes as the new session is asked for.
+class _DropsOnCreate extends ScriptedApi {
+  void Function()? drop;
+
+  @override
+  Future<SessionResume> createSession({
+    required String profile,
+    String? title,
+    bool hidden = false,
+    bool followProfileConfig = false,
+    String? parentSessionId,
+  }) async {
+    drop?.call();
+    await pumpEventQueue();
+    throw const NetworkFailure('down');
+  }
+}
 
 Future<ChatRig> open([ScriptedApi? api]) async {
   final rig = bootChat(api: (api ?? ScriptedApi())..rows = _rows);
@@ -50,6 +69,18 @@ void main() {
       expect(stateOf(rig).messages, hasLength(2));
       expect(stateOf(rig).error, isA<NetworkFailure>());
       expect(rig.api.archives, isEmpty);
+    });
+
+    test('a create that fails with the connection keeps the chat, shown as '
+        'offline', () async {
+      final api = _DropsOnCreate();
+      final rig = await open(api);
+      api.drop = rig.client.goOffline;
+      await chatOf(rig).startOver();
+      await pumpEventQueue();
+      expect(stateOf(rig).online, isFalse);
+      expect(stateOf(rig).messages, hasLength(2));
+      expect(stateOf(rig).error, isA<NetworkFailure>());
     });
 
     test(

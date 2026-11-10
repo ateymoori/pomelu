@@ -128,7 +128,18 @@ class _MediaVideoState extends ConsumerState<MediaVideo> {
   }
 
   void _onValue() {
-    final playing = _controller?.value.isPlaying ?? false;
+    final value = _controller?.value;
+    if (value == null) return;
+    // The stream broke after it opened: the gateway went out of reach.
+    if (value.hasError) {
+      if (_failed) return;
+      log.w('video stopped: ${value.errorDescription}');
+      _playing = false;
+      _nowPlaying.release(this);
+      setState(() => _failed = true);
+      return;
+    }
+    final playing = value.isPlaying;
     if (playing == _playing) return;
     _playing = playing;
     if (playing) {
@@ -169,34 +180,45 @@ class _MediaVideoState extends ConsumerState<MediaVideo> {
     if (controller == null || !_ready || _page != null) return;
     setState(() => _started = true);
     if (!controller.value.isPlaying) unawaited(controller.togglePlay());
+    final file = _fileSource();
     final page = VideoPage.open(
       context,
       controller: controller,
       name: widget.name,
-      save: _save,
-      share: _share,
+      save: () => _save(file),
+      share: () => _share(file),
     );
     _page = page;
     await page;
     _page = null;
   }
 
-  Future<File> _file() async {
+  /// The video as a file, for saving and sharing. It reads the gateway now:
+  /// the page and the menu ask after the row may have scrolled away.
+  Future<File> Function() _fileSource() {
     final client = ref.read(hermesClientProvider);
     final api = ref.read(hermesApiProvider);
-    if (client == null || api == null || widget.path.isEmpty) {
-      throw StateError('no gateway for ${widget.name}');
-    }
-    return MediaCache.fetch(client, api, widget.path, widget.name);
+    final path = widget.path;
+    final name = widget.name;
+    return () async {
+      if (client == null || api == null || path.isEmpty) {
+        throw StateError('no gateway for $name');
+      }
+      return MediaCache.fetch(client, api, path, name);
+    };
   }
 
-  Future<void> _save() async => MediaCache.galleryVideo((await _file()).path);
+  static Future<void> _save(Future<File> Function() file) async =>
+      MediaCache.galleryVideo((await file()).path);
 
-  Future<void> _share() async => MediaCache.shareFile(await _file());
+  static Future<void> _share(Future<File> Function() file) async =>
+      MediaCache.shareFile(await file());
 
   Future<void> _menu() async {
     final l10n = context.l10n;
     final snacks = AppSnacks.of(context);
+    final file = _fileSource();
+    final name = widget.name;
     final action = await showAppMenu<_VideoAction>(
       context,
       title: widget.name,
@@ -222,12 +244,12 @@ class _MediaVideoState extends ConsumerState<MediaVideo> {
     try {
       switch (action) {
         case _VideoAction.fullScreen:
-          await _openFull();
+          if (mounted) await _openFull();
         case _VideoAction.save:
-          await _save();
+          await _save(file);
           snacks.show(l10n.mediaSaved);
         case _VideoAction.share:
-          await _share();
+          await _share(file);
         case null:
       }
     } on Object catch (e) {
@@ -235,7 +257,7 @@ class _MediaVideoState extends ConsumerState<MediaVideo> {
       snacks.show(
         action == _VideoAction.save
             ? l10n.mediaVideoSaveFailed
-            : l10n.attachDownloadFailed(widget.name),
+            : l10n.attachDownloadFailed(name),
       );
     }
   }

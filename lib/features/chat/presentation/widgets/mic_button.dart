@@ -28,6 +28,7 @@ class MicButton extends StatefulWidget {
     required this.onRecorded,
     required this.onDenied,
     required this.onTooShort,
+    required this.onFailed,
     super.key,
     this.enabled = true,
     this.recorder,
@@ -42,6 +43,9 @@ class MicButton extends StatefulWidget {
   /// The microphone permission was refused.
   final VoidCallback onDenied;
   final VoidCallback onTooShort;
+
+  /// The recorder did not start (the microphone is in use, a call is on).
+  final VoidCallback onFailed;
 
   /// Null is the platform recorder.
   final AudioRecorder? recorder;
@@ -121,7 +125,12 @@ class _MicButtonState extends State<MicButton> {
       );
     } on Object catch (e, st) {
       log.w('recording failed to start', error: e, stackTrace: st);
+      // Not a tap: the lift that follows must not say "hold to record".
+      _held = false;
+      _byTap = false;
+      if (!mounted) return;
       widget.onChanged(null);
+      widget.onFailed();
       return;
     }
     if (!mounted || !_held) {

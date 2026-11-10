@@ -31,10 +31,12 @@ typedef GallerySink = Future<void> Function({
 /// `report.pdf` never collide and a file cached last time is found again. A
 /// download writes under a name of its own and is renamed when whole.
 abstract final class MediaCache {
+  /// Where the cache folder is made; tests point it at their own.
+  @visibleForTesting
+  static Future<Directory> Function() root = getTemporaryDirectory;
+
   static Future<Directory> _dir() async {
-    final dir = Directory(
-      '${(await getTemporaryDirectory()).path}/hermes_media',
-    );
+    final dir = Directory('${(await root()).path}/hermes_media');
     if (!dir.existsSync()) await dir.create(recursive: true);
     return dir;
   }
@@ -67,7 +69,7 @@ abstract final class MediaCache {
 
   static final Map<String, Future<File>> _inflight = {};
 
-  /// The gateway file [path], downloaded unless already cached.
+  /// The gateway file [path], downloaded unless a current copy is cached.
   static Future<File> fetch(
     HermesClient client,
     HermesApi api,
@@ -78,22 +80,37 @@ abstract final class MediaCache {
     final file = File('${(await _dir()).path}/${cacheName(uri, fileName)}');
     return _inflight[file.path] ??= () async {
       try {
-        if (file.existsSync() && await file.length() > 0) return file;
+        if (file.existsSync()) {
+          final cached = await file.length();
+          if (cached > 0 && await _current(api, path, cached)) return file;
+        }
         final temp = File('${file.path}.${newId()}');
         try {
           await client.http.download(uri, temp.path);
           return await temp.rename(file.path);
         } on Object {
           // Whatever a failed transfer left is not a file.
-          for (final f in [temp, File('${temp.path}.part')]) {
-            if (f.existsSync()) await f.delete();
-          }
+          if (temp.existsSync()) await temp.delete();
           rethrow;
         }
       } finally {
         unawaited(_inflight.remove(file.path));
       }
     }();
+  }
+
+  /// A bot may write a path again: a copy of another size is the old file.
+  /// With the gateway out of reach the copy stands.
+  static Future<bool> _current(HermesApi api, String path, int cached) async {
+    try {
+      final size = await api
+          .mediaSize(path)
+          .timeout(AppConfig.mediaFreshCheckBudget);
+      return size == null || size == cached;
+    } on Object catch (e) {
+      log.d('media cache: no word on $path, the copy stands: $e');
+      return true;
+    }
   }
 
   /// MIME types to open [name] as, best first: its own, then plain text for

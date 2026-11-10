@@ -98,7 +98,8 @@ class _MarkdownImageState extends State<MarkdownImage> {
     return Semantics(
       image: true,
       button: true,
-      label: '$_label, ${context.l10n.chatOpenImage}',
+      label: _label,
+      hint: context.l10n.chatOpenImage,
       child: TapInk(
         borderRadius: BorderRadius.circular(context.radii.md),
         onTap: _open,

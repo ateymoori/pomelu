@@ -430,6 +430,12 @@ abstract class AppLocalizations {
   /// **'Hold to record'**
   String get chatRecord;
 
+  /// No description provided for @chatRecordFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not start recording'**
+  String get chatRecordFailed;
+
   /// No description provided for @chatRecording.
   ///
   /// In en, this message translates to:
@@ -2523,12 +2529,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'−{time}'**
   String mediaRemaining(String time);
-
-  /// No description provided for @mediaVideoActions.
-  ///
-  /// In en, this message translates to:
-  /// **'Video actions'**
-  String get mediaVideoActions;
 
   /// No description provided for @mediaVideoSaveFailed.
   ///

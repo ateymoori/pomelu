@@ -121,7 +121,8 @@ class _Step extends StatelessWidget {
     };
     return Semantics(
       container: true,
-      label: '$state: ${item.content}',
+      label: item.content,
+      value: state,
       child: ExcludeSemantics(
         child: Padding(
           padding: EdgeInsetsDirectional.only(

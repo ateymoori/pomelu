@@ -84,6 +84,10 @@ class Spacing {
   /// Widest an audio player in a reply grows.
   final double audioCardMaxWidth = 420;
 
+  /// Narrowest inline video that still has room for its seek bar; below
+  /// it (a portrait video on a short window) only full screen stays.
+  final double videoBarMinWidth = 240;
+
   /// Row share a transcript separator's label may span before it wraps.
   final double separatorLabelFraction = 0.8;
 
