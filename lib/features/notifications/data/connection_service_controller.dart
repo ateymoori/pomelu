@@ -26,6 +26,11 @@ abstract interface class ConnectionServiceController {
 
   Future<void> stop();
 
+  /// Tells the platform whether the gateway socket is [up]: only while the
+  /// service holds a live socket does the app post the bots' messages and
+  /// the phone's push service stay quiet.
+  Future<void> socket({required bool up});
+
   /// Takes the platform's word for [isRunning]: the system can end the
   /// service while the app is away (a timeout, the task swiped away).
   Future<void> resync();
@@ -44,6 +49,7 @@ class AndroidConnectionServiceController
   /// What the app last asked for, set before anything is awaited, so queued
   /// calls act on the final intent.
   bool _wanted = false;
+  bool? _socketUp;
   String _title = '';
   String _body = '';
   Future<void> _tail = Future<void>.value();
@@ -78,6 +84,13 @@ class AndroidConnectionServiceController
   }
 
   @override
+  Future<void> socket({required bool up}) {
+    if (_socketUp == up) return _tail;
+    _socketUp = up;
+    return _enqueue(() => _call('socket', {'up': up}));
+  }
+
+  @override
   Future<void> resync() => _enqueue(() async {
     final running = await _call('isRunning');
     if (running != null) _running = running;
@@ -108,7 +121,7 @@ class AndroidConnectionServiceController
 
   /// [method] on the channel; null when the platform failed, which is
   /// logged and never thrown at the app.
-  Future<bool?> _call(String method, [Map<String, String>? args]) async {
+  Future<bool?> _call(String method, [Map<String, Object>? args]) async {
     try {
       return await _channel.invokeMethod<bool>(method, args);
     } on PlatformException catch (e) {
@@ -136,6 +149,9 @@ class NoopConnectionServiceController implements ConnectionServiceController {
 
   @override
   Future<void> stop() async {}
+
+  @override
+  Future<void> socket({required bool up}) async {}
 
   @override
   Future<void> resync() async {}

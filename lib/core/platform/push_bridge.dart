@@ -27,6 +27,10 @@ abstract interface class PushBridge {
   /// The bot whose push notification was tapped.
   Stream<String> get taps;
 
+  /// The bot whose message the phone's push service has just posted while
+  /// the app runs (Android): the app must not ring for it again.
+  Stream<String> get shown;
+
   /// The bot of the tap that cold-started the app, once.
   Future<String?> launchBot();
 
@@ -49,6 +53,9 @@ class NoPushBridge implements PushBridge {
   Stream<String> get taps => const Stream.empty();
 
   @override
+  Stream<String> get shown => const Stream.empty();
+
+  @override
   Future<String?> launchBot() async => null;
 
   @override
@@ -57,8 +64,8 @@ class NoPushBridge implements PushBridge {
 
 /// The native side over [PlatformChannels.push]: `register {newKey}` gives
 /// `{platform, token, key, sandbox}` or null, `launchBot` a bot or null;
-/// [PlatformChannels.pushEvents] sends `{type: token}` and
-/// `{type: tap, bot}`.
+/// [PlatformChannels.pushEvents] sends `{type: token}`, `{type: tap, bot}`
+/// and `{type: shown, bot}`.
 class ChannelPushBridge implements PushBridge {
   ChannelPushBridge() {
     _events.receiveBroadcastStream().listen((event) {
@@ -69,6 +76,9 @@ class ChannelPushBridge implements PushBridge {
         case 'tap':
           final bot = event['bot'];
           if (bot is String && bot.isNotEmpty) _taps.add(bot);
+        case 'shown':
+          final bot = event['bot'];
+          if (bot is String && bot.isNotEmpty) _shown.add(bot);
       }
     }, onError: (Object e) => log.w('push: event stream failed', error: e));
   }
@@ -78,6 +88,7 @@ class ChannelPushBridge implements PushBridge {
 
   final _tokens = StreamController<void>.broadcast();
   final _taps = StreamController<String>.broadcast();
+  final _shown = StreamController<String>.broadcast();
 
   @override
   Future<PushDevice?> register({bool newKey = false}) async {
@@ -103,6 +114,9 @@ class ChannelPushBridge implements PushBridge {
 
   @override
   Stream<String> get taps => _taps.stream;
+
+  @override
+  Stream<String> get shown => _shown.stream;
 
   @override
   Future<String?> launchBot() async {

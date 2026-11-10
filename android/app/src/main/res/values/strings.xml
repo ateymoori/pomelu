@@ -8,4 +8,7 @@
     <string name="connection_channel_description">Keeps the connection to your gateway open while the app is in the background.</string>
     <string name="connection_default_title">Stay connected</string>
     <string name="connection_default_body">Connected to your gateway</string>
+
+    <!-- Fallback: Dart makes the channel with its own words; a push can come first. -->
+    <string name="messages_channel_name">Messages</string>
 </resources>

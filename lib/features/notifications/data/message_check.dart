@@ -55,6 +55,23 @@ Future<void> checkMessages({
   if (marked) await store.saveMarks(account, marks);
 }
 
+/// The phone's push service rang for [bot] at [at], while the app ran with
+/// its socket down: the next check starts after that message. The count
+/// stays as it was, so that check still reads the chat.
+Future<void> markShown({
+  required AwayStore store,
+  required String account,
+  required String bot,
+  required DateTime at,
+}) async {
+  final marks = await store.marks(account);
+  marks[bot] = ChatMark(at, marks[bot]?.count ?? _noCount);
+  await store.saveMarks(account, marks);
+}
+
+/// No count on record: equal to no chat's, so the chat reads as moved.
+const _noCount = -1;
+
 /// What the app has seen of [bots] at [at]: taken as it leaves the screen,
 /// so a reply to a turn sent just before still counts as new.
 Map<String, ChatMark> marksOf(List<HermesProfile> bots, DateTime at) => {

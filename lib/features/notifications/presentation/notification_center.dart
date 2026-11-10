@@ -56,8 +56,9 @@ class NotificationCenter extends _$NotificationCenter {
     Timer? check;
 
     /// Only while away: on screen, the chat itself shows what came. With
-    /// push the phone's push service shows it, unless the socket stays open
-    /// (Android's Stay connected), which the push side then leaves to it.
+    /// push the phone's push service shows it, unless Android's Stay
+    /// connected holds a live socket, which the push side then leaves to
+    /// the app.
     void checkSoon() {
       if (appIsVisible || !_appPostsMessages) return;
       check?.cancel();
@@ -90,6 +91,10 @@ class NotificationCenter extends _$NotificationCenter {
           .read(pushBridgeProvider)
           .taps
           .listen((bot) => _openRoute(Routes.chatPath(bot))),
+      ref
+          .read(pushBridgeProvider)
+          .shown
+          .listen((bot) => unawaited(_markShown(bot))),
       // A question rings once on arrival (a replay is the same question) and
       // is retracted once answered or withdrawn.
       if (requests != null) ...[
@@ -135,7 +140,9 @@ class NotificationCenter extends _$NotificationCenter {
     // The first live connection is when to ask for the permission: the app
     // has just shown it is useful.
     ref.listen(connectionStateProvider, (_, next) {
-      if (next.value is! Connected) return;
+      final up = next.value is Connected;
+      unawaited(ref.read(connectionServiceControllerProvider).socket(up: up));
+      if (!up) return;
       unawaited(_promptOnce());
       // What the bots wrote while the socket was down.
       checkSoon();
@@ -226,6 +233,19 @@ class NotificationCenter extends _$NotificationCenter {
     }
   }
 
+  /// The push service rang for [bot] while the socket was down: the check
+  /// on the next `Connected` starts after that message.
+  Future<void> _markShown(String bot) async {
+    final config = ref.read(gatewayConfigProvider);
+    if (config == null) return;
+    await markShown(
+      store: ref.read(awayStoreProvider),
+      account: config.accountKey,
+      bot: bot,
+      at: DateTime.now(),
+    );
+  }
+
   /// The background check runs while notifications are on and the app can
   /// sign in on its own, and push does not already bring the messages.
   Future<void> _syncCheck() async {
@@ -240,9 +260,10 @@ class NotificationCenter extends _$NotificationCenter {
         );
   }
 
-  /// The app posts the bots' messages itself: without push, or while
-  /// Android's Stay connected holds the socket (the push side then stays
-  /// quiet, `PushService.kt`), so a message rings once.
+  /// The app posts the bots' messages itself: without push, or with
+  /// Android's Stay connected. While that holds a live socket the push side
+  /// stays quiet (`PushService.kt`); what it posts with the socket down it
+  /// reports ([_markShown]), so a message rings once.
   bool get _appPostsMessages =>
       ref.read(pushRegistrationProvider) != PushStatus.active ||
       ref.read(connectionServiceControllerProvider).isRunning;

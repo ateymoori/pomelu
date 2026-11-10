@@ -49,8 +49,11 @@ void main() {
       addTearDown(connection.close);
       await mount(prefs: keepAliveOn, connection: connection.stream);
 
+      connection.add(const Connected(replayEpoch: 'e'));
+      await pumpEventQueue();
+      expect(service.socketUp, isTrue);
+
       connection
-        ..add(const Connected(replayEpoch: 'e'))
         ..add(const Reconnecting(attempt: 1))
         ..add(const Connecting())
         ..add(const Disconnected());
@@ -58,6 +61,7 @@ void main() {
 
       expect(service.calls, ['start'], reason: 'never stopped, never redone');
       expect(service.running, isTrue);
+      expect(service.socketUp, isFalse, reason: 'push rings in its place');
     });
 
     test('stops when the switch goes off', () async {

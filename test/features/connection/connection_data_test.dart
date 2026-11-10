@@ -136,16 +136,6 @@ void main() {
       expect(reread, ada.copyWith(url: 'http://nas.local:9119'));
     });
 
-    test('clear forgets the config, the token and the password', () async {
-      secrets.values[PreferenceKeys.gatewayToken] = '{}';
-      secrets.values[PreferenceKeys.gatewayPassword] = 'pw';
-      final container = mount();
-      await container.read(gatewayConfigProvider.notifier).clear();
-      expect(container.read(gatewayConfigProvider), isNull);
-      expect(kv.values[PreferenceKeys.gatewayUrl], isNull);
-      expect(secrets.values, isEmpty);
-    });
-
     test('the client is rebuilt for another address only', () async {
       final container = mount();
       final first = container.read(hermesClientProvider);

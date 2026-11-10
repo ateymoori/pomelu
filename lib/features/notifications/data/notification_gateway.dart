@@ -98,7 +98,8 @@ class LocalNotificationGateway implements NotificationGateway {
           .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin
           >();
-    } on Object {
+    } on Object catch (e) {
+      log.w('notifications: no platform side', error: e);
       _usable = false;
       return null;
     }
@@ -111,7 +112,8 @@ class LocalNotificationGateway implements NotificationGateway {
           .resolvePlatformSpecificImplementation<
             IOSFlutterLocalNotificationsPlugin
           >();
-    } on Object {
+    } on Object catch (e) {
+      log.w('notifications: no platform side', error: e);
       _usable = false;
       return null;
     }

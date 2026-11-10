@@ -27,6 +27,19 @@ class Profiles extends _$Profiles {
     final api = ref.watch(hermesApiProvider);
     final client = ref.watch(hermesClientProvider);
     if (api == null || client == null) return const [];
+    // A sign-out takes the account's bots off the screen, the app icon's
+    // menu and the share sheet at once. No reload: the socket is still up
+    // for a moment and would bring them back. The next sign-in's
+    // `gateway.ready` loads the list.
+    ref.listen(credentialProvider, (previous, next) {
+      if ((previous?.isEmpty ?? true) || !next.isEmpty) return;
+      _debounce?.cancel();
+      state = const AsyncData([]);
+      state = AsyncError(
+        const UnauthorizedFailure('sign-in required'),
+        StackTrace.current,
+      );
+    });
     final sub = client.events.listen((ev) {
       if (ev.type == EventNames.sessionsChanged ||
           ev.type == EventNames.gatewayReady) {

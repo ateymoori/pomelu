@@ -20,7 +20,8 @@ import org.json.JSONObject
  * Push through Google (FCM) for the Pomelu Hermes plugin. Dart's
  * `ChannelPushBridge`: `register {newKey}` gives `{platform, token, key,
  * sandbox}` (null without the Firebase config or Play services), and the
- * events send `{type: token}` when FCM renews the token. The key is this
+ * events send `{type: token}` when FCM renews the token and `{type: shown,
+ * bot}` when [PushService] has posted a bot's message. The key is this
  * phone's own (AES-256): the plugin seals each message with it, and only
  * [open] reads it. A tap opens the bot's chat link, as any deep link, so
  * `launchBot` is always null here.
@@ -75,6 +76,11 @@ object PushBridge {
 
     fun tokenChanged() {
         main.post { sink?.success(mapOf("type" to "token")) }
+    }
+
+    /** A running app must not ring for the same message again. */
+    fun shown(bot: String) {
+        main.post { sink?.success(mapOf("type" to "shown", "bot" to bot)) }
     }
 
     private fun register(context: Context, newKey: Boolean, result: MethodChannel.Result) {

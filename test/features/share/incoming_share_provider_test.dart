@@ -95,6 +95,18 @@ void main() {
       expect(container.read(pendingShareProvider)?.profile, 'nova');
     });
 
+    test('a link that only names a bot does not replace a share that waits '
+        'for one', () async {
+      intake.launch = IncomingShare(id: 'files', files: [_file('a.txt')]);
+      container = boot();
+      await pumpEventQueue();
+
+      intake.controller.add(const IncomingShare(id: 'link', profile: 'nova'));
+      await pumpEventQueue();
+
+      expect(container.read(pendingShareProvider)?.id, 'files');
+    });
+
     test(
       'a share whose files were all left out is kept: the user is told',
       () async {

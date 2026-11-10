@@ -75,6 +75,14 @@ class PushRegistration extends _$PushRegistration {
   /// signed-out phone gets no more messages. A gateway out of reach keeps
   /// sending: a new key then stops the phone from opening them.
   Future<void> forget() async {
+    // A registration in flight would put the phone back after the removal.
+    _again = false;
+    try {
+      await _running;
+    } on Object catch (e) {
+      log.w('push: the sync before sign-out failed', error: e);
+    }
+    if (!ref.mounted) return;
     final id = _kv.getString(PreferenceKeys.pushDeviceId);
     final api = ref.read(hermesApiProvider);
     if (id == null || _kv.getString(PreferenceKeys.pushAccount) == null) return;

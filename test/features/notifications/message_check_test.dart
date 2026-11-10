@@ -115,6 +115,28 @@ void main() {
     expect(api.reads, ['tip-atlas', 'tip-atlas']);
   });
 
+  test('a message that rang by push does not ring again; the next one '
+      'does', () async {
+    store.away = at(10);
+    api.bots = [bot('atlas', count: 2)];
+    await store.saveMarks('gw#me', marksOf(api.bots, at(10)));
+
+    // The socket was down at :12: the push service rang and said so.
+    await markShown(store: store, account: 'gw#me', bot: 'atlas', at: at(13));
+    api.bots[0] = bot('atlas', count: 3);
+    api.rows['tip-atlas'] = [said('assistant', 'Rain until noon.', 12)];
+    await check();
+    expect(gateway.shown, isEmpty);
+
+    api.bots[0] = bot('atlas', count: 4);
+    api.rows['tip-atlas'] = [
+      said('assistant', 'Rain until noon.', 12),
+      said('assistant', 'Sun after that.', 15),
+    ];
+    await check();
+    expect(gateway.shown.map((n) => n.body), ['Sun after that.']);
+  });
+
   test('nothing is read while the app is in front', () async {
     api.bots = [bot('atlas', count: 3, last: at(14))];
     await check();

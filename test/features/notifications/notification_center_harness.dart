@@ -110,6 +110,11 @@ class FakeService implements ConnectionServiceController {
     running = false;
   }
 
+  /// What the centre last said of the socket.
+  bool? socketUp;
+  @override
+  Future<void> socket({required bool up}) async => socketUp = up;
+
   @override
   Future<void> resync() async => calls.add('resync');
 }

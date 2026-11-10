@@ -53,16 +53,6 @@ class GatewayConfigNotifier extends _$GatewayConfigNotifier {
     await _kv.setString(PreferenceKeys.gatewayUsername, config.username);
     state = normalized;
   }
-
-  /// Forgets the gateway and its secrets.
-  Future<void> clear() async {
-    await _kv.remove(PreferenceKeys.gatewayUrl);
-    await _kv.remove(PreferenceKeys.gatewayAuthMode);
-    await _kv.remove(PreferenceKeys.gatewayUsername);
-    await ref.read(credentialStorageProvider).savePassword(null);
-    await ref.read(credentialProvider.notifier).set(const NoCredential());
-    state = null;
-  }
 }
 
 /// The live credential of the configured gateway.

@@ -39,7 +39,11 @@ class PendingShare extends _$PendingShare {
   IncomingShare? build() {
     final service = ref.watch(shareIntakeServiceProvider);
     final sub = service.shares.listen((s) {
-      if (_worthKeeping(s)) state = s;
+      if (!_worthKeeping(s)) return;
+      // A link that only names a bot (a notification, the app icon's menu)
+      // must not take the place of files and words that wait for a bot.
+      if (s.isEmpty && !(state?.isEmpty ?? true)) return;
+      state = s;
     });
     ref.onDispose(sub.cancel);
     unawaited(

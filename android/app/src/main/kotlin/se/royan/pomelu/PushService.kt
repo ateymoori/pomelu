@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -14,8 +15,9 @@ import com.google.firebase.messaging.RemoteMessage
  * A bot's message by push (FCM, data only): opened with the phone's key and
  * posted as the bot's message row, the same id and tag Dart's
  * `NotificationPolicy.forMessage` uses, so a later one replaces it. Quiet
- * while the app is on screen, or while Stay connected holds the socket: the
- * app posts then, and a message rings once.
+ * while the app is on screen, or while Stay connected holds a live socket:
+ * the app posts then. With the socket down this posts and tells the app
+ * ([PushBridge.shown]), so a message rings once.
  */
 class PushService : FirebaseMessagingService() {
 
@@ -23,7 +25,7 @@ class PushService : FirebaseMessagingService() {
 
     override fun onMessageReceived(message: RemoteMessage) {
         val sealed = message.data["enc"] ?: return
-        if (PushBridge.foreground || ConnectionService.running) return
+        if (PushBridge.foreground || ConnectionService.holdsSocket) return
         val opened = PushBridge.open(this, sealed) ?: return
         val notifications = NotificationManagerCompat.from(this)
         if (!notifications.areNotificationsEnabled()) return
@@ -50,8 +52,9 @@ class PushService : FirebaseMessagingService() {
             .build()
         try {
             notifications.notify(tag, id, row)
+            PushBridge.shown(opened.bot)
         } catch (e: SecurityException) {
-            // The grant went between the check and the post.
+            Log.w(TAG, "the grant went between the check and the post", e)
         }
     }
 
@@ -60,11 +63,17 @@ class PushService : FirebaseMessagingService() {
         val manager = getSystemService(NotificationManager::class.java)
         if (manager.getNotificationChannel(CHANNEL_ID) != null) return
         manager.createNotificationChannel(
-            NotificationChannel(CHANNEL_ID, "Messages", NotificationManager.IMPORTANCE_HIGH),
+            NotificationChannel(
+                CHANNEL_ID,
+                getString(R.string.messages_channel_name),
+                NotificationManager.IMPORTANCE_HIGH,
+            ),
         )
     }
 
     companion object {
+        private const val TAG = "PushService"
+
         /** `NotificationChannels.messages` in Dart. */
         private const val CHANNEL_ID = "hermes.messages"
 

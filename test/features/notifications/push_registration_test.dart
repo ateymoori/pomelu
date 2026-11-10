@@ -34,9 +34,15 @@ class _PluginApi extends Fake implements HermesApi {
   bool forgotten = false;
   int registrations = 0;
 
+  /// The next registration answers only once this completes.
+  Completer<void>? gate;
+
   @override
   Future<void> registerPushDevice(String id, PushDevice device) async {
     if (!installed) throw const NotSupportedFailure('push is not supported');
+    final pending = gate;
+    gate = null;
+    await pending?.future;
     registrations++;
     registered[id] = device;
   }
@@ -45,6 +51,7 @@ class _PluginApi extends Fake implements HermesApi {
   Future<void> removePushDevice(String id) async {
     if (!reachable) throw const NetworkFailure('out of reach');
     removed.add(id);
+    registered.remove(id);
   }
 
   @override
@@ -74,6 +81,9 @@ class _Bridge implements PushBridge {
 
   @override
   Stream<String> get taps => const Stream.empty();
+
+  @override
+  Stream<String> get shown => const Stream.empty();
 
   @override
   Future<String?> launchBot() async => null;
@@ -220,6 +230,25 @@ void main() {
     expect(api.removed, [id]);
     expect(kv.getString(PreferenceKeys.pushAccount), isNull);
     expect(bridge.newKeys.where((renewed) => renewed), isEmpty);
+  });
+
+  test('signing out while the phone registers still takes it off', () async {
+    final container = await mount();
+    final gate = api.gate = Completer<void>();
+    bridge.device = _phone.copyWith(token: 'tok-2');
+    bridge.tokens.add(null);
+    await pumpEventQueue();
+
+    final signedOut = container
+        .read(pushRegistrationProvider.notifier)
+        .forget();
+    await pumpEventQueue();
+    gate.complete();
+    await signedOut;
+
+    expect(api.registered, isEmpty);
+    expect(kv.getString(PreferenceKeys.pushAccount), isNull);
+    expect(container.read(pushRegistrationProvider), PushStatus.off);
   });
 
   test('signing out with the gateway out of reach makes a new key', () async {

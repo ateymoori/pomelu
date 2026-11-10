@@ -3,14 +3,17 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermes/core/config/app_config.dart';
+import 'package:hermes/core/storage/secret_store.dart';
 import 'package:hermes/features/connection/presentation/connection_providers.dart';
 import 'package:hermes/features/sidebar/presentation/sidebar_providers.dart';
+import 'package:hermes/hermes/auth/auth_credential.dart';
 import 'package:hermes/hermes/client/connection_state.dart';
 import 'package:hermes/hermes/events/gateway_event.dart';
 import 'package:hermes/hermes/hermes_failure.dart';
 import 'package:hermes/hermes/models/profile.dart';
 
 import '../../support/fake_gateway.dart';
+import '../../support/memory_stores.dart';
 
 class _CountingApi extends FakeApi {
   int profileLists = 0;
@@ -243,6 +246,39 @@ void main() {
       );
       await end(tester, container);
     });
+  });
+
+  test("a sign-out takes the account's bots away", () async {
+    final client = FakeClient();
+    addTearDown(client.close);
+    final container = ProviderContainer(
+      retry: (_, _) => null,
+      overrides: [
+        hermesClientProvider.overrideWithValue(client),
+        hermesApiProvider.overrideWithValue(_CountingApi()),
+        secretStoreProvider.overrideWithValue(MemorySecretStore()),
+        initialCredentialProvider.overrideWithValue(
+          const BearerCredential(accessToken: 'at', username: 'ada'),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    final seen = <List<String>?>[];
+    container.listen(
+      profilesProvider,
+      (_, next) => seen.add(next.value?.map((b) => b.name).toList()),
+    );
+    await container.read(profilesProvider.future);
+    expect(container.read(profilesProvider).value?.single.name, 'atlas');
+
+    await container.read(credentialProvider.notifier).set(const NoCredential());
+
+    // The app icon's menu and the share sheet read the value: an empty list
+    // clears them; the menu then says a sign-in is needed.
+    expect(seen, contains(isEmpty));
+    final after = container.read(profilesProvider);
+    expect(after.value ?? const [], isEmpty);
+    expect(after.error, isA<UnauthorizedFailure>());
   });
 
   test('a burst of sessions.changed refreshes the bots once', () async {

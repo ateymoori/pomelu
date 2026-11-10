@@ -39,7 +39,7 @@ class ConnectionService : Service() {
         }
         try {
             ServiceCompat.startForeground(this, NOTIFICATION_ID, notification, type)
-            running = true
+            running = !stopWanted
         } catch (e: RuntimeException) {
             // Started from the background, or the type's permission is missing.
             // startForeground is the first thing done, so there is no earlier
@@ -47,6 +47,8 @@ class ConnectionService : Service() {
             Log.w(TAG, "startForeground refused", e)
             stopSelf()
         }
+        starting = false
+        if (stopWanted) shutDown()
         // Not sticky: a restart after a low-memory kill would have no Flutter
         // engine, so its row would claim a connection that is gone.
         return START_NOT_STICKY
@@ -83,6 +85,22 @@ class ConnectionService : Service() {
         var running = false
             private set
 
+        /**
+         * A start is on its way to onStartCommand. Android ends the app when
+         * a service asked to be in the foreground stops before it is, so a
+         * stop in that time waits ([stopWanted]) for the start to land.
+         */
+        private var starting = false
+        private var stopWanted = false
+
+        /** Dart's word (`socket`): the gateway socket is up. */
+        @Volatile
+        private var socketUp = false
+
+        /** The app sees what the gateway sends, so it posts the bots' messages. */
+        val holdsSocket: Boolean
+            get() = running && socketUp
+
         /** What the row says; set by `start` and `update`, read by every start. */
         @Volatile
         private var title: String? = null
@@ -96,7 +114,9 @@ class ConnectionService : Service() {
                 "start" -> try {
                     title = call.argument("title")
                     body = call.argument("body")
+                    stopWanted = false
                     context.startForegroundService(Intent(context, ConnectionService::class.java))
+                    starting = true
                     result.success(true)
                 } catch (e: RuntimeException) {
                     // Not allowed from the background (API 31+), or denied.
@@ -120,12 +140,20 @@ class ConnectionService : Service() {
                     result.success(true)
                 }
                 "isRunning" -> result.success(running)
+                "socket" -> {
+                    socketUp = call.argument<Boolean>("up") == true
+                    result.success(true)
+                }
                 else -> result.notImplemented()
             }
         }
 
         fun stop(context: Context) {
-            context.stopService(Intent(context, ConnectionService::class.java))
+            if (starting) {
+                stopWanted = true
+            } else {
+                context.stopService(Intent(context, ConnectionService::class.java))
+            }
             running = false
         }
 
