@@ -42,7 +42,7 @@ final class ProfilesProvider
   Profiles create() => Profiles();
 }
 
-String _$profilesHash() => r'197da8179e7b2d55fd5ab6c021bb5c7c53cf5f9e';
+String _$profilesHash() => r'810b869470b1e89ff030f6860e4ce468307ab438';
 
 /// The bots (profiles) on the gateway, refreshed on `sessions.changed` and
 /// `gateway.ready`. The first load waits for the socket, but not for ever: a

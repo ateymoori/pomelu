@@ -106,7 +106,7 @@ final class PendingShareProvider
   }
 }
 
-String _$pendingShareHash() => r'da91af8807c5dd076461888ad5d3eff57ec7f094';
+String _$pendingShareHash() => r'5e2aba03963ea6f35e4af4f7145c99d0a5ea35ff';
 
 /// The share waiting for the user to pick a bot. Kept too: a link that only
 /// names a bot (it says where to go), and a share whose files were all left

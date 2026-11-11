@@ -517,7 +517,7 @@ final class CronJobActionsProvider
   }
 }
 
-String _$cronJobActionsHash() => r'f41d4d9f22f299ebf00171c99c9ce85a220d5e05';
+String _$cronJobActionsHash() => r'76e0ab549dd2d83513082caca8bbff066825ee67';
 
 /// Pause, resume, run now and delete of job [jobId]. Kept alive: a run takes
 /// minutes and the tab can close and open meanwhile, and the job stays busy,

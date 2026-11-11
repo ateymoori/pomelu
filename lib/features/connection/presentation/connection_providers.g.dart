@@ -140,7 +140,7 @@ final class GatewayConfigNotifierProvider
 }
 
 String _$gatewayConfigNotifierHash() =>
-    r'cae4b2833ea3784d322ed2b42468e54c52abd2a8';
+    r'94386f453f56fb48e7f4370fe40b74ca8737b7df';
 
 /// The stored gateway settings; null until the user configures one.
 
