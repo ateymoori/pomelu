@@ -265,7 +265,9 @@ Attach the MP4 in App Store Connect → App Review → Attachment.
 Both platforms:
 
 1. `flutter analyze` and `dart analyze` clean; `flutter test` green; the count
-   above updated.
+   above updated. `dart run build_runner build -d` and `flutter gen-l10n` leave
+   no diff (CI checks it: a provider's generated hash changes with any edit to
+   its source, comments too).
 2. `flutter pub outdated`: every direct package on its latest stable, or the
    reason in the commit.
 3. Docs current (`ARCHITECTURE.md`, `DESIGN.md`, `PROTOCOL.md`, this file).
