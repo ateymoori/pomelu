@@ -261,9 +261,9 @@ Made by [Royan AB](https://royan.se) in Sweden ·
 
 ### ⭐ Like Pomelu? Give it a star
 
-If Pomelu is helpful to you, please [star this repo](https://github.com/ateymoori/pomelu/stargazers).
+If Pomelu is helpful to you, please [star this repo](https://github.com/ateymoori/pomelu).
 It is free and it helps other Hermes Agent users find the app.
 
-[![Star Pomelu on GitHub](https://img.shields.io/github/stars/ateymoori/pomelu?style=social)](https://github.com/ateymoori/pomelu/stargazers)
+[![Star Pomelu on GitHub](https://img.shields.io/github/stars/ateymoori/pomelu?style=social)](https://github.com/ateymoori/pomelu)
 
 </div>
