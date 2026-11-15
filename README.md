@@ -18,6 +18,7 @@ Chat with your self-hosted AI agent from your iPhone, iPad, Android phone, folda
 [![Flutter 3.47](https://img.shields.io/badge/Flutter-3.47-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
 [![Android](https://img.shields.io/badge/Android-10%2B-3DDC84?logo=android&logoColor=white)](#get-the-app)
 [![iOS and iPadOS](https://img.shields.io/badge/iOS%20%7C%20iPadOS-15%2B-000000?logo=apple&logoColor=white)](#get-the-app)
+[![Follow @ReadmeRadar on X](https://img.shields.io/badge/follow-%40ReadmeRadar-000000?logo=x)](https://x.com/ReadmeRadar)
 
 [Website](https://royan.se/pomelu/) ·
 [Watch the film](#watch-the-film) ·
