@@ -141,8 +141,24 @@ Hermes delivers only into a Bot Chat its gateway owns. A chat the app made
 which Hermes refuses (`runtime_coordination_required`, "another session
 writer holds the Bot Chat") while `hermes serve` holds it open for the app.
 So the app sends `session.close {session_id}` for an idle chat when it leaves
-the screen (or when a turn ends while it is away), and resumes it when it is
-back.
+the screen (or when a turn ends, or a lost chat resumes, while it is away),
+and resumes it when it is back.
+
+**Background work.** Not while the chat has work that reports back into it:
+`process.list` lists a process `running` with `notify_on_complete` or
+`watch_patterns`, or `subagent.list` lists a child (an async
+`delegate_task`). Hermes reads `session.close` as the user ending the chat
+(`end_reason: tui_close`, as `/new`): the agent's close kills its processes,
+its delegations are interrupted, and a result that still comes is a note
+with no turn, so no reply and no push. Left open, the chat stays live even
+with the socket gone (Hermes' reapers spare a session a process will notify
+or a delegation will return to); the result runs a turn, and its reply
+makes the plugin push. When that turn ends with the app still away the app
+closes the chat; with the socket gone, Hermes ends it 20 s later as
+`ws_orphan_reap`, which a resume reopens. Meanwhile a Bot Chat the gateway
+has not adopted yet refuses a cron report (above); an adopted one queues it.
+A check the gateway does not answer (`-32601`, gone session) counts as no
+work; a check with no answer at all keeps the chat.
 
 **Push (Pomelu plugin).** The plugin's dashboard routes, behind the
 dashboard's normal sign-in; 404 means no plugin (or an unknown phone):
@@ -169,6 +185,7 @@ message `{enc}`, high priority.
 | open | `session.resume {session_id: <stored>, profile, cols: 96, source: "gui", defer_history: true, omit_messages: true}`, then `session.history {session_id: <runtime>}`, polled while a hydrating (`hydrating: true`) session reads empty (history drops some stored rows, so it can stay below `message_count`). The resume answer carries `inflight`, `queued`, `open_requests`, `info.usage` |
 | send | stage `image.attach_bytes {session_id, filename, content_base64}` (25 MB) or `file.attach {session_id, name, path, data_url}` (50 MB) → refs; then `prompt.submit {session_id, profile, text}`. At most 10 files, 64 MB per turn, checked before encoding. Never resent blindly |
 | stop | `session.interrupt` → `message.complete {status: "interrupted"}` |
+| background work | `process.list {session_id}` → `{processes: [{status: running\|exited, notify_on_complete?, watch_patterns?}]}`; `subagent.list {session_id}` → `{subagents, delegations}` (live children; `delegations` are failed ones). Both only for the session's own socket |
 | new conversation | `session.create {..., parent_session_id: <old stored>}`, `session.archive {session_id, profile}` on the old one, `session.title` on the new. On failure the new one is archived and the old restored (`archived: false`) |
 | earlier conversations | REST `GET /api/sessions/{id}?profile=` → `parent_session_id` (a parent with `end_reason: compression` is the same conversation); rows `GET /api/sessions/{id}/messages?profile&limit=500&order=latest&inline_images=false`. At a root with no parent: the newest row of `GET /api/sessions?profile&sources=gui,mobile&archived=include&limit=100&offset` titled `Bot Chat (…` that started before it (a Bot Chat the gateway moved aside; a compacted one is listed as its tip) |
 | compact | `session.compress {session_id}` (up to 3 min) → `{status, before_*, after_*, summary}` or `{lock_held: true}` |

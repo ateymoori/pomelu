@@ -274,6 +274,8 @@ abstract final class HermesMethods {
   static const String sessionCompress = 'session.compress';
   static const String sessionContextBreakdown = 'session.context_breakdown';
   static const String sessionInterrupt = 'session.interrupt';
+  static const String processList = 'process.list';
+  static const String subagentList = 'subagent.list';
   static const String promptSubmit = 'prompt.submit';
   static const String imageAttachBytes = 'image.attach_bytes';
   static const String fileAttach = 'file.attach';

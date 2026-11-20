@@ -103,6 +103,70 @@ void main() {
     },
   );
 
+  group('background work that reports back while the app is away', () {
+    late TestWidgetsFlutterBinding binding;
+
+    setUp(() {
+      binding = TestWidgetsFlutterBinding.ensureInitialized();
+      addTearDown(
+        () => binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed),
+      );
+    });
+
+    void hide() => binding
+      ..handleAppLifecycleStateChanged(AppLifecycleState.inactive)
+      ..handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+
+    test('keeps the session until the turn its result starts ends', () async {
+      final api = ScriptedApi()..backgroundWork = true;
+      final rig = bootChat(api: api);
+      await pumpEventQueue();
+
+      hide();
+      await pumpEventQueue();
+      expect(api.closedIds, isEmpty);
+      expect(rig.client.watched, ['rt-1']);
+
+      api.backgroundWork = false;
+      rig.client.emit(ev(EventNames.messageStart));
+      await pumpEventQueue();
+      rig.client.emit(ev(EventNames.messageComplete, {'text': 'built'}));
+      await pumpEventQueue();
+      expect(words(rig), ['built']);
+      expect(api.closedIds, ['rt-1']);
+    });
+
+    test('a check with no answer keeps the session', () async {
+      final api = ScriptedApi()..nextWorkFailure = NetworkFailure.notConnected;
+      final rig = bootChat(api: api);
+      await pumpEventQueue();
+
+      hide();
+      await pumpEventQueue();
+      expect(api.closedIds, isEmpty);
+      expect(rig.client.watched, ['rt-1']);
+    });
+
+    test('a session lost meanwhile and resumed is let go again', () async {
+      final api = ScriptedApi()..backgroundWork = true;
+      final rig = bootChat(api: api);
+      await pumpEventQueue();
+      hide();
+      await pumpEventQueue();
+
+      api.backgroundWork = false;
+      rig.client.emit(
+        const GatewayEvent(
+          type: SyntheticEvents.sessionLost,
+          sessionId: 'rt-1',
+        ),
+      );
+      await pumpEventQueue();
+      expect(api.resumedIds, ['stored-1', 'stored-1']);
+      expect(api.closedIds, ['rt-1']);
+    });
+  });
+
   test('opens the Bot Chat it finds and reads its transcript', () async {
     final api = ScriptedApi()
       ..rows = const [SessionMessage(role: 'user', text: 'hi')];

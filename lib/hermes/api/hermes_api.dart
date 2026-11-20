@@ -142,6 +142,42 @@ class HermesApi
     await _client.call(HermesMethods.sessionClose, {'session_id': runtimeId});
   }
 
+  /// Whether the live session still has work that reports back into it: a
+  /// running background process that tells it when it ends or prints a
+  /// watched line, or a delegated task still at work. A check this gateway
+  /// does not answer counts as none.
+  Future<bool> awaitsBackgroundWork(String runtimeId) async {
+    final [processes, children] = await Future.wait([
+      _sessionWork(HermesMethods.processList, runtimeId),
+      _sessionWork(HermesMethods.subagentList, runtimeId),
+    ]);
+    final running = processes['processes'];
+    final busy = children['subagents'];
+    return (running is List && running.any(_reportsBack)) ||
+        (busy is List && busy.isNotEmpty);
+  }
+
+  Future<Map<String, dynamic>> _sessionWork(
+    String method,
+    String runtimeId,
+  ) async {
+    try {
+      return await _client.call(method, {
+        'session_id': runtimeId,
+      }, HermesTimeouts.rpcLiveness);
+    } on ServerFailure catch (e) {
+      // An older gateway, or a session no longer live: nothing to wait on.
+      _client.log('$method refused', e);
+      return const {};
+    }
+  }
+
+  static bool _reportsBack(Object? process) => switch (process) {
+    {'status': 'running', 'notify_on_complete': true} => true,
+    {'status': 'running', 'watch_patterns': [_, ...]} => true,
+    _ => false,
+  };
+
   /// Drops the last user turn and all after it from an idle session;
   /// returns how many rows went.
   Future<int> undoLastTurn(String runtimeId) async {

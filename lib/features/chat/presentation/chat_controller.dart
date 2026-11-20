@@ -75,6 +75,9 @@ class _Run {
   bool released = false;
   Future<void>? releasing;
 
+  /// `_release` is asking whether background work holds the session.
+  bool checkingWork = false;
+
   /// The socket came back while an open or a resume was on the old one:
   /// that attempt may still fail, so one more runs after it.
   bool openAgain = false;

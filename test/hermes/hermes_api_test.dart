@@ -252,6 +252,49 @@ void main() {
       },
     );
 
+    test('background work: a process that reports back, a delegated task; '
+        'a check the gateway lacks is none', () async {
+      gateway.rpc['process.list'] = (_) => const RpcResult({
+        'processes': [
+          {'status': 'running'},
+          {'status': 'exited', 'notify_on_complete': true},
+        ],
+      });
+      gateway.rpc['subagent.list'] = (_) => const RpcResult({
+        'subagents': <Object?>[],
+        'delegations': <Object?>[],
+      });
+      expect(await api.awaitsBackgroundWork('r1'), isFalse);
+      expect(sent('process.list'), {'session_id': 'r1'});
+      expect(sent('subagent.list'), {'session_id': 'r1'});
+
+      for (final process in [
+        {'status': 'running', 'notify_on_complete': true},
+        {
+          'status': 'running',
+          'watch_patterns': ['ERROR'],
+        },
+      ]) {
+        gateway.rpc['process.list'] = (_) => RpcResult({
+          'processes': [process],
+        });
+        expect(await api.awaitsBackgroundWork('r1'), isTrue);
+      }
+
+      gateway.rpc['process.list'] = (_) =>
+          const RpcError(HermesProtocol.errMethodNotFound, 'unknown');
+      gateway.rpc['subagent.list'] = (_) => const RpcResult({
+        'subagents': [
+          {'subagent_id': 'sa-1', 'status': 'running'},
+        ],
+      });
+      expect(await api.awaitsBackgroundWork('r1'), isTrue);
+
+      gateway.rpc['subagent.list'] = (_) =>
+          const RpcError(HermesProtocol.errMethodNotFound, 'unknown');
+      expect(await api.awaitsBackgroundWork('r1'), isFalse);
+    });
+
     test('a gateway error keeps its code', () async {
       gateway.rpc['session.title'] = (_) =>
           const RpcError(HermesProtocol.errSessionNotFound, 'gone');

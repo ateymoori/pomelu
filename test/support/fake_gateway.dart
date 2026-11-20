@@ -83,6 +83,20 @@ class FakeApi extends Fake implements HermesApi {
   /// Thrown by the next attachment upload, then cleared.
   HermesFailure? nextStageFailure;
 
+  /// The session has background work that reports back into it.
+  bool backgroundWork = false;
+
+  /// Thrown by the next background-work check, then cleared.
+  HermesFailure? nextWorkFailure;
+
+  @override
+  Future<bool> awaitsBackgroundWork(String runtimeId) async {
+    final failure = nextWorkFailure;
+    nextWorkFailure = null;
+    if (failure != null) throw failure;
+    return backgroundWork;
+  }
+
   @override
   Future<SessionResume> resumeSession({
     required String storedId,

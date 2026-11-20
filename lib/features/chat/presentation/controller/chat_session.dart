@@ -23,9 +23,37 @@ mixin _Session on _$ChatController {
   /// report or a bot's message into a Bot Chat only once it owns the chat,
   /// and it cannot take over one this app holds open: a chat the app
   /// started would refuse every delivery while the app stays connected.
+  ///
+  /// Not while background work will still report back: Hermes reads a close
+  /// as the user ending that work, so it would kill it and keep a late
+  /// result as a silent note. Left open, the result runs a turn whose reply
+  /// rings the phone, and the end of that turn comes back here.
   void _release(_Run run) {
     final id = state.runtimeId;
-    if (!run.live || run.released || id.isEmpty || _busy(run)) return;
+    if (!run.live || run.released || run.checkingWork || id.isEmpty) return;
+    if (_busy(run)) return;
+    run.checkingWork = true;
+    unawaited(_releaseUnlessWorking(run, id));
+  }
+
+  Future<void> _releaseUnlessWorking(_Run run, String id) async {
+    bool working;
+    try {
+      working = await run.api.awaitsBackgroundWork(id);
+    } on HermesFailure catch (e) {
+      // Kept: with the socket gone, Hermes ends the chat itself and spares
+      // its work.
+      log.w('background work of $id unknown', error: e);
+      working = true;
+    } finally {
+      run.checkingWork = false;
+    }
+    if (!run.live || run.released || appIsVisible) return;
+    if (state.runtimeId != id || _busy(run)) return;
+    if (working) {
+      log.d('$id stays open for its background work');
+      return;
+    }
     run.released = true;
     run.client.unwatchSession(id);
     run.watched = '';
@@ -145,6 +173,8 @@ mixin _Session on _$ChatController {
       loading: false,
     );
     unawaited(_drain(run));
+    // Resumed while away (a lost session): let go of it again.
+    if (!appIsVisible) _release(run);
   }
 
   Future<List<SessionMessage>> _hydratedHistory(

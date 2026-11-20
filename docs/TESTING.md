@@ -205,6 +205,10 @@ No flow covers these:
   adds a one-off task. iOS: `BGTaskScheduler`'s
   `_simulateLaunchForTaskWithIdentifier:` from an Xcode or lldb session
   attached to the app (macOS asks for permission to attach).
+- Background work while away (a test bot): ask it to run `sleep 120` in
+  the background with notify on complete, press Home or lock the phone,
+  wait 3 min. The result's reply rings; the session's row in `state.db`
+  stays open or ends `ws_orphan_reap`, never `tui_close`.
 - Bot Screen (a gateway with one; the local macOS gateway has none): open
   a bot's screen, watch, pinch and double tap, Take over, type with the key
   row (only it over the keyboard), Drag and drop a window or file, Hand back; Take over from a second viewer (Hermes desktop app) drops

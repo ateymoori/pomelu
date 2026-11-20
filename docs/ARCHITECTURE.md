@@ -370,7 +370,9 @@ Hermes (a `pre_tool_call` hook on `cronjob_manage` create, plus a prompt
 section in `gui` sessions) sets `bot-chat` when no target was chosen. An
 idle open chat lets go of its session while the app is away (`_release`,
 `session.close`) so the gateway can take the chat over and deliver; it
-resumes on return. Without push, two runners share it:
+resumes on return. A chat whose background work will still report back
+stays open until the turn that work starts has ended (PROTOCOL.md →
+"Background work"). Without push, two runners share it:
 
 - the app, on `sessions.changed` and on every `Connected` while it is not
   visible (2 s debounce): with "Stay connected", at once, and what came
