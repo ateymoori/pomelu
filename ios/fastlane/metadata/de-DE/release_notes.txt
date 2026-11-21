@@ -1,3 +1,4 @@
 • Neuer Videoplayer: Vorschau und Länge, Bedienelemente, Vollbild, Sichern und Teilen.
 • Neue Audiokarte mit Wiedergabegeschwindigkeit und Restzeit.
 • Fehlerbehebungen bei Video, Sprachaufnahme und Wiederverbindung.
+• Aufgaben, die ein Bot im Hintergrund ausführt, laufen jetzt weiter, wenn du die App verlässt.

@@ -1,3 +1,4 @@
 • Nieuwe videospeler: voorvertoning en duur, bediening, volledig scherm, bewaren en delen.
 • Nieuwe audiokaart met afspeelsnelheid en resterende tijd.
 • Oplossingen voor video, spraakopname en opnieuw verbinden.
+• Taken die een bot op de achtergrond uitvoert, worden nu afgemaakt als je de app verlaat.

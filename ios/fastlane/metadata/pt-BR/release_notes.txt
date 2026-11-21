@@ -1,3 +1,4 @@
 • Novo player de vídeo: prévia e duração, controles, tela cheia, salvar e compartilhar.
 • Novo cartão de áudio com velocidade de reprodução e tempo restante.
 • Correções em vídeo, gravação de voz e reconexão.
+• Tarefas que um bot executa em segundo plano agora terminam quando você sai do app.

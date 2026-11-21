@@ -1,3 +1,4 @@
 • Yeni video oynatıcı: önizleme ve süre, denetimler, tam ekran, kaydetme ve paylaşma.
 • Oynatma hızını ve kalan süreyi gösteren yeni ses kartı.
 • Video, ses kaydı ve yeniden bağlanma için düzeltmeler.
+• Bir botun arka planda çalıştırdığı görevler artık uygulamadan çıktığınızda da tamamlanıyor.

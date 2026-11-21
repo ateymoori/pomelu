@@ -1,3 +1,4 @@
 • Uusi videosoitin: esikatselu ja kesto, säätimet, koko näyttö, tallennus ja jakaminen.
 • Uusi äänikortti, jossa on toistonopeus ja jäljellä oleva aika.
 • Korjauksia videoon, äänitykseen ja yhteyden palautukseen.
+• Botin taustalla ajamat tehtävät valmistuvat nyt, vaikka poistut sovelluksesta.

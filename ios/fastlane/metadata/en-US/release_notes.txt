@@ -1,3 +1,4 @@
 • New video player: preview and length, controls, full screen, save and share.
 • New audio card with playback speed and time left.
 • Fixes for video, voice recording and reconnecting.
+• Tasks a bot runs in the background now finish when you leave the app.

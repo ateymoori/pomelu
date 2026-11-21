@@ -1,3 +1,4 @@
 • Nouveau lecteur vidéo : aperçu et durée, commandes, plein écran, enregistrement et partage.
 • Nouvelle carte audio avec vitesse de lecture et temps restant.
 • Corrections pour la vidéo, l'enregistrement vocal et la reconnexion.
+• Les tâches qu'un bot exécute en arrière-plan se terminent désormais quand vous quittez l'app.
