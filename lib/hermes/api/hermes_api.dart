@@ -145,7 +145,8 @@ class HermesApi
   /// Whether the live session still has work that reports back into it: a
   /// running background process that tells it when it ends or prints a
   /// watched line, or a delegated task still at work. A check this gateway
-  /// does not answer counts as none.
+  /// does not know counts as none; any other refusal throws, since a close
+  /// on a guess would kill the work.
   Future<bool> awaitsBackgroundWork(String runtimeId) async {
     final [processes, children] = await Future.wait([
       _sessionWork(HermesMethods.processList, runtimeId),
@@ -166,8 +167,10 @@ class HermesApi
         'session_id': runtimeId,
       }, HermesTimeouts.rpcLiveness);
     } on ServerFailure catch (e) {
-      // An older gateway, or a session no longer live: nothing to wait on.
-      _client.log('$method refused', e);
+      // `subagent.list` also refuses a live session whose socket it does not
+      // see yet (4001), so only an unknown method is safe to read as none.
+      if (e.rpcCode != HermesProtocol.errMethodNotFound) rethrow;
+      _client.log('$method unknown to this gateway', e);
       return const {};
     }
   }

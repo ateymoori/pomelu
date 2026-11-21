@@ -157,8 +157,9 @@ makes the plugin push. When that turn ends with the app still away the app
 closes the chat; with the socket gone, Hermes ends it 20 s later as
 `ws_orphan_reap`, which a resume reopens. Meanwhile a Bot Chat the gateway
 has not adopted yet refuses a cron report (above); an adopted one queues it.
-A check the gateway does not answer (`-32601`, gone session) counts as no
-work; a check with no answer at all keeps the chat.
+A check the gateway does not know (`-32601`) counts as no work; any other
+refusal (`subagent.list` answers 4001 for a live session it does not see
+on this socket yet) or no answer keeps the chat.
 
 **Push (Pomelu plugin).** The plugin's dashboard routes, behind the
 dashboard's normal sign-in; 404 means no plugin (or an unknown phone):
