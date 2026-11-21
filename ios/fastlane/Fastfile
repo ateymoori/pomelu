@@ -6,8 +6,10 @@ default_platform(:ios)
 
 ROOT = File.expand_path('../..')
 KEY_ID = ENV.fetch('ASC_KEY_ID')
-# The build number is the part after `+` in pubspec.yaml.
-BUILD = File.read("#{ROOT}/pubspec.yaml")[/^version: .+\+(\d+)$/, 1]
+# The App Store version and the build number: `version: <VERSION>+<BUILD>` in
+# pubspec.yaml. Read here, not in the Deliverfile: fastlane evaluates that
+# without a file of its own, so a path from it goes astray.
+VERSION, BUILD = File.read("#{ROOT}/pubspec.yaml").match(/^version: ([\d.]+)\+(\d+)$/).captures
 
 platform :ios do
   before_all do
@@ -49,6 +51,7 @@ platform :ios do
   desc 'Push store text, screenshots and review details'
   lane :metadata do
     deliver(
+      app_version: VERSION,
       skip_binary_upload: true,
       overwrite_screenshots: true,
       force: true,
@@ -61,6 +64,7 @@ platform :ios do
   desc 'Submit the pubspec build for App Review, replacing a pending one; live on approval'
   lane :release do
     deliver(
+      app_version: VERSION,
       build_number: BUILD,
       skip_binary_upload: true,
       skip_metadata: true,
