@@ -294,8 +294,10 @@ void main() {
           const RpcError(HermesProtocol.errMethodNotFound, 'unknown');
       expect(await api.awaitsBackgroundWork('r1'), isFalse);
 
-      gateway.rpc['subagent.list'] = (_) =>
-          const RpcError(4001, 'session not found or not owned by this transport');
+      gateway.rpc['subagent.list'] = (_) => const RpcError(
+        4001,
+        'session not found or not owned by this transport',
+      );
       await expectLater(
         api.awaitsBackgroundWork('r1'),
         throwsA(isA<ServerFailure>()),

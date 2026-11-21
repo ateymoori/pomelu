@@ -172,6 +172,13 @@ abstract final class AppConfig {
   /// How long a `session.interrupt` gets to produce its `message.complete`.
   static const Duration interruptGrace = Duration(seconds: 8);
 
+  /// Wait, with the app away, before an idle chat lets go of its session:
+  /// Hermes starts a result that waited for a turn's end within 5 s of it.
+  static const Duration releaseSettle = Duration(seconds: 8);
+
+  /// How often an away chat that still holds its session asks again.
+  static const Duration releaseRetry = Duration(minutes: 1);
+
   /// Quiet time after `sessions.changed` before an open chat checks its
   /// transcript: a burst of writes costs one request.
   static const Duration transcriptFollowDelay = Duration(milliseconds: 800);

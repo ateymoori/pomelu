@@ -24,14 +24,30 @@ mixin _Session on _$ChatController {
   /// and it cannot take over one this app holds open: a chat the app
   /// started would refuse every delivery while the app stays connected.
   ///
-  /// Not while background work will still report back: Hermes reads a close
-  /// as the user ending that work, so it would kill it and keep a late
-  /// result as a silent note. Left open, the result runs a turn whose reply
-  /// rings the phone, and the end of that turn comes back here.
-  void _release(_Run run) {
+  /// Hermes reads a close as the user ending the chat: it kills the chat's
+  /// background work and keeps a late result as a silent note. So not at
+  /// once: a result that waited for a turn to end starts its own turn within
+  /// seconds, and that turn's end comes back here. And not while work will
+  /// still report back. Until it lets go, an away chat asks again every
+  /// minute. With the socket gone first, Hermes ends the session itself and
+  /// spares the same work.
+  void _release(_Run run) => _checkReleaseIn(run, AppConfig.releaseSettle);
+
+  void _checkReleaseIn(_Run run, Duration delay) {
+    if (!run.live || run.released) return;
+    run.releaseCheck?.cancel();
+    run.releaseCheck = Timer(delay, () => _checkRelease(run));
+  }
+
+  void _checkRelease(_Run run) {
+    run.releaseCheck = null;
     final id = state.runtimeId;
-    if (!run.live || run.released || run.checkingWork || id.isEmpty) return;
-    if (_busy(run)) return;
+    if (!run.live || run.released || appIsVisible) return;
+    if (id.isEmpty || _busy(run) || run.checkingWork) {
+      // Away and still held: ask again later; a turn's end asks sooner.
+      _checkReleaseIn(run, AppConfig.releaseRetry);
+      return;
+    }
     run.checkingWork = true;
     unawaited(_releaseUnlessWorking(run, id));
   }
@@ -41,17 +57,19 @@ mixin _Session on _$ChatController {
     try {
       working = await run.api.awaitsBackgroundWork(id);
     } on HermesFailure catch (e) {
-      // Kept: with the socket gone, Hermes ends the chat itself and spares
-      // its work.
+      // Kept: a close on a guess could kill the work.
       log.w('background work of $id unknown', error: e);
       working = true;
     } finally {
       run.checkingWork = false;
     }
     if (!run.live || run.released || appIsVisible) return;
-    if (state.runtimeId != id || _busy(run)) return;
-    if (working) {
-      log.d('$id stays open for its background work');
+    if (working || state.runtimeId != id || _busy(run)) {
+      if (working) log.d('$id stays open for its background work');
+      // A `_release` meanwhile has set its own, sooner check.
+      if (run.releaseCheck == null) {
+        _checkReleaseIn(run, AppConfig.releaseRetry);
+      }
       return;
     }
     run.released = true;
@@ -65,6 +83,8 @@ mixin _Session on _$ChatController {
 
   /// Back on screen: the released chat resumes, with what came meanwhile.
   Future<void> _comeBack(_Run run) async {
+    run.releaseCheck?.cancel();
+    run.releaseCheck = null;
     if (!run.live || !run.released) return;
     await run.releasing;
     if (!run.live || !run.released) return;
@@ -274,6 +294,8 @@ mixin _Session on _$ChatController {
       // another device started meanwhile.
       _scheduleFollow(run);
     }
+    // A turn the dropped socket ended sent no end of turn here.
+    if (!appIsVisible) _release(run);
   }
 
   void _onEvent(_Run run, GatewayEvent ev) {

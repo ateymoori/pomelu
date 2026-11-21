@@ -75,7 +75,10 @@ class _Run {
   bool released = false;
   Future<void>? releasing;
 
-  /// `_release` is asking whether background work holds the session.
+  /// When the app, away, next asks whether it can let go of the session.
+  Timer? releaseCheck;
+
+  /// Whether background work holds the session is being asked now.
   bool checkingWork = false;
 
   /// The socket came back while an open or a resume was on the old one:
@@ -96,6 +99,7 @@ class _Run {
   void dispose() {
     stopGuard?.cancel();
     follow?.cancel();
+    releaseCheck?.cancel();
     unawaited(events?.cancel());
     if (watched.isNotEmpty) client.unwatchSession(watched);
   }

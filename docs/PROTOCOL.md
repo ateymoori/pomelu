@@ -140,26 +140,35 @@ Hermes delivers only into a Bot Chat its gateway owns. A chat the app made
 (`session.create`, a new conversation) is adopted on the first delivery,
 which Hermes refuses (`runtime_coordination_required`, "another session
 writer holds the Bot Chat") while `hermes serve` holds it open for the app.
-So the app sends `session.close {session_id}` for an idle chat when it leaves
-the screen (or when a turn ends, or a lost chat resumes, while it is away),
-and resumes it when it is back.
+So the app sends `session.close {session_id}` for an idle chat while it is
+away (8 s after it leaves the screen, a turn ends, a lost chat resumes or the
+socket comes back), and resumes it when it is back.
 
-**Background work.** Not while the chat has work that reports back into it:
-`process.list` lists a process `running` with `notify_on_complete` or
-`watch_patterns`, or `subagent.list` lists a child (an async
-`delegate_task`). Hermes reads `session.close` as the user ending the chat
-(`end_reason: tui_close`, as `/new`): the agent's close kills its processes,
-its delegations are interrupted, and a result that still comes is a note
-with no turn, so no reply and no push. Left open, the chat stays live even
-with the socket gone (Hermes' reapers spare a session a process will notify
-or a delegation will return to); the result runs a turn, and its reply
-makes the plugin push. When that turn ends with the app still away the app
-closes the chat; with the socket gone, Hermes ends it 20 s later as
-`ws_orphan_reap`, which a resume reopens. Meanwhile a Bot Chat the gateway
-has not adopted yet refuses a cron report (above); an adopted one queues it.
-A check the gateway does not know (`-32601`) counts as no work; any other
-refusal (`subagent.list` answers 4001 for a live session it does not see
-on this socket yet) or no answer keeps the chat.
+**Background work.** Hermes reads `session.close` as the user ending the
+chat (`end_reason: tui_close`, as `/new`): the agent's close kills every
+running process it started (except `persist_on_release`), its delegations
+are interrupted, and a result that still comes is a note with no turn, so
+no reply and no push. So the app first waits 8 s: a result that waited for
+a turn's end starts its own turn within 5 s, and a turn that starts puts the
+close off until it ends. Then it asks: work reports back when `process.list`
+lists a process `running` with `notify_on_complete` or `watch_patterns`, or
+`subagent.list` lists a child (an async `delegate_task`). With work, the chat
+stays open and the app asks again every minute; the result runs a turn, its
+reply makes the plugin push, and that turn's end comes back to the check.
+With the socket gone first (Android without "Stay connected", iOS), the app
+sends nothing and Hermes decides: its reaper spares a session a process
+will notify or a delegation will return to, and ends it 20 s after the last
+of that as `ws_orphan_reap`, which a resume reopens. While held, a Bot Chat
+the gateway has not adopted yet refuses a cron report (above); an adopted
+one queues it. A check the gateway does not know (`-32601`) counts as no
+work; any other refusal (`subagent.list` answers 4001 for a live session it
+does not see on this socket yet) or no answer keeps the chat.
+
+Known limit (Hermes 0.23): `process.list` matches the session's current key,
+and compaction gives the session a new one, so a process started before a
+compaction is not listed; a close kills it while the app thinks the chat
+idle. Only a gateway change can close this (list by the agent's process
+owners, as the reaper does).
 
 **Push (Pomelu plugin).** The plugin's dashboard routes, behind the
 dashboard's normal sign-in; 404 means no plugin (or an unknown phone):

@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:fake_async/fake_async.dart';
 import 'package:flutter/widgets.dart' show AppLifecycleState;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hermes/core/config/app_config.dart';
 import 'package:hermes/features/chat/domain/chat_target.dart';
 import 'package:hermes/features/chat/domain/slash_command.dart';
 import 'package:hermes/features/chat/presentation/chat_controller.dart';
@@ -52,59 +54,11 @@ void main() {
     },
   );
 
-  test(
-    'an idle chat lets go of its session while the app is away, and resumes',
-    () async {
-      final binding = TestWidgetsFlutterBinding.ensureInitialized();
-      addTearDown(
-        () => binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed),
-      );
-      final api = ScriptedApi();
-      final rig = bootChat(api: api);
-      await pumpEventQueue();
-      expect(api.resumedIds, ['stored-1']);
-
-      binding
-        ..handleAppLifecycleStateChanged(AppLifecycleState.inactive)
-        ..handleAppLifecycleStateChanged(AppLifecycleState.hidden);
-      await pumpEventQueue();
-      expect(api.closedIds, ['rt-1']);
-      expect(rig.client.watched, isEmpty);
-
-      binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
-      await pumpEventQueue();
-      expect(api.resumedIds, ['stored-1', 'stored-1']);
-      expect(rig.client.watched, ['rt-1']);
-    },
-  );
-
-  test(
-    'a turn running while the app is away keeps its session until it ends',
-    () async {
-      final binding = TestWidgetsFlutterBinding.ensureInitialized();
-      addTearDown(
-        () => binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed),
-      );
-      final api = ScriptedApi();
-      final rig = bootChat(api: api);
-      await pumpEventQueue();
-      rig.client.emit(ev(EventNames.messageStart));
-      await pumpEventQueue();
-
-      binding
-        ..handleAppLifecycleStateChanged(AppLifecycleState.inactive)
-        ..handleAppLifecycleStateChanged(AppLifecycleState.hidden);
-      await pumpEventQueue();
-      expect(api.closedIds, isEmpty);
-
-      rig.client.emit(ev(EventNames.messageComplete, {'text': 'done'}));
-      await pumpEventQueue();
-      expect(api.closedIds, ['rt-1']);
-    },
-  );
-
-  group('background work that reports back while the app is away', () {
+  group('letting go of the session while the app is away', () {
     late TestWidgetsFlutterBinding binding;
+    const settle = AppConfig.releaseSettle;
+    const recheck = AppConfig.releaseRetry;
+    const second = Duration(seconds: 1);
 
     setUp(() {
       binding = TestWidgetsFlutterBinding.ensureInitialized();
@@ -117,53 +71,142 @@ void main() {
       ..handleAppLifecycleStateChanged(AppLifecycleState.inactive)
       ..handleAppLifecycleStateChanged(AppLifecycleState.hidden);
 
-    test('keeps the session until the turn its result starts ends', () async {
-      final api = ScriptedApi()..backgroundWork = true;
+    void show() =>
+        binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+
+    ChatRig open(FakeAsync time, ScriptedApi api) {
       final rig = bootChat(api: api);
-      await pumpEventQueue();
+      time.elapse(Duration.zero);
+      return rig;
+    }
 
-      hide();
-      await pumpEventQueue();
-      expect(api.closedIds, isEmpty);
-      expect(rig.client.watched, ['rt-1']);
+    test('an idle chat lets go shortly after the app leaves, and resumes', () {
+      final api = ScriptedApi();
+      fakeAsync((time) {
+        final rig = open(time, api);
+        hide();
+        time.elapse(settle - second);
+        expect(api.closedIds, isEmpty);
+        time.elapse(second);
+        expect(api.closedIds, ['rt-1']);
+        expect(rig.client.watched, isEmpty);
 
-      api.backgroundWork = false;
-      rig.client.emit(ev(EventNames.messageStart));
-      await pumpEventQueue();
-      rig.client.emit(ev(EventNames.messageComplete, {'text': 'built'}));
-      await pumpEventQueue();
-      expect(words(rig), ['built']);
-      expect(api.closedIds, ['rt-1']);
+        show();
+        time.elapse(Duration.zero);
+        expect(api.resumedIds, ['stored-1', 'stored-1']);
+        expect(rig.client.watched, ['rt-1']);
+      });
     });
 
-    test('a check with no answer keeps the session', () async {
+    test('back on screen in time, the chat keeps its session', () {
+      final api = ScriptedApi();
+      fakeAsync((time) {
+        open(time, api);
+        hide();
+        time.elapse(settle - second);
+        show();
+        time.elapse(recheck);
+        expect(api.closedIds, isEmpty);
+        expect(api.resumedIds, ['stored-1']);
+      });
+    });
+
+    test('a turn keeps the session until it ends, also one that starts '
+        'while the chat waits (a result Hermes held for a turn)', () {
+      final api = ScriptedApi();
+      fakeAsync((time) {
+        final rig = open(time, api);
+        rig.client.emit(ev(EventNames.messageStart));
+        hide();
+        time.elapse(settle);
+        rig.client.emit(ev(EventNames.messageComplete, {'text': 'one'}));
+        time.elapse(settle - second);
+        rig.client.emit(ev(EventNames.messageStart));
+        time.elapse(recheck);
+        expect(api.closedIds, isEmpty);
+
+        rig.client.emit(ev(EventNames.messageComplete, {'text': 'two'}));
+        time.elapse(settle);
+        expect(api.closedIds, ['rt-1']);
+      });
+    });
+
+    test('work that reports back keeps the session until the turn its '
+        'result starts ends', () {
+      final api = ScriptedApi()..backgroundWork = true;
+      fakeAsync((time) {
+        final rig = open(time, api);
+        hide();
+        time.elapse(settle);
+        expect(api.closedIds, isEmpty);
+        expect(rig.client.watched, ['rt-1']);
+
+        api.backgroundWork = false;
+        rig.client.emit(ev(EventNames.messageStart));
+        rig.client.emit(ev(EventNames.messageComplete, {'text': 'built'}));
+        time.elapse(settle);
+        expect(words(rig), ['built']);
+        expect(api.closedIds, ['rt-1']);
+      });
+    });
+
+    test('work that ends with no turn is let go at the next check', () {
+      final api = ScriptedApi()..backgroundWork = true;
+      fakeAsync((time) {
+        open(time, api);
+        hide();
+        time.elapse(settle);
+        api.backgroundWork = false;
+        time.elapse(recheck - second);
+        expect(api.closedIds, isEmpty);
+        time.elapse(second);
+        expect(api.closedIds, ['rt-1']);
+      });
+    });
+
+    test('a check with no answer keeps the session and asks again', () {
       final api = ScriptedApi()..nextWorkFailure = NetworkFailure.notConnected;
-      final rig = bootChat(api: api);
-      await pumpEventQueue();
-
-      hide();
-      await pumpEventQueue();
-      expect(api.closedIds, isEmpty);
-      expect(rig.client.watched, ['rt-1']);
+      fakeAsync((time) {
+        open(time, api);
+        hide();
+        time.elapse(settle);
+        expect(api.closedIds, isEmpty);
+        time.elapse(recheck);
+        expect(api.closedIds, ['rt-1']);
+      });
     });
 
-    test('a session lost meanwhile and resumed is let go again', () async {
-      final api = ScriptedApi()..backgroundWork = true;
-      final rig = bootChat(api: api);
-      await pumpEventQueue();
-      hide();
-      await pumpEventQueue();
+    test('a socket back while away lets go of a turn it lost', () {
+      final api = ScriptedApi();
+      fakeAsync((time) {
+        final rig = open(time, api);
+        rig.client.emit(ev(EventNames.messageStart));
+        hide();
+        rig.client.goOffline();
+        time.elapse(recheck);
+        rig.client.goOnline();
+        time.elapse(settle);
+        expect(api.closedIds, ['rt-1']);
+      });
+    });
 
-      api.backgroundWork = false;
-      rig.client.emit(
-        const GatewayEvent(
-          type: SyntheticEvents.sessionLost,
-          sessionId: 'rt-1',
-        ),
-      );
-      await pumpEventQueue();
-      expect(api.resumedIds, ['stored-1', 'stored-1']);
-      expect(api.closedIds, ['rt-1']);
+    test('a session lost meanwhile and resumed is let go again', () {
+      final api = ScriptedApi()..backgroundWork = true;
+      fakeAsync((time) {
+        final rig = open(time, api);
+        hide();
+        time.elapse(settle);
+        api.backgroundWork = false;
+        rig.client.emit(
+          const GatewayEvent(
+            type: SyntheticEvents.sessionLost,
+            sessionId: 'rt-1',
+          ),
+        );
+        time.elapse(settle);
+        expect(api.resumedIds, ['stored-1', 'stored-1']);
+        expect(api.closedIds, ['rt-1']);
+      });
     });
   });
 
